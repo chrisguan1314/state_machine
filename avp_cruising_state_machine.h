@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <algorithm>
 
-const std::string AvpFormat(const std::string& str)
+const std::string AvpFormator(const std::string& str)
 {
     return Format(str, avp_cruising_str_map);
 }
@@ -42,9 +42,9 @@ public:
     {
         void operator()(const StateMachineBase<AvpCruisingStateType>& base) const override
         {
-            std::cout << "[Avp] Crnt State : " << AvpFormat(avp_cruising_str_map.at(base.GetCrntState())) 
-                << ", Last State : " << AvpFormat(avp_cruising_str_map.at(base.GetLastState()))
-                << ", Prvs State : " << AvpFormat(avp_cruising_str_map.at(base.GetPrvsState())) 
+            std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(base.GetCrntState())) 
+                << ", Last State : " << AvpFormator(avp_cruising_str_map.at(base.GetLastState()))
+                << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(base.GetPrvsState())) 
                 << ", Duration : " << base.GetDuration().count() << "(S)" << std::endl; 
         }
     };
@@ -80,9 +80,9 @@ public:
         {  
             UpdateState(static_cast<AvpCruisingStateType>(10 - count / 2));
             PrintData();
-            // std::cout << "[Avp] Crnt State : " << AvpFormat(avp_cruising_str_map.at(GetCrntState())) 
-            // << ", Last State : " << AvpFormat(avp_cruising_str_map.at(GetLastState()))
-            // << ", Prvs State : " << AvpFormat(avp_cruising_str_map.at(GetPrvsState())) 
+            // std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
+            // << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
+            // << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
             // << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
             if (count == 0)
