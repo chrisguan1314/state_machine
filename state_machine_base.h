@@ -16,7 +16,7 @@ class StateMachineBase;
 
 // alias declaration by using of class template 
 template <typename T>
-using LogPrintFunc = std::function<void(const StateMachineBase<T>&)>;
+using PrinterType = std::function<void(const StateMachineBase<T>&)>;
 
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
@@ -49,7 +49,7 @@ private:
     system_time_point system_start_time_{std::chrono::system_clock::now()};
     steady_time_point steady_start_time_{std::chrono::steady_clock::now()};
     duration_of_second duration_{0}; 
-    std::unique_ptr<LogPrintFunc<T>> func_{nullptr};
+    std::unique_ptr<PrinterType<T>> func_{nullptr};
     // 整体的这里的标志位都应该用原子变量，以避免可能带来的数据竞争
 
     // 其实这个使能标志位应该是由调度器来加载相关参数的
@@ -60,8 +60,10 @@ private:
     std::atomic_bool init_flag_{false};
     // 当初始化完成之后，我们就可以创建线程开始工作了
     std::atomic_bool setup_flag_{false};
+    // the frequency of print log
+    uint32_t freq_{20};
 protected:
-    StateMachineBase(std::string && name, LogPrintFunc<T> func = DefaultPrinter()) : func_(std::make_unique<LogPrintFunc<T>>(func))
+    StateMachineBase(std::string && name, PrinterType<T> func = DefaultPrinter()) : func_(std::make_unique<PrinterType<T>>(func))
     {
         auto now = std::chrono::system_clock::to_time_t(system_start_time_);
         std::cout << "Construct a " << name + "StateMachine" << " object, at " 
@@ -72,7 +74,14 @@ public:
     virtual void Init() = 0;
     void PrintData() const
     {
-        (*func_)(*this);
+        if (IsStateChanged())
+        {
+            (*func_)(*this);
+        }
+        else if (GetCount() % GetFrequency() * 5 == 0)
+        {
+            (*func_)(*this);
+        }
     }
 public:
     void UpdateState(T state) noexcept
@@ -84,9 +93,6 @@ public:
             SetStartSystemTime(std::chrono::system_clock::now());
             SetStartSteadyTime(std::chrono::steady_clock::now());
             SetDuration(duration_of_second(0U));
-            // auto now = std::chrono::system_clock::to_time_t(system_start_time_);
-            // std::cout << "Update state from " << prvs_state_ << " to " << crnt_state_ << ", at " 
-            //       << std::put_time(std::localtime(&now), "%F %T") << std::endl;
         }
         SetLastState(crnt_state_.load());
         SetCrntState(state);
@@ -121,6 +127,12 @@ public:
     {
         return duration_;
     }
+    uint32_t GetFrequency() const noexcept
+    {
+        return freq_;
+    }
+public:
+    virtual T CalcCrntState() const noexcept = 0;
 protected:
     void SetEnableFlag(bool flag = false) noexcept
     {
@@ -146,6 +158,11 @@ protected:
     bool GetSetupFlag() const noexcept
     {
         return setup_flag_.load();
+    }
+public:
+    bool IsStateChanged() const noexcept
+    {
+        return crnt_state_.load() != last_state_.load();
     }
 private:
     void SetCrntState(T state = static_cast<T>(0)) noexcept

@@ -142,11 +142,11 @@ int main()
     // std::cout << "-10000 : " << fn (-10000) << std::endl;
     // std::shared_ptr<uint32_t> ptr = std::allocate_shared<uint32_t>(MyAllocator<uint32_t>(), 42);
     // std::cout << *ptr << std::endl;
-
-    // if (std::unique_ptr<StateMachineManager> sm_manager = std::make_unique<StateMachineManager>(""))
-    // {
-    //     sm_manager->Init();
-    // }
+    
+    if (std::unique_ptr<StateMachineManager> sm_manager = std::make_unique<StateMachineManager>(""))
+    {
+        sm_manager->Init();
+    }
     // std::function<int(int, int)> func = std::plus<int>();
     // // std::bind
     // std::function<int(int)> func1 = std::bind(func, 2, std::placeholders::_1);
@@ -174,16 +174,16 @@ int main()
 
     // SharedSingletonDerived::GetInstance()->loadConfig();
 
-    std::thread t1(&AddData);
-    std::thread t2(&AddData);
-    std::thread t3(&AddData);
-    std::thread t5(&AddData);
-    std::thread t4(&ReadData);
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-    t5.join();
+    // std::thread t1(&AddData);
+    // std::thread t2(&AddData);
+    // std::thread t3(&AddData);
+    // std::thread t5(&AddData);
+    // std::thread t4(&ReadData);
+    // t1.join();
+    // t2.join();
+    // t3.join();
+    // t4.join();
+    // t5.join();
 
     // std::vector<Animal> v;
     // v.push_back(Animal());
