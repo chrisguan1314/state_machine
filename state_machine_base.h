@@ -180,6 +180,7 @@ private:
     void SetCount(uint32_t count = 0) noexcept
     {
         count_ = count;
+        std::cout << "count : " << count_ << std::endl;
     }
     template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, system_time_point>::value>>
     void SetStartSystemTime(TimePoint && time_point) noexcept
