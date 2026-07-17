@@ -6,6 +6,7 @@
 #include "state_machine_base.h"
 #include "log_base.h"
 #include "str_map.h"
+#include "state_switch_table.h"
 
 #include <stdint.h>
 #include <vector>
@@ -63,6 +64,7 @@ private:
     // atomic_sptr<AvpCruisingParam> param_;
     std::shared_ptr<AvpCruisingInput> input_;
     // atomic_sptr<AvpCruisingOutput> output_;
+    StateSwitchTable<AvpCruisingStateType> table_;
 
     std::multimap<AvpCruisingStateType, std::pair<AvpCruisingStateType, std::function<bool(AvpCruisingStateType)>>> state_switch_map_;
 private:
@@ -247,62 +249,112 @@ public:
     }
     void InitStateSwtichMap()
     {
-        state_switch_map_.emplace(AvpCruisingStateType::IDLE_0, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
+        using SwitchSubTable = StateSwitchTable<AvpCruisingStateType>::SwitchSubTable;
 
-        state_switch_map_.emplace(AvpCruisingStateType::STANDBY_1, std::pair{AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingStateMachine::SwitchToIdle, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::STANDBY_1, std::pair{AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateMachine::SwitchToLocating, this, std::placeholders::_1)});
+        SwitchSubTable idle_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+        };
+         
+        SwitchSubTable standby_to_table = 
+        {
+            {AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingStateMachine::SwitchToIdle, this, std::placeholders::_1)},
+            {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateMachine::SwitchToLocating, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::LOCATING_2, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::LOCATING_2, std::pair{AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateMachine::SwitchToLocated, this, std::placeholders::_1)});
+        SwitchSubTable locating_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+            {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateMachine::SwitchToLocated, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::LOCATED_3, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::LOCATED_3, std::pair{AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateMachine::SwitchToLocating, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::LOCATED_3, std::pair{AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingStateMachine::SwitchToPrepared, this, std::placeholders::_1)});
+        SwitchSubTable located_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+            {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateMachine::SwitchToLocating, this, std::placeholders::_1)},
+            {AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingStateMachine::SwitchToPrepared, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::PREPARED_4, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PREPARED_4, std::pair{AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateMachine::SwitchToLocating, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PREPARED_4, std::pair{AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateMachine::SwitchToLocated, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PREPARED_4, std::pair{AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateMachine::SwitchToCruising, this, std::placeholders::_1)});
+        SwitchSubTable prepared_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+            {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateMachine::SwitchToLocating, this, std::placeholders::_1)},
+            {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateMachine::SwitchToLocated, this, std::placeholders::_1)},
+            {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateMachine::SwitchToCruising, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateMachine::SwitchToParking, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingStateMachine::SwitchToOverride, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateMachine::SwitchToSuccess, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateMachine::SwitchToFailed, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateMachine::SwitchToSuspend, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::CRUISING_5, std::pair{AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateMachine::SwitchToTerminate, this, std::placeholders::_1)});
+        SwitchSubTable cruising_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+            {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateMachine::SwitchToParking, this, std::placeholders::_1)},
+            {AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingStateMachine::SwitchToOverride, this, std::placeholders::_1)},
+            {AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateMachine::SwitchToSuccess, this, std::placeholders::_1)},
+            {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateMachine::SwitchToFailed, this, std::placeholders::_1)},
+            {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateMachine::SwitchToSuspend, this, std::placeholders::_1)},
+            {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateMachine::SwitchToTerminate, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::PARKING_6, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PARKING_6, std::pair{AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateMachine::SwitchToSuccess, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PARKING_6, std::pair{AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateMachine::SwitchToFailed, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PARKING_6, std::pair{AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateMachine::SwitchToSuspend, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::PARKING_6, std::pair{AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateMachine::SwitchToTerminate, this, std::placeholders::_1)});
+        SwitchSubTable parking_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+            {AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateMachine::SwitchToSuccess, this, std::placeholders::_1)},
+            {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateMachine::SwitchToFailed, this, std::placeholders::_1)},
+            {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateMachine::SwitchToSuspend, this, std::placeholders::_1)},
+            {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateMachine::SwitchToTerminate, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::OVERRIDE_7, std::pair{AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateMachine::SwitchToCruising, this, std::placeholders::_1)});
+        SwitchSubTable override_to_table = 
+        {
+            {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateMachine::SwitchToCruising, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::SUCCESS_8, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
+        SwitchSubTable success_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::FAILED_9, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
+        SwitchSubTable failed_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::SUSPEND_10, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::SUSPEND_10, std::pair{AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateMachine::SwitchToCruising, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::SUSPEND_10, std::pair{AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateMachine::SwitchToParking, this, std::placeholders::_1)});
-        state_switch_map_.emplace(AvpCruisingStateType::SUSPEND_10, std::pair{AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateMachine::SwitchToTerminate, this, std::placeholders::_1)});
+        SwitchSubTable suspend_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+            {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateMachine::SwitchToCruising, this, std::placeholders::_1)},
+            {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateMachine::SwitchToParking, this, std::placeholders::_1)},
+            {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateMachine::SwitchToTerminate, this, std::placeholders::_1)},
+        };
 
-        state_switch_map_.emplace(AvpCruisingStateType::TERMINATE_11, std::pair{AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)});
+        SwitchSubTable terminate_to_table = 
+        {
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchToStandby, this, std::placeholders::_1)},
+        };
+
+        table_.AddStateSwitch(AvpCruisingStateType::IDLE_0, idle_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::STANDBY_1, standby_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::LOCATING_2, locating_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::LOCATED_3, located_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::PREPARED_4, prepared_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::CRUISING_5, cruising_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::PARKING_6, parking_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, override_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::SUCCESS_8, success_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::FAILED_9, failed_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::SUSPEND_10, suspend_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::TERMINATE_11, terminate_to_table);
     }
     AvpCruisingStateType CalcCrntState() const noexcept override
     {
         AvpCruisingStateType crnt_state = GetCrntState();
-        auto to_state_list = state_switch_map_.equal_range(crnt_state);
-        for (auto it = to_state_list.first; it != to_state_list.second; ++it)
+        auto to_state_list = table_.GetSwitchTable(crnt_state);
+        for (auto iter = std::begin(to_state_list); iter != std::end(to_state_list); ++iter)
         {
-            auto tmp_crnt_state = it->first;
-            auto to_switch_state = it->second.first;
-            auto switch_function = it->second.second;
-            if (switch_function(tmp_crnt_state))
+            auto to_state = iter->first;
+            auto switch_function = iter->second;
+            if (switch_function(crnt_state))
             {
-                crnt_state = to_switch_state;
+                crnt_state = to_state;
                 break;
             }
         }
