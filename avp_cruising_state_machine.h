@@ -327,8 +327,8 @@ public:
     AvpCruisingStateType CalcCrntState() const noexcept override
     {
         AvpCruisingStateType crnt_state = GetCrntState();
-        auto to_state_list = table_.GetSwitchTable(crnt_state);
-        for (auto iter = std::begin(to_state_list); iter != std::end(to_state_list); ++iter)
+        auto state_switch_list = table_.GetSwitchTable(crnt_state);
+        for (auto iter = std::begin(state_switch_list); iter != std::end(state_switch_list); ++iter)
         {
             auto to_state = iter->first;
             auto switch_function = iter->second;
@@ -343,27 +343,11 @@ public:
 public:
     void Run() override
     {
-        // uint32_t count = 20;
         while (true)
         {  
-            auto state = CalcCrntState();
-            std::cout << "crnt state : " << static_cast<uint32_t>(state) << std::endl;
-            UpdateState(state);
+            UpdateState(CalcCrntState());
             PrintData();
-
-            // std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
-            // << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
-            // << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
-            // << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
-            // if (count == 0)
-            // {
-            //     break;
-            // }
-            // else
-            // {
-            //     count--;
-            // }
         }
         
     }
