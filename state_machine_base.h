@@ -132,7 +132,7 @@ public:
         return freq_;
     }
 public:
-    virtual T CalcCrntState() const noexcept = 0;
+    virtual T CalcNextState() const noexcept = 0;
 protected:
     void SetEnableFlag(bool flag = false) noexcept
     {

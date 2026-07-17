@@ -324,7 +324,7 @@ public:
         table_.AddStateSwitch(AvpCruisingStateType::SUSPEND_10, suspend_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::TERMINATE_11, terminate_to_table);
     }
-    AvpCruisingStateType CalcCrntState() const noexcept override
+    AvpCruisingStateType CalcNextState() const noexcept override
     {
         AvpCruisingStateType crnt_state = GetCrntState();
         auto state_switch_list = table_.GetSwitchTable(crnt_state);
@@ -345,7 +345,7 @@ public:
     {
         while (true)
         {  
-            UpdateState(CalcCrntState());
+            UpdateState(CalcNextState());
             PrintData();
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
