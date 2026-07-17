@@ -23,9 +23,16 @@ public:
     }
     void AddStateSwitch(T from_state, const SwitchSubTable& table)
     {
-        std::for_each(std::begin(table), std::end(table), [this, from_state](auto item){
-            state_switch_table_.at(from_state).at(item.first) = item.second; 
-        });
+        if (state_switch_table_.find(from_state) != std::end(state_switch_table_))
+        {
+            std::for_each(std::begin(table), std::end(table), [this, from_state](auto item){
+                state_switch_table_.at(from_state).at(item.first) = item.second; 
+            });
+        }
+        else
+        {
+            state_switch_table_.insert({from_state, table});
+        }
     }
     const StateList GetToStateList(T state) const noexcept
     {

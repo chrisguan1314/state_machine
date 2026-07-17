@@ -339,13 +339,15 @@ public:
         table_.AddStateSwitch(AvpCruisingStateType::CRUISING_5, cruising_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::PARKING_6, parking_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, override_to_table);
-        table_.AddStateSwitch(AvpCruisingStateType::SUCCESS_8, success_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::SUCCESS_8, success_to_table); 
         table_.AddStateSwitch(AvpCruisingStateType::FAILED_9, failed_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::SUSPEND_10, suspend_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::TERMINATE_11, terminate_to_table);
+        std::cout << "333" << std::endl;
     }
     AvpCruisingStateType CalcCrntState() const noexcept override
     {
+        std::cout << "111" << std::endl;
         AvpCruisingStateType crnt_state = GetCrntState();
         auto to_state_list = table_.GetSwitchTable(crnt_state);
         for (auto iter = std::begin(to_state_list); iter != std::end(to_state_list); ++iter)
