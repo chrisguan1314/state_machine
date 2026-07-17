@@ -9,7 +9,7 @@ class StateSwitchTable
 {
 public:
     using StateType = T;
-    using SwitchFunction = std::function<bool(StateType)>;
+    using SwitchFunction = std::function<bool()>;
     using SwitchSubTable = std::map<T, SwitchFunction>;
     using SwitchTable = std::map<T, SwitchSubTable>;
 private:
