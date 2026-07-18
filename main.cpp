@@ -14,8 +14,6 @@
 #include "structure\algorithm\perception\obstacle.h"
 #include "structure\concurrent\spsc_queue.h"
 
-
-
 #include <vector>
 #include <algorithm>
 #include <random>

@@ -7,7 +7,12 @@
 class StateMachineOutputBase
 {
 private:
-    std::shared_ptr<StateMachineActionBase> action_sptr_{std::make_shared<StateMachineActionBase>()};
+    std::shared_ptr<StateMachineActionBase> action_sptr_{nullptr};
+public:
+    StateMachineOutputBase(std::shared_ptr<StateMachineActionBase> action = std::make_shared<StateMachineActionBase>()) : 
+    action_sptr_(action)
+    {
+    }
 public:
     void Init()
     {

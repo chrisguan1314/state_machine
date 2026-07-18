@@ -84,12 +84,12 @@ protected:
     {
         
     }
-    StateMachineBase(std::string name, StateMachineParamBase param, StateMachineInputBase input, StateMachineSwtichBase switches, StateMachineOutputBase output) :
+    StateMachineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputBase> && input, std::shared_ptr<StateMachineSwtichBase> && switches, std::shared_ptr<StateMachineOutputBase> && output) :
     name_(name),
-    param_sptr_{std::make_shared<StateMachineParamBase>(param)},
-    input_sptr_{std::make_shared<StateMachineInputBase>(input)},
-    switch_sptr_{std::make_shared<StateMachineSwtichBase>(switches)}, 
-    output_sptr_{std::make_shared<StateMachineOutputBase>(output)}
+    param_sptr_{param},
+    input_sptr_{input},
+    switch_sptr_{switches}, 
+    output_sptr_{output}
     {
         Init();
         auto now = std::chrono::system_clock::to_time_t(system_start_time_);

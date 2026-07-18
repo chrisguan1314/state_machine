@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 
-#include "avp_cruising_state_machine.h"
+// #include "avp_cruising_state_machine.h"
+#include "avp\avp_cruising_state_machine.h"
 
 class StateMachineManager
 {
@@ -28,9 +29,9 @@ public:
     {
         if (avp_enable_flag_)
         {
-            if (auto& avp_cruising_sm = AvpCruisingStateMachine::GetInstance())
+            if (auto& avp_cruising_sm = avp_cruising::AvpCruisingStateMachine::GetInstance())
             {
-                avp_cruising_sm->Setup();
+         
             }
             else
             {
