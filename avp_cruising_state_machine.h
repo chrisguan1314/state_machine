@@ -64,11 +64,9 @@ public:
 private:
     thread_uptr_with_deleter trd_{nullptr, thread_deleter};
     // atomic_sptr<AvpCruisingParam> param_;
-    std::shared_ptr<AvpCruisingInput> input_;
-    // atomic_sptr<AvpCruisingOutput> output_;
+    std::shared_ptr<AvpCruisingInput> input_sptr_{std::make_shared<AvpCruisingInput>()};
+    std::shared_ptr<AvpCruisingOutput> output_sptr_{std::make_shared<AvpCruisingOutput>()};
     StateSwitchTable<AvpCruisingStateType> table_;
-
-    std::multimap<AvpCruisingStateType, std::pair<AvpCruisingStateType, std::function<bool(AvpCruisingStateType)>>> state_switch_map_;
 private:
     // *******************************SwitchFromIdle*******************************
     bool SwitchFromIdleToStandby() const noexcept
@@ -340,13 +338,29 @@ public:
         }
         return crnt_state;
     }
+    void PrintStateSwitchInfo() override
+    {
+        std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
+            << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
+            << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
+            << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
+    }
+    void UpdateInput()
+    {
+
+    }
+    void UpdateOutput()
+    {
+        
+    }
 public:
     void Run() override
     {
         while (true)
         {  
+            UpdateInput();
             UpdateState(CalcNextState());
-            PrintData();
+            UpdateOutput();
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
         

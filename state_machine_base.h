@@ -83,6 +83,18 @@ public:
             (*func_)(*this);
         }
     }
+    void PrintInfo()
+    {
+        if (IsStateChanged())
+        {
+            PrintStateSwitchInfo();
+        }
+        else if (GetCount() % GetFrequency() * 5 == 0)
+        {
+            PrintStateSwitchInfo();
+        }
+    }
+    virtual void PrintStateSwitchInfo() = 0;
 public:
     void UpdateState(T state) noexcept
     {
@@ -98,6 +110,7 @@ public:
         SetCrntState(state);
         SetCount(GetCount() + 1);
         SetDuration(std::chrono::duration_cast<duration_of_second>(std::chrono::steady_clock::now() - steady_start_time_));
+        PrintInfo();
     }
     const T GetCrntState() const noexcept
     {
