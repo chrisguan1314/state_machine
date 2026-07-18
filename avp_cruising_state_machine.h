@@ -213,7 +213,7 @@ private:
         return true;
     }
 private:
-    AvpCruisingStateMachine(PrinterType<AvpCruisingStateType> func = AvpCruisingPrinter()) : StateMachineBase("AvpCruising", func)
+    AvpCruisingStateMachine() : StateMachineBase("AvpCruising")
     {
         SetEnableFlag(true);
 
@@ -354,7 +354,7 @@ public:
         
     }
 public:
-    void Run() override
+    void Run() 
     {
         while (true)
         {  
@@ -365,7 +365,7 @@ public:
         }
         
     }
-    void Init() override
+    void Init()
     {
         if (LoadFunctionParam() && CreateReadersAndWriters())
         {

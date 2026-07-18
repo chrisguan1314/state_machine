@@ -1,5 +1,10 @@
 #pragma once
 
+#include "state_machine_param_base.h"
+#include "state_machine_input_base.h"
+#include "state_machine_switch_base.h"
+#include "state_machine_output_base.h"
+
 #include <iostream>
 #include <chrono>
 #include <type_traits>
@@ -62,16 +67,55 @@ private:
     std::atomic_bool setup_flag_{false};
     // the frequency of print log
     uint32_t freq_{20};
+
+    std::shared_ptr<StateMachineParamBase> param_sptr_{nullptr};
+    std::shared_ptr<StateMachineInputBase> input_sptr_{nullptr};
+    std::shared_ptr<StateMachineSwtichBase> switch_sptr_{nullptr};
+    std::shared_ptr<StateMachineOutputBase> output_sptr_{nullptr};
+    std::unique_ptr<std::thread> trd_uptr_{nullptr};
+    std::string name_;
 protected:
-    StateMachineBase(std::string && name, PrinterType<T> func = DefaultPrinter()) : func_(std::make_unique<PrinterType<T>>(func))
+    StateMachineBase(std::string name) : 
+    name_(name),
+    param_sptr_{std::make_shared<StateMachineParamBase>()},
+    input_sptr_{std::make_shared<StateMachineInputBase>()},
+    switch_sptr_{std::make_shared<StateMachineSwtichBase>()}, 
+    output_sptr_{std::make_shared<StateMachineOutputBase>()}
     {
+        
+    }
+    StateMachineBase(std::string name, StateMachineParamBase param, StateMachineInputBase input, StateMachineSwtichBase switches, StateMachineOutputBase output) :
+    name_(name),
+    param_sptr_{std::make_shared<StateMachineParamBase>(param)},
+    input_sptr_{std::make_shared<StateMachineInputBase>(input)},
+    switch_sptr_{std::make_shared<StateMachineSwtichBase>(switches)}, 
+    output_sptr_{std::make_shared<StateMachineOutputBase>(output)}
+    {
+        Init();
         auto now = std::chrono::system_clock::to_time_t(system_start_time_);
         std::cout << "Construct a " << name + "StateMachine" << " object, at " 
                   << std::put_time(std::localtime(&now), "%F %T") << std::endl;
     }
 public:
-    virtual void Run() = 0;
-    virtual void Init() = 0;
+    void Init() 
+    {
+        param_sptr_->Init();
+        input_sptr_->Init();
+        switch_sptr_->Init();
+        output_sptr_->Init();
+    }
+    void Run()
+    {
+        while (true)
+        {
+            param_sptr_->UpdateParam();
+            input_sptr_->UpdateEvent();
+            switch_sptr_->UpdateState();
+            output_sptr_->UpdateAction();
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+    
     void PrintData() const
     {
         if (IsStateChanged())
