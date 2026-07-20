@@ -5,23 +5,15 @@
 #include "state_machine_switcher_base.h"
 #include "state_machine_outputer_base.h"
 
-#include <iostream>
-#include <chrono>
 #include <type_traits>
-#include <iomanip>
 #include <string>
 #include <thread>
 #include <memory>
 #include <atomic>
-#include <functional>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
 class StateMachineBase;
-
-// alias declaration by using of class template 
-template <typename T>
-using PrinterType = std::function<void(const StateMachineBase<T>&)>;
 
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
@@ -42,15 +34,6 @@ private:
     std::unique_ptr<std::thread> thrd_uptr_{nullptr};
     std::string name_;
 protected:
-    StateMachineBase(std::string name) : 
-    name_(name),
-    param_sptr_{std::make_shared<StateMachineParamBase>()},
-    input_sptr_{std::make_shared<StateMachineInputerBase>()},
-    switch_sptr_{std::make_shared<StateMachineSwticherBase<T>>()}, 
-    output_sptr_{std::make_shared<StateMachineOutputerBase>()}
-    {
-        
-    }
     StateMachineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputerBase> && input, std::shared_ptr<StateMachineSwticherBase<T>> && switches, std::shared_ptr<StateMachineOutputerBase> && output) :
     name_(name),
     param_sptr_{param},
