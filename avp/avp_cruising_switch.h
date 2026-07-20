@@ -5,6 +5,10 @@
 
 namespace avp_cruising
 {
+const std::string AvpFormator(const std::string& str)
+{
+    return Format(str, avp_cruising_str_map);
+}
 class AvpCruisingStateSwitch : public StateMachineSwtichBase<AvpCruisingStateType>
 {
 private:

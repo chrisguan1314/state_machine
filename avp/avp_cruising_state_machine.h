@@ -2,7 +2,6 @@
 
 #include "../enum.h"
 #include "../str_map.h"
-#include "../log_base.h"
 #include "../state_machine_base.h"
 #include "avp_cruising_param.h"
 #include "avp_cruising_input.h"
@@ -11,10 +10,6 @@
 
 namespace avp_cruising
 {
-const std::string AvpFormator(const std::string& str)
-{
-    return Format(str, avp_cruising_str_map);
-}
 class AvpCruisingStateMachine : public StateMachineBase<AvpCruisingStateType>
 {
 public:
@@ -29,17 +24,5 @@ private:
     {
         
     }
-    void PrintStateSwitchInfo() override 
-    {
-        std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
-                << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
-                << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
-                << ", Duration : " << GetDuration().count() << "(S)" << std::endl; 
-    };
-    AvpCruisingStateType CalcNextState() const noexcept override
-    { 
-        std::cout << "222" << std::endl;
-        return AvpCruisingStateType::IDLE_0; 
-    };
 };
 };

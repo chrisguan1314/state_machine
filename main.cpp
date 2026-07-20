@@ -2,7 +2,6 @@
 #include "cat.h"
 #include "singleton.h"
 #include "state_machine_base.h"
-#include "avp_cruising_state_machine.h"
 #include "state_machine_manager.h"
 #include "threadsafe_stack.h"
 #include "threadsafe_queue.h"
