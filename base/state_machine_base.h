@@ -41,7 +41,7 @@ protected:
     switch_sptr_{switches}, 
     output_sptr_{output}
     {
-        Init();
+    
     }
     ~StateMachineBase()
     {

@@ -31,6 +31,7 @@ public:
         {
             if (auto& avp_cruising_sm = parking::AvpCruisingStateMachine::GetInstance())
             {
+                avp_cruising_sm->Init();
             }
             else
             {
