@@ -230,7 +230,7 @@ public:
     {
         SwitchSubTable idle_to_table = 
         {
-            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchFromStandbyToIdle, this)},
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateMachine::SwitchFromIdleToStandby, this)},
         };
          
         SwitchSubTable standby_to_table = 

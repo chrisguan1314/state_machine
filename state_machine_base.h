@@ -70,39 +70,48 @@ private:
 
     std::shared_ptr<StateMachineParamBase> param_sptr_{nullptr};
     std::shared_ptr<StateMachineInputBase> input_sptr_{nullptr};
-    std::shared_ptr<StateMachineSwtichBase> switch_sptr_{nullptr};
+    std::shared_ptr<StateMachineSwtichBase<T>> switch_sptr_{nullptr};
     std::shared_ptr<StateMachineOutputBase> output_sptr_{nullptr};
-    std::unique_ptr<std::thread> trd_uptr_{nullptr};
+    std::unique_ptr<std::thread> thrd_uptr_{nullptr};
     std::string name_;
 protected:
     StateMachineBase(std::string name) : 
     name_(name),
     param_sptr_{std::make_shared<StateMachineParamBase>()},
     input_sptr_{std::make_shared<StateMachineInputBase>()},
-    switch_sptr_{std::make_shared<StateMachineSwtichBase>()}, 
+    switch_sptr_{std::make_shared<StateMachineSwtichBase<T>>()}, 
     output_sptr_{std::make_shared<StateMachineOutputBase>()}
     {
         
     }
-    StateMachineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputBase> && input, std::shared_ptr<StateMachineSwtichBase> && switches, std::shared_ptr<StateMachineOutputBase> && output) :
+    StateMachineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputBase> && input, std::shared_ptr<StateMachineSwtichBase<T>> && switches, std::shared_ptr<StateMachineOutputBase> && output) :
     name_(name),
     param_sptr_{param},
     input_sptr_{input},
     switch_sptr_{switches}, 
     output_sptr_{output}
     {
-        Init();
         auto now = std::chrono::system_clock::to_time_t(system_start_time_);
         std::cout << "Construct a " << name + "StateMachine" << " object, at " 
                   << std::put_time(std::localtime(&now), "%F %T") << std::endl;
+        Init();
+    }
+    ~StateMachineBase()
+    {
+        if (thrd_uptr_ && thrd_uptr_->joinable())
+        {
+            thrd_uptr_->join();
+        }
     }
 public:
     void Init() 
     {
         param_sptr_->Init();
-        input_sptr_->Init();
+        input_sptr_->Init();;
         switch_sptr_->Init();
         output_sptr_->Init();
+
+        thrd_uptr_ = std::make_unique<std::thread>(&StateMachineBase::Run, this);
     }
     void Run()
     {
@@ -110,7 +119,8 @@ public:
         {
             param_sptr_->UpdateParam();
             input_sptr_->UpdateEvent();
-            switch_sptr_->UpdateState();
+            switch_sptr_->UpdateState(input_sptr_);
+            // UpdateState();
             output_sptr_->UpdateAction();
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
@@ -138,8 +148,15 @@ public:
             PrintStateSwitchInfo();
         }
     }
-    virtual void PrintStateSwitchInfo() = 0;
+    virtual void PrintStateSwitchInfo()
+    {
+        std::cout << "555" << std::endl;
+    }
 public:
+    void UpdateState() noexcept
+    {
+        UpdateState(CalcNextState());
+    }
     void UpdateState(T state) noexcept
     {
         if (crnt_state_.load() != state)
@@ -189,11 +206,13 @@ public:
         return freq_;
     }
 public:
-    virtual T CalcNextState() const noexcept = 0;
+    virtual T CalcNextState() const noexcept 
+    {
+        return static_cast<T>(0);
+    }
 protected:
     void SetEnableFlag(bool flag = false) noexcept
     {
-        // std::atomic_store(&enable_flag_, flag);
         enable_flag_.store(flag);
     }
     void SetInitFlag(bool flag = false) noexcept

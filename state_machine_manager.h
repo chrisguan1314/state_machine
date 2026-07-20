@@ -31,7 +31,6 @@ public:
         {
             if (auto& avp_cruising_sm = avp_cruising::AvpCruisingStateMachine::GetInstance())
             {
-         
             }
             else
             {
@@ -42,7 +41,6 @@ public:
         {
             std::cout << "Avp enable flag : " << std::boolalpha << avp_enable_flag_ << std::endl;
         }
-
     }
 private:
     void LoadEnableParams(const std::string& path)

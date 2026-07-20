@@ -15,7 +15,13 @@ public:
 
     }
 public:
-    virtual void InitReaders() override {};
-    virtual void UpdateEvent() override {};
+    virtual void InitReaders() override 
+    {
+        std::cout << "Init AvpCruisingInput Readers" << std::endl;
+    };
+    virtual void UpdateEvent() override 
+    {
+        std::cout << "Update AvpCruisingInput Event" << std::endl;
+    };
 };
 };

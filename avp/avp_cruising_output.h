@@ -4,6 +4,7 @@
 #include "../state_machine_output_base.h"
 
 #include <memory>
+#include <iostream>
 
 namespace avp_cruising
 {
@@ -15,7 +16,13 @@ public:
 
     }
 public:
-    virtual void InitWriters() override {};
-    virtual void UpdateAction() override {};
+    virtual void InitWriters() override 
+    {
+        std::cout << "Init AvpCruisingOutput Writers" << std::endl;
+    };
+    virtual void UpdateAction() override 
+    {
+        std::cout << "Update AvpCruisingOutput Action" << std::endl;
+    };
 };
 };

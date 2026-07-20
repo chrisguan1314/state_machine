@@ -2,6 +2,8 @@
 
 #include "../state_machine_param_base.h"
 
+#include <iostream>
+
 namespace avp_cruising
 {
 class AvpCruisingParam : public StateMachineParamBase
@@ -12,7 +14,13 @@ public:
 
     }
 public:
-    virtual void Init() override {}; 
-    virtual void UpdateParam() override {};
+    virtual void Init() override 
+    {
+        std::cout << "Init AvpCruisingParam" << std::endl;
+    }; 
+    virtual void UpdateParam() override 
+    {
+        std::cout << "Update AvpCruisingParam" << std::endl;
+    };
 };
 };
