@@ -16,11 +16,11 @@ public:
 
     }
 public:
-    virtual void InitWriters() override 
+    void InitWriters() override 
     {
         std::cout << "Init AvpCruisingOutputer Writers" << std::endl;
     };
-    virtual void UpdateAction() override 
+    void UpdateAction() override 
     {
         std::cout << "Update AvpCruisingOutputer Action" << std::endl;
     };
