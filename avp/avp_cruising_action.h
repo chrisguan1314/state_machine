@@ -1,6 +1,6 @@
 #include "../base/state_machine_action_base.h"
 
-namespace avp_cruising
+namespace parking
 {
 class AvpCruisingAction : public StateMachineActionBase
 {

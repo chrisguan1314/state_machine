@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-namespace avp_cruising
+namespace parking
 {
 class AvpCruisingParam : public StateMachineParamBase
 {

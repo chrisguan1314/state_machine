@@ -8,7 +8,7 @@
 #include "avp_cruising_switcher.h"
 #include "avp_cruising_outputer.h"
 
-namespace avp_cruising
+namespace parking
 {
 class AvpCruisingStateMachine : public StateMachineBase<AvpCruisingStateType>
 {

@@ -6,7 +6,7 @@
 #include <memory>
 #include <iostream>
 
-namespace avp_cruising
+namespace parking
 {
 class AvpCruisingOutputer : public StateMachineOutputerBase
 {

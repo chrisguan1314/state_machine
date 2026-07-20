@@ -3,7 +3,7 @@
 #include "../base/state_machine_switcher_base.h"
 #include "../base/state_switch_table.h"
 
-namespace avp_cruising
+namespace parking
 {
 const std::string AvpFormator(const std::string& str)
 {

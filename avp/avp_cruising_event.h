@@ -1,6 +1,6 @@
 #include "../base/state_machine_event_base.h"
 
-namespace avp_cruising
+namespace parking
 {
 class AvpCruisingEvent : public StateMachineEventBase
 {

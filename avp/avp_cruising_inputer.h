@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace avp_cruising
+namespace parking
 {
 class AvpCruisingInputer : public StateMachineInputerBase
 {
