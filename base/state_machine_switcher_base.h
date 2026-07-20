@@ -1,7 +1,7 @@
 #pragma once
 
-#include "state_machine_input_base.h"
-#include "state_machine_output_base.h"
+#include "state_machine_inputer_base.h"
+#include "state_machine_outputer_base.h"
 
 #include <type_traits>
 #include <atomic>

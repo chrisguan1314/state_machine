@@ -2,11 +2,11 @@
 
 #include "../enum.h"
 #include "../str_map.h"
-#include "../state_machine_base.h"
+#include "../base/state_machine_base.h"
 #include "avp_cruising_param.h"
-#include "avp_cruising_input.h"
-#include "avp_cruising_switch.h"
-#include "avp_cruising_output.h"
+#include "avp_cruising_inputer.h"
+#include "avp_cruising_switcher.h"
+#include "avp_cruising_outputer.h"
 
 namespace avp_cruising
 {
@@ -19,8 +19,7 @@ public:
         return avp_sm_uptr_;
     }
 private: 
-    AvpCruisingStateMachine() :  
-    StateMachineBase<AvpCruisingStateType>("AvpCruising", std::make_shared<AvpCruisingParam>(), std::make_shared<AvpCruisingInput>(), std::make_shared<AvpCruisingStateSwitch>(), std::make_shared<AvpCruisingOutput>())
+    AvpCruisingStateMachine() : StateMachineBase<AvpCruisingStateType>("AvpCruising", std::make_shared<AvpCruisingParam>(), std::make_shared<AvpCruisingInputer>(), std::make_shared<AvpCruisingStateSwitcher>(), std::make_shared<AvpCruisingOutputer>())
     {
         
     }

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "state_machine_param_base.h"
-#include "state_machine_input_base.h"
-#include "state_machine_switch_base.h"
-#include "state_machine_output_base.h"
+#include "state_machine_inputer_base.h"
+#include "state_machine_switcher_base.h"
+#include "state_machine_outputer_base.h"
 
 #include <iostream>
 #include <chrono>

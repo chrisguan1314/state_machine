@@ -6,7 +6,7 @@
 // #include "avp_cruising_state_machine.h"
 #include "avp\avp_cruising_state_machine.h"
 
-class StateMachineManager
+class StateMachineScheduler
 {
 private:
     // 行车
@@ -20,7 +20,7 @@ private:
     bool park2park_enable_flag_{false};
     // 主动安全
 public:
-    StateMachineManager(const std::string& path)
+    StateMachineScheduler(const std::string& path)
     {
         LoadEnableParams(path);
     }

@@ -1,8 +1,7 @@
 #include "random.h"
 #include "cat.h"
 #include "singleton.h"
-#include "state_machine_base.h"
-#include "state_machine_manager.h"
+#include "state_machine_scheduler.h"
 #include "threadsafe_stack.h"
 #include "threadsafe_queue.h"
 #include "custom_queue.h"
@@ -140,7 +139,7 @@ int main()
     // std::shared_ptr<uint32_t> ptr = std::allocate_shared<uint32_t>(MyAllocator<uint32_t>(), 42);
     // std::cout << *ptr << std::endl;
     
-    if (std::unique_ptr<StateMachineManager> sm_manager = std::make_unique<StateMachineManager>(""))
+    if (std::unique_ptr<StateMachineScheduler> sm_manager = std::make_unique<StateMachineScheduler>(""))
     {
         sm_manager->Init();
     }
