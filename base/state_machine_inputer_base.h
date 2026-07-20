@@ -19,6 +19,6 @@ public:
         InitReaders();
     }
 public:
-    virtual void InitReaders() {};
-    virtual void UpdateEvent() {};
+    virtual void InitReaders() = 0;
+    virtual void UpdateEvent() = 0;
 };

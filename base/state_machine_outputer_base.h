@@ -19,6 +19,6 @@ public:
         InitWriters();
     }
 public:
-    virtual void InitWriters() {};
-    virtual void UpdateAction() {};
+    virtual void InitWriters() = 0;
+    virtual void UpdateAction() = 0;
 };

@@ -31,11 +31,9 @@ private:
     duration_of_second duration_{0}; 
     uint32_t freq_{20};
 public:
-    virtual void Init() {}; 
-    virtual T CalcNextState(std::shared_ptr<StateMachineInputerBase> input) 
-    {
-        return static_cast<T>(0);
-    };  
+    virtual void Init() = 0; 
+    virtual void PrintStateSwitchInfo() = 0;
+    virtual T CalcNextState(std::shared_ptr<StateMachineInputerBase> input) = 0;  
 public:
     void PrintInfo()
     {
@@ -67,10 +65,6 @@ public:
     void UpdateState(std::shared_ptr<StateMachineInputerBase> input)
     {
         UpdateState(CalcNextState(input));
-    }
-    virtual void PrintStateSwitchInfo()
-    {
-        
     }
 public:
     const T GetCrntState() const noexcept
