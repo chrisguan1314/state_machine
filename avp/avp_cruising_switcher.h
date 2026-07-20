@@ -22,146 +22,377 @@ private:
     // *******************************SwitchFromIdle*******************************
     bool SwitchFromIdleToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromStandby*******************************
     bool SwitchFromStandbyToIdle() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromStandbyToLocating() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromLocating*******************************
     bool SwitchFromLocatingToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromLocatingToLocated() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromLocated*******************************
     bool SwitchFromLocatedToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromLocatedToLocating() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromLocatedToPrepared() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromPrepared*******************************
     bool SwitchFromPreparedToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromPreparedToLocating() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromPreparedToLocated() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromPreparedToCruising() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromCruising*******************************
     bool SwitchFromCruisingToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromCruisingToParking() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromCruisingToOverride() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromCruisingToSuccess() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromCruisingToFailed() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromCruisingToSuspend() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromCruisingToTerminate() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromParking*******************************
     bool SwitchFromParkingToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromParkingToSuccess() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromParkingToFailed() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromParkingToSuspend() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromParkingToTerminate() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromOverride*******************************
     bool SwitchFromOverrideToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromOverrideToCruising() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromSuccess*******************************
     bool SwitchFromSuccessToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromFailed*******************************
     bool SwitchFromFailedToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromSuspend*******************************
     bool SwitchFromSuspenedToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromSuspenedToCruising() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromSuspenedToParking() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromSuspenedToTerminate() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     // *******************************SwitchFromgTerminate*******************************
     bool SwitchFromTerminateToStandby() const noexcept
     {
-        return true;
+        if (GetCount() > 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 public:
     void Init() override 

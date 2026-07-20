@@ -29,14 +29,9 @@ template <typename T, typename>
 class StateMachineBase
 {
 private:
-    // 其实这个使能标志位应该是由调度器来加载相关参数的
-    // 根据加载的结果来决定是否生成该状态机对象
-    std::atomic_bool enable_flag_{false};
     // 如果功能开关打开，则对该状态机进行初始化
     // 初始化大概分为参数加载和通信协议适配
     std::atomic_bool init_flag_{false};
-    // 当初始化完成之后，我们就可以创建线程开始工作了
-    std::atomic_bool setup_flag_{false};
     // the frequency of print log
     uint32_t freq_{20};
 
@@ -81,41 +76,30 @@ public:
         output_sptr_->Init();
 
         thrd_uptr_ = std::make_unique<std::thread>(&StateMachineBase::Run, this);
+        
+        SetInitFlag(true);
     }
     void Run()
     {
         while (true)
         {
-            param_sptr_->UpdateParam();
-            input_sptr_->UpdateEvent();
-            switch_sptr_->UpdateState(input_sptr_);
-            output_sptr_->UpdateAction();
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            if (GetInitFlag())
+            {
+                param_sptr_->UpdateParam();
+                input_sptr_->UpdateEvent();
+                switch_sptr_->UpdateState(input_sptr_);
+                output_sptr_->UpdateAction();
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000 / freq_));
         }
     }
 protected:
-    void SetEnableFlag(bool flag = false) noexcept
-    {
-        enable_flag_.store(flag);
-    }
     void SetInitFlag(bool flag = false) noexcept
     {
         init_flag_.store(flag);
     }
-    void SetSetupFlag(bool flag = false) noexcept
-    {
-        setup_flag_.store(flag);
-    }
-    bool GetEnableFlag() const noexcept
-    {
-        return enable_flag_.load();
-    }
     bool GetInitFlag() const noexcept
     {
         return init_flag_.load();
-    }
-    bool GetSetupFlag() const noexcept
-    {
-        return setup_flag_.load();
     }
 };
