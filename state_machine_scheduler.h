@@ -3,9 +3,10 @@
 #include <iostream>
 #include <string>
 
-#include "avp_cruising_state_machine.h"
+// #include "avp_cruising_state_machine.h"
+#include "avp\avp_cruising_state_machine.h"
 
-class StateMachineManager
+class StateMachineScheduler
 {
 private:
     // 行车
@@ -19,7 +20,7 @@ private:
     bool park2park_enable_flag_{false};
     // 主动安全
 public:
-    StateMachineManager(const std::string& path)
+    StateMachineScheduler(const std::string& path)
     {
         LoadEnableParams(path);
     }
@@ -28,9 +29,9 @@ public:
     {
         if (avp_enable_flag_)
         {
-            if (auto& avp_cruising_sm = AvpCruisingStateMachine::GetInstance())
+            if (auto& avp_cruising_sm = parking::AvpCruisingStateMachine::GetInstance())
             {
-                avp_cruising_sm->Setup();
+                avp_cruising_sm->Init();
             }
             else
             {
@@ -41,7 +42,6 @@ public:
         {
             std::cout << "Avp enable flag : " << std::boolalpha << avp_enable_flag_ << std::endl;
         }
-
     }
 private:
     void LoadEnableParams(const std::string& path)

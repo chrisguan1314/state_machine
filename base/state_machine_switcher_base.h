@@ -1,39 +1,19 @@
 #pragma once
 
-#include <iostream>
-#include <chrono>
+#include "state_machine_inputer_base.h"
+#include "state_machine_outputer_base.h"
+
 #include <type_traits>
-#include <iomanip>
-#include <string>
-#include <thread>
-#include <memory>
 #include <atomic>
-#include <functional>
+#include <chrono>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
-class StateMachineBase;
+class StateMachineSwticherBase;
 
-// alias declaration by using of class template 
-template <typename T>
-using PrinterType = std::function<void(const StateMachineBase<T>&)>;
-
-// 在定义类模板时，不再需要指定默认模板参数
-// don't need to specify that default template argument when define the class template 
 template <typename T, typename>
-class StateMachineBase
+class StateMachineSwticherBase
 {
-public:
-    struct DefaultPrinter
-    {
-        virtual void operator()(const StateMachineBase& base) const
-        {
-            std::cout << "Crnt State : " << static_cast<uint32_t>(base.GetCrntState()) 
-                << ", Last State : " << static_cast<uint32_t>(base.GetLastState())
-                << ", Prvs State : " << static_cast<uint32_t>(base.GetPrvsState())
-                << ", Duration : " << base.GetDuration().count() << "(S)" << std::endl; 
-        }
-    };
 public:
     using system_time_point = std::chrono::system_clock::time_point;
     using steady_time_point = std::chrono::steady_clock::time_point;
@@ -49,40 +29,12 @@ private:
     system_time_point system_start_time_{std::chrono::system_clock::now()};
     steady_time_point steady_start_time_{std::chrono::steady_clock::now()};
     duration_of_second duration_{0}; 
-    std::unique_ptr<PrinterType<T>> func_{nullptr};
-    // 整体的这里的标志位都应该用原子变量，以避免可能带来的数据竞争
-
-    // 其实这个使能标志位应该是由调度器来加载相关参数的
-    // 根据加载的结果来决定是否生成该状态机对象
-    std::atomic_bool enable_flag_{false};
-    // 如果功能开关打开，则对该状态机进行初始化
-    // 初始化大概分为参数加载和通信协议适配
-    std::atomic_bool init_flag_{false};
-    // 当初始化完成之后，我们就可以创建线程开始工作了
-    std::atomic_bool setup_flag_{false};
-    // the frequency of print log
     uint32_t freq_{20};
-protected:
-    StateMachineBase(std::string && name, PrinterType<T> func = DefaultPrinter()) : func_(std::make_unique<PrinterType<T>>(func))
-    {
-        auto now = std::chrono::system_clock::to_time_t(system_start_time_);
-        std::cout << "Construct a " << name + "StateMachine" << " object, at " 
-                  << std::put_time(std::localtime(&now), "%F %T") << std::endl;
-    }
 public:
-    virtual void Run() = 0;
-    virtual void Init() = 0;
-    void PrintData() const
-    {
-        if (IsStateChanged())
-        {
-            (*func_)(*this);
-        }
-        else if (GetCount() % GetFrequency() * 5 == 0)
-        {
-            (*func_)(*this);
-        }
-    }
+    virtual void Init() = 0; 
+    virtual void PrintStateSwitchInfo() = 0;
+    virtual T CalcNextState(std::shared_ptr<StateMachineInputerBase> input) = 0;  
+public:
     void PrintInfo()
     {
         if (IsStateChanged())
@@ -94,8 +46,6 @@ public:
             PrintStateSwitchInfo();
         }
     }
-    virtual void PrintStateSwitchInfo() = 0;
-public:
     void UpdateState(T state) noexcept
     {
         if (crnt_state_.load() != state)
@@ -112,6 +62,11 @@ public:
         SetDuration(std::chrono::duration_cast<duration_of_second>(std::chrono::steady_clock::now() - steady_start_time_));
         PrintInfo();
     }
+    void UpdateState(std::shared_ptr<StateMachineInputerBase> input)
+    {
+        UpdateState(CalcNextState(input));
+    }
+public:
     const T GetCrntState() const noexcept
     {
         return crnt_state_.load();
@@ -145,39 +100,11 @@ public:
         return freq_;
     }
 public:
-    virtual T CalcNextState() const noexcept = 0;
-protected:
-    void SetEnableFlag(bool flag = false) noexcept
-    {
-        // std::atomic_store(&enable_flag_, flag);
-        enable_flag_.store(flag);
-    }
-    void SetInitFlag(bool flag = false) noexcept
-    {
-        init_flag_.store(flag);
-    }
-    void SetSetupFlag(bool flag = false) noexcept
-    {
-        setup_flag_.store(flag);
-    }
-    bool GetEnableFlag() const noexcept
-    {
-        return enable_flag_.load();
-    }
-    bool GetInitFlag() const noexcept
-    {
-        return init_flag_.load();
-    }
-    bool GetSetupFlag() const noexcept
-    {
-        return setup_flag_.load();
-    }
-public:
     bool IsStateChanged() const noexcept
     {
         return crnt_state_.load() != last_state_.load();
     }
-private:
+public:
     void SetCrntState(T state = static_cast<T>(0)) noexcept
     {
         crnt_state_.store(state);
