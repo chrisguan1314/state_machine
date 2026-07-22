@@ -70,7 +70,7 @@ public:
             {
                 param_sptr_->UpdateParam();
                 input_sptr_->UpdateEvent();
-                switch_sptr_->UpdateState(input_sptr_);
+                switch_sptr_->UpdateState(param_sptr_, input_sptr_);
                 output_sptr_->UpdateAction();
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(1000 / freq_));

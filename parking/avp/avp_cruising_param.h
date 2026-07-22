@@ -8,6 +8,8 @@ namespace parking
 {
 class AvpCruisingParam : public StateMachineParamBase
 {
+private:
+    
 public:
     AvpCruisingParam() : StateMachineParamBase()
     {

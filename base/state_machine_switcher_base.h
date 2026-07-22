@@ -1,5 +1,6 @@
 #pragma once
 
+#include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
 #include "state_machine_outputer_base.h"
 
@@ -33,7 +34,7 @@ private:
 public:
     virtual void Init() = 0; 
     virtual void PrintStateSwitchInfo() = 0;
-    virtual T CalcNextState(std::shared_ptr<StateMachineInputerBase> input) = 0;  
+    virtual T CalcNextState(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) = 0;  
 public:
     void PrintInfo()
     {
@@ -62,9 +63,9 @@ public:
         SetDuration(std::chrono::duration_cast<duration_of_second>(std::chrono::steady_clock::now() - steady_start_time_));
         PrintInfo();
     }
-    void UpdateState(std::shared_ptr<StateMachineInputerBase> input)
+    void UpdateState(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input)
     {
-        UpdateState(CalcNextState(input));
+        UpdateState(CalcNextState(param, input));
     }
 public:
     const T GetCrntState() const noexcept
