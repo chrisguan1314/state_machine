@@ -12,33 +12,31 @@
 #include <atomic>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
+template <typename T, typename ParamType, typename InputerType, typename SwitcherType, typename OutputerType, typename = typename std::enable_if_t<std::is_enum_v<T>>>
 class StateMachineEngineBase;
 
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
-template <typename T, typename>
+template <typename T, typename ParamType, typename InputerType, typename SwitcherType, typename OutputerType, typename>
 class StateMachineEngineBase
 {
 private:
-    // 如果功能开关打开，则对该状态机进行初始化
-    // 初始化大概分为参数加载和通信协议适配
     std::atomic_bool init_flag_{false};
     // the frequency of print log
     uint32_t freq_{20};
 
-    std::shared_ptr<StateMachineParamBase> param_sptr_{nullptr};
-    std::shared_ptr<StateMachineInputerBase> input_sptr_{nullptr};
-    std::shared_ptr<StateMachineSwticherBase<T>> switch_sptr_{nullptr};
-    std::shared_ptr<StateMachineOutputerBase> output_sptr_{nullptr};
+    std::shared_ptr<ParamType> param_sptr_{nullptr};
+    std::shared_ptr<InputerType> input_sptr_{nullptr};
+    std::shared_ptr<SwitcherType> switch_sptr_{nullptr};
+    std::shared_ptr<OutputerType> output_sptr_{nullptr};
     std::unique_ptr<std::thread> thrd_uptr_{nullptr};
     std::string name_;
 protected:
-    StateMachineEngineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputerBase> && input, std::shared_ptr<StateMachineSwticherBase<T>> && switches, std::shared_ptr<StateMachineOutputerBase> && output) :
+    StateMachineEngineBase(std::string name, std::shared_ptr<ParamType> && param, std::shared_ptr<InputerType> && input, std::shared_ptr<SwitcherType> && switcher, std::shared_ptr<OutputerType> && output) :
     name_(name),
     param_sptr_{param},
     input_sptr_{input},
-    switch_sptr_{switches}, 
+    switch_sptr_{switcher}, 
     output_sptr_{output}
     {
     
@@ -69,7 +67,7 @@ public:
             if (GetInitFlag())
             {
                 param_sptr_->UpdateParam();
-                input_sptr_->UpdateEvent();
+                input_sptr_->UpdateEvent(param_sptr_);
                 switch_sptr_->UpdateState(param_sptr_, input_sptr_);
                 output_sptr_->UpdateAction();
             }

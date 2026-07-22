@@ -3,7 +3,7 @@
 #include "avp_cruising_event.h"
 #include "../../base/state_machine_inputer_base.h"
 
-#include <memory>
+#include <iostream>
 
 namespace parking
 {
@@ -19,7 +19,7 @@ public:
     {
         std::cout << "Init AvpCruisingInputer Readers" << std::endl;
     };
-    virtual void UpdateEvent() override 
+    virtual void UpdateEvent(std::shared_ptr<StateMachineParamBase> param) override 
     {
         std::cout << "Update AvpCruisingInputer Event" << std::endl;
     };

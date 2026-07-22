@@ -3,24 +3,26 @@
 #include "../../base/state_machine_switcher_base.h"
 #include "../../base/state_switch_table.h"
 
+#include <any>
+
 namespace parking
 {
 const std::string AvpFormator(const std::string& str)
 {
     return Format(str, avp_cruising_str_map);
 }
-class AvpCruisingStateSwitcher : public StateMachineSwticherBase<AvpCruisingStateType>
+class AvpCruisingStateSwitcher : public StateMachineSwticherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
 {
 private:
-    StateSwitchTable<AvpCruisingStateType> table_;
+    StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer> table_;
 public:
-    AvpCruisingStateSwitcher() : StateMachineSwticherBase<AvpCruisingStateType>()
+    AvpCruisingStateSwitcher() : StateMachineSwticherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>()
     {
 
     }
 private:
     // *******************************SwitchFromIdle*******************************
-    bool SwitchFromIdleToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromIdleToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -32,7 +34,7 @@ private:
         }
     }
     // *******************************SwitchFromStandby*******************************
-    bool SwitchFromStandbyToIdle(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromStandbyToIdle(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -43,7 +45,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromStandbyToLocating(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromStandbyToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -55,7 +57,7 @@ private:
         }
     }
     // *******************************SwitchFromLocating*******************************
-    bool SwitchFromLocatingToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromLocatingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -66,7 +68,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromLocatingToLocated(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromLocatingToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -78,7 +80,7 @@ private:
         }
     }
     // *******************************SwitchFromLocated*******************************
-    bool SwitchFromLocatedToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromLocatedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -89,7 +91,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromLocatedToLocating(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromLocatedToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -100,7 +102,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromLocatedToPrepared(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromLocatedToPrepared(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -112,7 +114,7 @@ private:
         }
     }
     // *******************************SwitchFromPrepared*******************************
-    bool SwitchFromPreparedToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromPreparedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -123,7 +125,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromPreparedToLocating(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromPreparedToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -134,7 +136,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromPreparedToLocated(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromPreparedToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -145,7 +147,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromPreparedToCruising(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromPreparedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -157,7 +159,7 @@ private:
         }
     }
     // *******************************SwitchFromCruising*******************************
-    bool SwitchFromCruisingToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -168,7 +170,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromCruisingToParking(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -179,7 +181,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromCruisingToOverride(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToOverride(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -190,7 +192,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromCruisingToSuccess(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -201,7 +203,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromCruisingToFailed(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -212,7 +214,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromCruisingToSuspend(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -223,7 +225,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromCruisingToTerminate(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromCruisingToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -235,7 +237,7 @@ private:
         }
     }
     // *******************************SwitchFromParking*******************************
-    bool SwitchFromParkingToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromParkingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -246,7 +248,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromParkingToSuccess(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromParkingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -257,7 +259,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromParkingToFailed(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromParkingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -268,7 +270,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromParkingToSuspend(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromParkingToSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -279,7 +281,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromParkingToTerminate(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromParkingToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -291,7 +293,7 @@ private:
         }
     }
     // *******************************SwitchFromOverride*******************************
-    bool SwitchFromOverrideToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromOverrideToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -302,7 +304,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromOverrideToCruising(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromOverrideToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -314,7 +316,7 @@ private:
         }
     }
     // *******************************SwitchFromSuccess*******************************
-    bool SwitchFromSuccessToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromSuccessToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -326,7 +328,7 @@ private:
         }
     }
     // *******************************SwitchFromFailed*******************************
-    bool SwitchFromFailedToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromFailedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -338,7 +340,7 @@ private:
         }
     }
     // *******************************SwitchFromSuspend*******************************
-    bool SwitchFromSuspenedToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromSuspenedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -349,7 +351,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromSuspenedToCruising(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromSuspenedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -360,7 +362,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromSuspenedToParking(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromSuspenedToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20)
         {
@@ -371,7 +373,7 @@ private:
             return false;
         }
     }
-    bool SwitchFromSuspenedToTerminate(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromSuspenedToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > (20 * 30))
         {
@@ -383,7 +385,7 @@ private:
         }
     }
     // *******************************SwitchFromgTerminate*******************************
-    bool SwitchFromTerminateToStandby(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) const noexcept
+    bool SwitchFromTerminateToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > (20 * 3))
         {
@@ -397,7 +399,7 @@ private:
 public:
     void Init() override 
     {
-        using SwitchSubTable = StateSwitchTable<AvpCruisingStateType>::SwitchSubTable;
+        using SwitchSubTable = StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>::SwitchSubTable;
 
         SwitchSubTable idle_to_table = 
         {
@@ -494,7 +496,7 @@ public:
         table_.AddStateSwitch(AvpCruisingStateType::TERMINATE_11, terminate_to_table);
     }; 
 public:
-    AvpCruisingStateType CalcNextState(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) override
+    AvpCruisingStateType CalcNextState(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) override
     {
         auto crnt_state = GetCrntState();
         auto state_switch_list = table_.GetStateSwitchTable(crnt_state);
@@ -502,7 +504,7 @@ public:
         {
             auto to_state = iter->first;
             auto switch_function = iter->second;
-            if (switch_function(param, input))            
+            if (switch_function(param, input))
             {
                 crnt_state = to_state;
                 break;

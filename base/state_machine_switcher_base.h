@@ -7,12 +7,13 @@
 #include <type_traits>
 #include <atomic>
 #include <chrono>
+#include <any>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
+template <typename T, typename ParamType, typename InputerType, typename = typename std::enable_if_t<std::is_enum_v<T>>>
 class StateMachineSwticherBase;
 
-template <typename T, typename>
+template <typename T, typename ParamType, typename InputerType, typename>
 class StateMachineSwticherBase
 {
 public:
@@ -34,7 +35,7 @@ private:
 public:
     virtual void Init() = 0; 
     virtual void PrintStateSwitchInfo() = 0;
-    virtual T CalcNextState(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input) = 0;  
+    virtual T CalcNextState(std::shared_ptr<ParamType> param, std::shared_ptr<InputerType> input) = 0;  
 public:
     void PrintInfo()
     {
@@ -63,7 +64,7 @@ public:
         SetDuration(std::chrono::duration_cast<duration_of_second>(std::chrono::steady_clock::now() - steady_start_time_));
         PrintInfo();
     }
-    void UpdateState(std::shared_ptr<StateMachineParamBase> param, std::shared_ptr<StateMachineInputerBase> input)
+    void UpdateState(std::shared_ptr<ParamType> param, std::shared_ptr<InputerType> input)
     {
         UpdateState(CalcNextState(param, input));
     }

@@ -10,7 +10,7 @@
 
 namespace parking
 {
-class AvpCruisingStateMachineEngine : public StateMachineEngineBase<AvpCruisingStateType>
+class AvpCruisingStateMachineEngine : public StateMachineEngineBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher, AvpCruisingOutputer>
 {
 public:
     static std::unique_ptr<AvpCruisingStateMachineEngine>& GetInstance()
@@ -19,7 +19,7 @@ public:
         return avp_sm_uptr_;
     }
 private: 
-    AvpCruisingStateMachineEngine() : StateMachineEngineBase<AvpCruisingStateType>("AvpCruising", std::make_shared<AvpCruisingParam>(), std::make_shared<AvpCruisingInputer>(), std::make_shared<AvpCruisingStateSwitcher>(), std::make_shared<AvpCruisingOutputer>())
+    AvpCruisingStateMachineEngine() : StateMachineEngineBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher, AvpCruisingOutputer>("AvpCruising", std::make_shared<AvpCruisingParam>(), std::make_shared<AvpCruisingInputer>(), std::make_shared<AvpCruisingStateSwitcher>(), std::make_shared<AvpCruisingOutputer>())
     {
         
     }
