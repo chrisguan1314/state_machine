@@ -6,6 +6,10 @@
 
 #include <memory>
 
+template <typename Data, typename Param, typename Inputer, typename Switcher,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<Data, Param, Inputer>, Switcher>>>
 class StateMachineOutputerBase
 {
 private:
@@ -22,5 +26,5 @@ public:
     }
 public:
     virtual void InitWriters() = 0;
-    virtual void UpdateAction() = 0;
+    virtual void UpdateAction(std::shared_ptr<Param> param, std::shared_ptr<Inputer> input, std::shared_ptr<Switcher> switcher) = 0;
 };

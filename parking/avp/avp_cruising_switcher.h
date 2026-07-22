@@ -11,12 +11,12 @@ const std::string AvpFormator(const std::string& str)
 {
     return Format(str, avp_cruising_str_map);
 }
-class AvpCruisingStateSwitcher : public StateMachineSwticherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
+class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
 {
 private:
     StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer> table_;
 public:
-    AvpCruisingStateSwitcher() : StateMachineSwticherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>()
+    AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>()
     {
 
     }

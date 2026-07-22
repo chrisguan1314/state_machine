@@ -8,10 +8,10 @@
 
 namespace parking
 {
-class AvpCruisingOutputer : public StateMachineOutputerBase
+class AvpCruisingOutputer : public StateMachineOutputerBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher>
 {
 public:
-    AvpCruisingOutputer() : StateMachineOutputerBase(std::make_shared<AvpCruisingAction>())
+    AvpCruisingOutputer() : StateMachineOutputerBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher>(std::make_shared<AvpCruisingAction>())
     {
 
     }
@@ -20,7 +20,7 @@ public:
     {
         std::cout << "Init AvpCruisingOutputer Writers" << std::endl;
     };
-    void UpdateAction() override 
+    void UpdateAction(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher) override
     {
         std::cout << "Update AvpCruisingOutputer Action" << std::endl;
     };

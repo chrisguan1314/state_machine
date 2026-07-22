@@ -12,27 +12,36 @@
 #include <atomic>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename T, typename ParamType, typename InputerType, typename SwitcherType, typename OutputerType, typename = typename std::enable_if_t<std::is_enum_v<T>>>
+template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, typename = typename std::enable_if_t<std::is_enum_v<State>>>
 class StateMachineEngineBase;
 
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
-template <typename T, typename ParamType, typename InputerType, typename SwitcherType, typename OutputerType, typename>
+template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, typename>
 class StateMachineEngineBase
 {
+public:
+    using StateType = State;
+    using ParamType = Param;
+    using InputerType = Inputer;
+    using SwitcherType = Switcher;
+    using OutputerType = Outputer;
+    using ParamPtr = std::shared_ptr<ParamType>;
+    using InputerSPtr = std::shared_ptr<InputerType>;
+    using SwitcherSPtr = std::shared_ptr<SwitcherType>;
+    using OutputerSPtr = std::shared_ptr<OutputerType>;
 private:
     std::atomic_bool init_flag_{false};
     // the frequency of print log
     uint32_t freq_{20};
-
-    std::shared_ptr<ParamType> param_sptr_{nullptr};
-    std::shared_ptr<InputerType> input_sptr_{nullptr};
-    std::shared_ptr<SwitcherType> switch_sptr_{nullptr};
-    std::shared_ptr<OutputerType> output_sptr_{nullptr};
-    std::unique_ptr<std::thread> thrd_uptr_{nullptr};
     std::string name_;
+    ParamPtr param_sptr_{nullptr};
+    InputerSPtr input_sptr_{nullptr};
+    SwitcherSPtr switch_sptr_{nullptr};
+    OutputerSPtr output_sptr_{nullptr};
+    std::unique_ptr<std::thread> thrd_uptr_{nullptr};
 protected:
-    StateMachineEngineBase(std::string name, std::shared_ptr<ParamType> && param, std::shared_ptr<InputerType> && input, std::shared_ptr<SwitcherType> && switcher, std::shared_ptr<OutputerType> && output) :
+    StateMachineEngineBase(std::string name, ParamPtr && param, InputerSPtr && input, SwitcherSPtr && switcher, OutputerSPtr && output) :
     name_(name),
     param_sptr_{param},
     input_sptr_{input},
@@ -69,7 +78,7 @@ public:
                 param_sptr_->UpdateParam();
                 input_sptr_->UpdateEvent(param_sptr_);
                 switch_sptr_->UpdateState(param_sptr_, input_sptr_);
-                output_sptr_->UpdateAction();
+                output_sptr_->UpdateAction(param_sptr_, input_sptr_, switch_sptr_);
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(1000 / freq_));
         }
