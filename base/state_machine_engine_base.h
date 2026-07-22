@@ -13,12 +13,12 @@
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
-class StateMachineBase;
+class StateMachineEngineBase;
 
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
 template <typename T, typename>
-class StateMachineBase
+class StateMachineEngineBase
 {
 private:
     // 如果功能开关打开，则对该状态机进行初始化
@@ -34,7 +34,7 @@ private:
     std::unique_ptr<std::thread> thrd_uptr_{nullptr};
     std::string name_;
 protected:
-    StateMachineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputerBase> && input, std::shared_ptr<StateMachineSwticherBase<T>> && switches, std::shared_ptr<StateMachineOutputerBase> && output) :
+    StateMachineEngineBase(std::string name, std::shared_ptr<StateMachineParamBase> && param, std::shared_ptr<StateMachineInputerBase> && input, std::shared_ptr<StateMachineSwticherBase<T>> && switches, std::shared_ptr<StateMachineOutputerBase> && output) :
     name_(name),
     param_sptr_{param},
     input_sptr_{input},
@@ -43,7 +43,7 @@ protected:
     {
     
     }
-    ~StateMachineBase()
+    ~StateMachineEngineBase()
     {
         if (thrd_uptr_ && thrd_uptr_->joinable())
         {
@@ -58,7 +58,7 @@ public:
         switch_sptr_->Init();
         output_sptr_->Init();
 
-        thrd_uptr_ = std::make_unique<std::thread>(&StateMachineBase::Run, this);
+        thrd_uptr_ = std::make_unique<std::thread>(&StateMachineEngineBase::Run, this);
         
         SetInitFlag(true);
     }

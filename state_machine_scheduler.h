@@ -29,7 +29,7 @@ public:
     {
         if (avp_enable_flag_)
         {
-            if (auto& avp_cruising_sm = parking::AvpCruisingStateMachine::GetInstance())
+            if (auto& avp_cruising_sm = parking::AvpCruisingStateMachineEngine::GetInstance())
             {
                 avp_cruising_sm->Init();
             }
