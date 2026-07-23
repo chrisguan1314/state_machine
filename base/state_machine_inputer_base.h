@@ -1,9 +1,11 @@
 #pragma once
 
 #include "state_machine_event_base.h"
+#include "state_machine_param_base.h"
 
 #include <memory>
 
+template <typename Param, typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>>
 class StateMachineInputerBase
 {
 private:
@@ -20,5 +22,5 @@ public:
     }
 public:
     virtual void InitReaders() = 0;
-    virtual void UpdateEvent() = 0;
+    virtual void UpdateEvent(std::shared_ptr<Param> param) = 0;
 };

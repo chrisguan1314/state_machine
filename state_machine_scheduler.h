@@ -4,7 +4,7 @@
 #include <string>
 
 // #include "avp_cruising_state_machine.h"
-#include "avp\avp_cruising_state_machine.h"
+#include "parking/avp/avp_cruising_state_machine_engine.h"
 
 class StateMachineScheduler
 {
@@ -29,9 +29,10 @@ public:
     {
         if (avp_enable_flag_)
         {
-            if (auto& avp_cruising_sm = parking::AvpCruisingStateMachine::GetInstance())
+            if (auto& avp_cruising_sm = parking::AvpCruisingStateMachineEngine::GetInstance())
             {
                 avp_cruising_sm->Init();
+                avp_cruising_sm->Start();
             }
             else
             {
