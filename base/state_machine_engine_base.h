@@ -7,10 +7,8 @@
 
 #include <string>
 #include <thread>
-#include <memory>
 #include <atomic>
 #include <stdexcept>
-#include <type_traits>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, 
@@ -37,8 +35,8 @@ public:
     using SwitcherSPtr = std::shared_ptr<SwitcherType>;
     using OutputerSPtr = std::shared_ptr<OutputerType>;
 private:
-    uint32_t freq_{20};
     std::string name_;
+    uint32_t freq_{20};
     std::atomic_bool init_flag_{false};
     std::atomic_bool run_flag_{false};
     ParamPtr param_sptr_{std::make_shared<ParamType>()};
@@ -52,10 +50,6 @@ protected:
         if (name_.empty())
         {
             name_ = "StateMachineEngineBase";
-        }
-        if (freq_ == 0)
-        {
-            freq_ = 20;
         }
         if (!param_sptr_)
         {
