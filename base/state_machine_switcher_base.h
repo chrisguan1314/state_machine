@@ -6,13 +6,20 @@
 #include <type_traits>
 #include <atomic>
 #include <chrono>
-#include <any>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename State, typename Param, typename Inputer, typename = typename std::enable_if_t<std::is_enum_v<State>>>
+template <typename State, typename Param, typename Inputer, 
+typename = typename std::enable_if_t<std::is_enum_v<State>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
 class StateMachineSwitcherBase;
 
-template <typename State, typename Param, typename Inputer, typename>
+using namespace std::chrono;
+
+template <typename T1, typename T2>
+using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>::type;
+
+template <typename State, typename Param, typename Inputer, typename, typename, typename>
 class StateMachineSwitcherBase
 {
 public:
@@ -21,21 +28,17 @@ public:
     using InputerType = Inputer;
     using ParamSPtr = std::shared_ptr<ParamType>;
     using InputerSPtr = std::shared_ptr<InputerType>;
-public:
-    using system_time_point = std::chrono::system_clock::time_point;
-    using steady_time_point = std::chrono::steady_clock::time_point;
-    using duration_of_second = std::chrono::duration<uint32_t>;
-    template <typename _T1, typename _T2>
-    using is_decay_same = typename std::is_same<std::decay_t<_T1>, _T2>::type;
     using atomic_T = std::atomic<StateType>;
+public:
+    StateMachineSwitcherBase() noexcept = default;
 private:
     atomic_T crnt_state_{static_cast<StateType>(0)};
     atomic_T last_state_{static_cast<StateType>(0)};
     atomic_T prvs_state_{static_cast<StateType>(0)};
     uint32_t count_{0};
-    system_time_point system_start_time_{std::chrono::system_clock::now()};
-    steady_time_point steady_start_time_{std::chrono::steady_clock::now()};
-    duration_of_second duration_{0}; 
+    system_clock::time_point system_start_time_{system_clock::now()};
+    steady_clock::time_point steady_start_time_{steady_clock::now()};
+    seconds duration_{0}; 
     uint32_t freq_{20};
 public:
     virtual void Init() = 0; 
@@ -59,14 +62,14 @@ public:
         {
             SetPrvsState(crnt_state_.load());
             SetCount();
-            SetStartSystemTime(std::chrono::system_clock::now());
-            SetStartSteadyTime(std::chrono::steady_clock::now());
-            SetDuration(duration_of_second(0U));
+            SetStartSystemTime(system_clock::now());
+            SetStartSteadyTime(steady_clock::now());
+            SetDuration(seconds(0U));
         }
         SetLastState(crnt_state_.load());
         SetCrntState(state);
         SetCount(GetCount() + 1);
-        SetDuration(std::chrono::duration_cast<duration_of_second>(std::chrono::steady_clock::now() - steady_start_time_));
+        SetDuration(duration_cast<seconds>(steady_clock::now() - steady_start_time_));
         PrintInfo();
     }
     void UpdateState(ParamSPtr param, InputerSPtr input)
@@ -90,15 +93,15 @@ public:
     {
         return count_;
     }
-    const system_time_point& GetStartSystemTime() const noexcept
+    const system_clock::time_point& GetStartSystemTime() const noexcept
     {
         return system_start_time_;
     }
-    const steady_time_point& GetStartSteadyTime() const noexcept
+    const steady_clock::time_point& GetStartSteadyTime() const noexcept
     {
         return steady_start_time_;
     }
-    const duration_of_second& GetDuration() const noexcept
+    const seconds& GetDuration() const noexcept
     {
         return duration_;
     }
@@ -127,19 +130,18 @@ public:
     void SetCount(uint32_t count = 0) noexcept
     {
         count_ = count;
-        std::cout << "count : " << count_ << std::endl;
     }
-    template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, system_time_point>::value>>
+    template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, system_clock::time_point>::value>>
     void SetStartSystemTime(TimePoint && time_point) noexcept
     {
         system_start_time_ = std::forward<TimePoint>(time_point);
     }
-    template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, steady_time_point>::value>>
+    template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, steady_clock::time_point>::value>>
     void SetStartSteadyTime(TimePoint && time_point) noexcept
     {
         steady_start_time_ = std::forward<TimePoint>(time_point);
     }
-    template <typename Duration, typename = typename std::enable_if_t<is_decay_same<Duration, duration_of_second>::value>>
+    template <typename Duration, typename = typename std::enable_if_t<is_decay_same<Duration, seconds>::value>>
     void SetDuration(Duration && duration) noexcept
     {
         duration_ = std::forward<Duration>(duration);

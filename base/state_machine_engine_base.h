@@ -5,11 +5,12 @@
 #include "state_machine_switcher_base.h"
 #include "state_machine_outputer_base.h"
 
-#include <type_traits>
 #include <string>
 #include <thread>
 #include <memory>
 #include <atomic>
+#include <stdexcept>
+#include <type_traits>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, 
@@ -36,26 +37,43 @@ public:
     using SwitcherSPtr = std::shared_ptr<SwitcherType>;
     using OutputerSPtr = std::shared_ptr<OutputerType>;
 private:
-    std::atomic_bool init_flag_{false};
-    std::atomic_bool run_flag_{false};
-    // the frequency of print log
     uint32_t freq_{20};
     std::string name_;
-    ParamPtr param_sptr_{nullptr};
-    InputerSPtr input_sptr_{nullptr};
-    SwitcherSPtr switch_sptr_{nullptr};
-    OutputerSPtr output_sptr_{nullptr};
+    std::atomic_bool init_flag_{false};
+    std::atomic_bool run_flag_{false};
+    ParamPtr param_sptr_{std::make_shared<ParamType>()};
+    InputerSPtr input_sptr_{std::make_shared<InputerType>()};
+    SwitcherSPtr switch_sptr_{std::make_shared<SwitcherType>()};
+    OutputerSPtr output_sptr_{std::make_shared<OutputerType>()};
     std::unique_ptr<std::thread> thrd_uptr_{nullptr};
 protected:
-    StateMachineEngineBase(std::string name, ParamPtr && param, InputerSPtr && input, SwitcherSPtr && switcher, OutputerSPtr && output, uint32_t freq = 20) :
-    name_(name),
-    param_sptr_{param},
-    input_sptr_{input},
-    switch_sptr_{switcher}, 
-    output_sptr_{output},
-    freq_{freq}
+    StateMachineEngineBase(std::string name, uint32_t freq = 20) : name_(name), freq_{freq}
     {
-    
+        if (name_.empty())
+        {
+            name_ = "StateMachineEngineBase";
+        }
+        if (freq_ == 0)
+        {
+            freq_ = 20;
+        }
+        if (!param_sptr_)
+        {
+            throw std::invalid_argument("StateMachineEngineBase: param_sptr_ is nullptr");
+        }
+        if (!input_sptr_)
+        {
+            throw std::invalid_argument("StateMachineEngineBase: input_sptr_ is nullptr");
+        }
+        if (!switch_sptr_)
+        {
+            throw std::invalid_argument("StateMachineEngineBase: switch_sptr_ is nullptr");
+        }
+        if (!output_sptr_)
+        {
+            throw std::invalid_argument("StateMachineEngineBase: output_sptr_ is nullptr");
+        }
+        std::cout << "StateMachineEngineBase: " << name_ << " is Created, Frequency : " << freq_ << std::endl;
     }
     ~StateMachineEngineBase()
     {
@@ -97,7 +115,6 @@ public:
     {
         while (GetInitFlag())
         {
-            using namespace std::chrono;
             auto start_time = steady_clock::now();
             if (GetRunFlag())
             {

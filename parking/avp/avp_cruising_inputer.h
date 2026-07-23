@@ -19,9 +19,6 @@ public:
     {
         std::cout << "Init AvpCruisingInputer Readers" << std::endl;
     };
-    virtual void UpdateEvent(std::shared_ptr<AvpCruisingParam> param) override 
-    {
-        std::cout << "Update AvpCruisingInputer Event" << std::endl;
-    };
+    void UpdateEvent(std::shared_ptr<AvpCruisingParam> param) override {};
 };
 };

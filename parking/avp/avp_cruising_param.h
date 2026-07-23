@@ -20,9 +20,6 @@ public:
     {
         std::cout << "Init AvpCruisingParam" << std::endl;
     }; 
-    virtual void UpdateParam() override 
-    {
-        std::cout << "Update AvpCruisingParam" << std::endl;
-    };
+    virtual void UpdateParam() override {};
 };
 };
