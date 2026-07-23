@@ -1,24 +1,26 @@
 #pragma once
 
-#include <map>
-#include <memory>
-#include <type_traits>
-#include <algorithm>
-#include <functional>
-#include <any>
-
 #include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
 
-template <typename T, typename ParamType, typename InputerType, typename Container = std::vector<T>, typename = typename std::enable_if_t<std::is_enum_v<T>>>
+#include <map>
+#include <memory>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <type_traits>
+
+template <typename State, typename Param, typename Inputer, typename Container = std::vector<State>, typename = typename std::enable_if_t<std::is_enum_v<State>>>
 class StateSwitchTable
 {
 public:
-    using StateType = T;
-    using ToStateList = Container;
+    using StateType = State;
+    using ParamType = Param;
+    using InputerType = Inputer;
+    using StateList = Container;
     using SwitchFunction = std::function<bool(std::shared_ptr<ParamType>, std::shared_ptr<InputerType>)>;
-    using SwitchSubTable = std::map<T, SwitchFunction>;
-    using SwitchTable = std::map<T, SwitchSubTable>;
+    using SwitchSubTable = std::map<State, SwitchFunction>;
+    using SwitchTable = std::map<State, SwitchSubTable>;
 private:
     SwitchTable state_switch_table_;
 public:
@@ -48,20 +50,35 @@ public:
             state_switch_table_[from_state] = table;
         }
     }
-    const ToStateList GetToStateList(StateType state) const noexcept
+    const StateList GetToStateList(StateType state) const noexcept
     {
-        ToStateList list;
-        auto sub_table = state_switch_table_.at(state);
-        std::for_each(std::begin(sub_table), std::end(sub_table), [&list](auto item){
-            list.push_back(item.first);
-        });
+        StateList list;
+        if (state_switch_table_.find(state) != std::end(state_switch_table_))
+        {
+            auto & sub_table = state_switch_table_.at(state);
+            std::for_each(std::begin(sub_table), std::end(sub_table), [&list](auto item){
+                list.push_back(item.first); 
+            });
+        }
         return list;
     }
-    const SwitchSubTable& GetStateSwitchTable(StateType state) const noexcept
+    const StateList GetFromStateList(StateType state) const noexcept
+    {
+        StateList list;
+        for (const auto& [from_state, sub_table] : state_switch_table_)
+        {
+            if (sub_table.find(state) != std::end(sub_table))
+            {
+                list.push_back(from_state);
+            }
+        }
+        return list;
+    }
+    const SwitchSubTable& GetSubStateSwitchTable(StateType state) const noexcept
     {
         return state_switch_table_.at(state);
     }
-    const SwitchTable& GetSwitchTable() const noexcept
+    const SwitchTable& GetStateSwitchTable() const noexcept
     {
         return state_switch_table_;
     }

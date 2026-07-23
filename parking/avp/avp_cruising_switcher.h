@@ -499,7 +499,7 @@ public:
     AvpCruisingStateType CalcNextState(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) override
     {
         auto crnt_state = GetCrntState();
-        auto state_switch_list = table_.GetStateSwitchTable(crnt_state);
+        auto state_switch_list = table_.GetSubStateSwitchTable(crnt_state);
         for (auto iter = std::begin(state_switch_list); iter != std::end(state_switch_list); ++iter)
         {
             auto to_state = iter->first;
