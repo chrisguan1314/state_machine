@@ -47,12 +47,13 @@ private:
     OutputerSPtr output_sptr_{nullptr};
     std::unique_ptr<std::thread> thrd_uptr_{nullptr};
 protected:
-    StateMachineEngineBase(std::string name, ParamPtr && param, InputerSPtr && input, SwitcherSPtr && switcher, OutputerSPtr && output) :
+    StateMachineEngineBase(std::string name, ParamPtr && param, InputerSPtr && input, SwitcherSPtr && switcher, OutputerSPtr && output, uint32_t freq = 20) :
     name_(name),
     param_sptr_{param},
     input_sptr_{input},
     switch_sptr_{switcher}, 
-    output_sptr_{output}
+    output_sptr_{output},
+    freq_{freq}
     {
     
     }
@@ -62,6 +63,7 @@ protected:
         {
             thrd_uptr_->join();
         }
+        Stop();
     }
 public:
     void Init() 
@@ -95,14 +97,24 @@ public:
     {
         while (GetInitFlag())
         {
-            if (GetInitFlag())
+            using namespace std::chrono;
+            auto start_time = steady_clock::now();
+            if (GetRunFlag())
             {
                 param_sptr_->UpdateParam();
                 input_sptr_->UpdateEvent(param_sptr_);
                 switch_sptr_->UpdateState(param_sptr_, input_sptr_);
                 output_sptr_->UpdateAction(param_sptr_, input_sptr_, switch_sptr_);
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000 / freq_));
+            auto elapsed_time = duration_cast<milliseconds>(steady_clock::now() - start_time).count();
+            if (elapsed_time < (1000 / freq_))  
+            {
+                std::this_thread::sleep_for(milliseconds((1000 / freq_) - elapsed_time));
+            }
+            else
+            {
+                std::cout << "StateMachineEngineBase::Run() is running slower than expected, elapsed time: " << elapsed_time << " ms" << std::endl;
+            }
         }
     }
 private:
@@ -121,5 +133,13 @@ private:
     void SetRunFlag(bool flag = false) noexcept
     {
         run_flag_.store(flag);
+    }
+    uint32_t GetFrequency() const noexcept
+    {
+        return freq_;
+    }
+    void  SetFrequency(uint32_t freq = 20) noexcept
+    {
+        freq_ = freq;
     }
 };
