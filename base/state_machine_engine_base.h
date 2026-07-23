@@ -12,12 +12,17 @@
 #include <atomic>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, typename = typename std::enable_if_t<std::is_enum_v<State>>>
+template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, 
+typename = typename std::enable_if_t<std::is_enum_v<State>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
 class StateMachineEngineBase;
 
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
-template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, typename>
+template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, typename, typename, typename, typename, typename>
 class StateMachineEngineBase
 {
 public:
@@ -32,6 +37,7 @@ public:
     using OutputerSPtr = std::shared_ptr<OutputerType>;
 private:
     std::atomic_bool init_flag_{false};
+    std::atomic_bool run_flag_{false};
     // the frequency of print log
     uint32_t freq_{20};
     std::string name_;
@@ -65,13 +71,29 @@ public:
         switch_sptr_->Init();
         output_sptr_->Init();
 
-        thrd_uptr_ = std::make_unique<std::thread>(&StateMachineEngineBase::Run, this);
-        
         SetInitFlag(true);
+
+        thrd_uptr_ = std::make_unique<std::thread>(&StateMachineEngineBase::Run, this);
+    }
+    void Start()
+    {
+        if (GetInitFlag())
+        {
+            SetRunFlag(true);
+        }
+        else
+        {
+            std::cout << "StateMachineEngineBase::Start() failed, please call Init() first!" << std::endl;
+        }
+    }
+    void Stop()
+    {
+        SetRunFlag(false);
+        SetInitFlag(false);
     }
     void Run()
     {
-        while (true)
+        while (GetInitFlag())
         {
             if (GetInitFlag())
             {
@@ -83,13 +105,21 @@ public:
             std::this_thread::sleep_for(std::chrono::milliseconds(1000 / freq_));
         }
     }
-protected:
+private:
+    bool GetInitFlag() const noexcept
+    {
+        return init_flag_.load();
+    }
     void SetInitFlag(bool flag = false) noexcept
     {
         init_flag_.store(flag);
     }
-    bool GetInitFlag() const noexcept
+    bool GetRunFlag() const noexcept
     {
-        return init_flag_.load();
+        return run_flag_.load();
+    }
+    void SetRunFlag(bool flag = false) noexcept
+    {
+        run_flag_.store(flag);
     }
 };
