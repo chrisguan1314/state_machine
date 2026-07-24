@@ -490,10 +490,10 @@ public:
         table_.AddStateSwitch(AvpCruisingStateType::CRUISING_5, cruising_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::PARKING_6, parking_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, override_to_table);
-        table_.AddStateSwitch(AvpCruisingStateType::SUCCESS_10, success_to_table); 
-        table_.AddStateSwitch(AvpCruisingStateType::FAILED_11, failed_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::SUSPEND_8, suspend_to_table);
         table_.AddStateSwitch(AvpCruisingStateType::TERMINATE_9, terminate_to_table);
+        table_.AddStateSwitch(AvpCruisingStateType::SUCCESS_10, success_to_table); 
+        table_.AddStateSwitch(AvpCruisingStateType::FAILED_11, failed_to_table);
         std::cout << "Init AvpCruisingStateSwitcher StateSwitchTable" << std::endl;
     }; 
 public:
