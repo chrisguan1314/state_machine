@@ -1,5 +1,6 @@
 #pragma once
 
+#include "concept_base.h"
 #include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
 
@@ -7,19 +8,20 @@
 #include <atomic>
 #include <chrono>
 
-// 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename State, typename Param, typename Inputer, 
-typename = typename std::enable_if_t<std::is_enum_v<State>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
-class StateMachineSwitcherBase;
-
 using namespace std::chrono;
 
 template <typename T1, typename T2>
 using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>::type;
 
-template <typename State, typename Param, typename Inputer, typename, typename, typename>
+
+#if __cplusplus >= 202002L
+template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer>
+#else
+template <typename State, typename Param, typename Inputer,
+          typename = typename std::enable_if_t<std::is_enum_v<State>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
+#endif
 class StateMachineSwitcherBase
 {
 public:
@@ -147,3 +149,12 @@ public:
         duration_ = std::forward<Duration>(duration);
     }
 };
+
+#if __cplusplus >= 202002L
+template <typename T, typename State, typename Param, typename Inputer>
+concept is_switcher_base = 
+    is_enum<State> &&
+    is_param_base<Param> && 
+    is_inputer_base<Inputer, Param> && 
+    std::is_base_of_v<StateMachineSwitcherBase<typename T::StateType, Param, Inputer>, T>;  
+#endif

@@ -1,16 +1,25 @@
 #pragma once
 
+#include "concept_base.h"
 #include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
 
 #include <map>
 #include <memory>
 #include <vector>
+#include <concepts>
 #include <algorithm>
 #include <functional>
 #include <type_traits>
 
-template <typename State, typename Param, typename Inputer, typename Container = std::vector<State>, typename = typename std::enable_if_t<std::is_enum_v<State>>>
+#if __cplusplus >= 202002L
+template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer, typename Container = std::vector<State>>
+#else
+template <typename State, typename Param, typename Inputer, typename Container = std::vector<State>,
+typename = typename std::enable_if_t<std::is_enum_v<State>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
+#endif
 class StateSwitchTable
 {
 public:

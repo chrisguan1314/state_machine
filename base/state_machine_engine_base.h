@@ -10,18 +10,19 @@
 #include <atomic>
 #include <stdexcept>
 
-// 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, 
-typename = typename std::enable_if_t<std::is_enum_v<State>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
-class StateMachineEngineBase;
-
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
-template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, typename, typename, typename, typename, typename>
+#if __cplusplus >= 202002L
+template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer, is_switcher_base<State, Param, Inputer> Switcher, is_outputer_base<State, Param, Inputer, Switcher> Outputer>
+#else
+template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer,
+          typename = typename std::enable_if_t<std::is_enum_v<State>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
+#endif
+
 class StateMachineEngineBase
 {
 public:
