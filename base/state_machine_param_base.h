@@ -9,5 +9,5 @@ public:
 
 #if __cplusplus >= 202002L
 template <typename T>
-concept is_param_base = std::is_base_of_v<StateMachineParamBase, T>;
+concept is_param_base = std::derived_from<T, StateMachineParamBase>;
 #endif

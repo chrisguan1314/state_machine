@@ -68,5 +68,5 @@ concept is_outputer_base =
     is_param_base<Param> &&     
     is_inputer_base<Inputer, Param> && 
     is_switcher_base<Switcher, State, Param, Inputer> &&
-    std::is_base_of_v<StateMachineOutputerBase<typename T::StateType, Param, Inputer, Switcher>, T>;
+    std::derived_from<T, StateMachineOutputerBase<typename T::StateType, Param, Inputer, Switcher>>;
 #endif

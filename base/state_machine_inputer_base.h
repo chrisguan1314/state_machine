@@ -36,5 +36,5 @@ public:
 
 #if __cplusplus >= 202002L
 template <typename T, typename Param>
-concept is_inputer_base = is_param_base<Param> && std::is_base_of_v<StateMachineInputerBase<Param>, T>;
+concept is_inputer_base = is_param_base<Param> && std::derived_from<T, StateMachineInputerBase<Param>>;
 #endif

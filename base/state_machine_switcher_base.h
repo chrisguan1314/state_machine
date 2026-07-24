@@ -156,5 +156,5 @@ concept is_switcher_base =
     is_enum<State> &&
     is_param_base<Param> && 
     is_inputer_base<Inputer, Param> && 
-    std::is_base_of_v<StateMachineSwitcherBase<typename T::StateType, Param, Inputer>, T>;  
+    std::derived_from<T, StateMachineSwitcherBase<typename T::StateType, Param, Inputer>>;
 #endif
