@@ -37,11 +37,11 @@ public:
 private:
     void ActionIdle(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : IDLE" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : IDLE" << std::endl;
     };
     void ActionStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : STANDBY" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : STANDBY" << std::endl;
     };
     void ActionLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {

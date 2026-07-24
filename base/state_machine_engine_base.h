@@ -22,7 +22,6 @@ template <typename State, typename Param, typename Inputer, typename Switcher, t
           typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
           typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
 #endif
-
 class StateMachineEngineBase
 {
 public:
