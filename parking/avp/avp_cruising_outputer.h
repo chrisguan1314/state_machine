@@ -29,10 +29,10 @@ public:
         AddAction(AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingOutputer::ActionCruising, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         AddAction(AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingOutputer::ActionParking, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         AddAction(AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingOutputer::ActionOverride, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingOutputer::ActionSuccess, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingOutputer::ActionFailed, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingOutputer::ActionSuspend, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingOutputer::ActionTerminate, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        AddAction(AvpCruisingStateType::SUCCESS_10, std::bind(&AvpCruisingOutputer::ActionSuccess, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        AddAction(AvpCruisingStateType::FAILED_11, std::bind(&AvpCruisingOutputer::ActionFailed, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        AddAction(AvpCruisingStateType::SUSPEND_8, std::bind(&AvpCruisingOutputer::ActionSuspend, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        AddAction(AvpCruisingStateType::TERMINATE_9, std::bind(&AvpCruisingOutputer::ActionTerminate, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     };
 private:
     void ActionIdle(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)

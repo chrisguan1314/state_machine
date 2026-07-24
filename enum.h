@@ -13,10 +13,10 @@ enum class AvpCruisingStateType : uint8_t
     CRUISING_5,
     PARKING_6,
     OVERRIDE_7,
-    SUCCESS_8,
-    FAILED_9,
-    SUSPEND_10,
-    TERMINATE_11
+    SUSPEND_8,
+    TERMINATE_9,
+    SUCCESS_10,
+    FAILED_11,
 };
 
 enum class AvpCruisingRecoverableInterruption : uint8_t

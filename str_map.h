@@ -20,8 +20,8 @@ str_unordered_map<AvpCruisingStateType> avp_cruising_str_map =
     {AvpCruisingStateType::CRUISING_5, Convert("CRUISING_5")},
     {AvpCruisingStateType::PARKING_6, Convert("PARKING_6")},
     {AvpCruisingStateType::OVERRIDE_7, Convert("OVERRIDE_7")},
-    {AvpCruisingStateType::SUCCESS_8, Convert("SUCCESS_8")},
-    {AvpCruisingStateType::FAILED_9, Convert("FAILED_9")},
-    {AvpCruisingStateType::SUSPEND_10, Convert("SUSPEND_10")},
-    {AvpCruisingStateType::TERMINATE_11, Convert("TERMINATE_11")},
+    {AvpCruisingStateType::SUSPEND_8, Convert("SUSPEND_8")},
+    {AvpCruisingStateType::TERMINATE_9, Convert("TERMINATE_9")},
+    {AvpCruisingStateType::SUCCESS_10, Convert("SUCCESS_10")},
+    {AvpCruisingStateType::FAILED_11, Convert("FAILED_11")},
 };
