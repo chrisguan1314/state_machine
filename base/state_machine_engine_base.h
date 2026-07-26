@@ -45,7 +45,8 @@ private:
     OutputerSPtr output_sptr_{std::make_shared<OutputerType>()};
     std::unique_ptr<std::thread> thrd_uptr_{nullptr};
 protected:
-    StateMachineEngineBase(std::string name, uint32_t freq = 20) : name_(name), freq_{freq}
+    template <is_convertible_to_string T>
+    StateMachineEngineBase(T && name, uint32_t freq = 20) : name_(std::forward<T>(name)), freq_{freq}
     {
         if (name_.empty())
         {

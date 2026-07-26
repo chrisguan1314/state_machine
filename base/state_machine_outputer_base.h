@@ -28,12 +28,22 @@ public:
     using SwitcherSPtr = std::shared_ptr<SwitcherType>;
     using ActionFunction = std::function<void(ParamSPtr, InputerSPtr, SwitcherSPtr)>;
     using ActionTable = std::map<State, ActionFunction>;
+    using ActionSPtr = std::shared_ptr<StateMachineActionBase>;
 private:
     std::shared_ptr<StateMachineActionBase> action_sptr_{nullptr};
     ActionTable action_table_{ActionTable()};
 public:
-    StateMachineOutputerBase(std::shared_ptr<StateMachineActionBase> action = std::make_shared<StateMachineActionBase>()) : action_sptr_(action)
+#if __cplusplus >= 202002L
+    template <is_action_sptr_base ActionSPtr>
+#else
+    template <typename ActionSPtr, typename = typename std::enable_if_t<std::is_base_of_v<StateMachineActionBase, typename ActionSPtr::element_type>>>
+#endif
+    StateMachineOutputerBase(ActionSPtr && action) : action_sptr_(std::forward<ActionSPtr>(action))
     {
+        if (!action_sptr_)
+        {
+            throw std::invalid_argument("StateMachineOutputerBase: action_sptr_ is nullptr");
+        }
     }
 public:
     void Init()
