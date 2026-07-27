@@ -513,7 +513,7 @@ public:
         }
         return crnt_state;
     };
-    void PrintStateSwitchInfo() override
+    void PrintStateSwitchInfo() const override
     {
         std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
             << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
