@@ -8,10 +8,6 @@
 
 namespace parking
 {
-// const std::string AvpFormator(const std::string& str)
-// {
-//     return Format(str, avp_cruising_str_map);
-// }
 class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
 {
 private:
@@ -518,10 +514,6 @@ public:
     void PrintStateSwitchInfo() override
     {
         printer_.PrintStateSwitchInfo(GetCrntState(), GetLastState(), GetPrvsState(), GetCount() / 20);
-        // std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
-        //     << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
-        //     << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
-        //     << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
     }
 };
 };
