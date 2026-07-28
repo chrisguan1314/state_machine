@@ -45,43 +45,43 @@ private:
     };
     void ActionLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : LOCATING" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : LOCATING" << std::endl;
     };
     void ActionLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : LOCATED" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : LOCATED" << std::endl;
     };
     void ActionPrepared(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : PREPARED" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : PREPARED" << std::endl;
     };
     void ActionCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : CRUISING" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : CRUISING" << std::endl;
     };
     void ActionParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : PARKING" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : PARKING" << std::endl;
     };
     void ActionOverride(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : OVERRIDE" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : OVERRIDE" << std::endl;
     };
     void ActionSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : SUCCESS" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : SUCCESS" << std::endl;
     };
     void ActionFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : FAILED" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : FAILED" << std::endl;
     };
     void ActionSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : SUSPEND" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : SUSPEND" << std::endl;
     };
     void ActionTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
     {
-        std::cout << "AvpCruisingOutputer Action : TERMINATE" << std::endl;
+        // std::cout << "AvpCruisingOutputer Action : TERMINATE" << std::endl;
     };
 };
 };

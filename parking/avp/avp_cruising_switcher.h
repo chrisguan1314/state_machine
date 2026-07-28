@@ -4,8 +4,6 @@
 #include "../../base/state_switch_table.h"
 #include "../../base/state_machine_switcher_base.h"
 
-#include <any>
-
 namespace parking
 {
 class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
@@ -36,7 +34,7 @@ private:
     {
         if (GetCount() > (20 * 5))
         {
-            return true;
+            return false;
         }
         else
         {
@@ -59,7 +57,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -68,7 +66,7 @@ private:
     }
     bool SwitchFromLocatingToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 5)
         {
             return true;
         }
@@ -82,7 +80,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -93,7 +91,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -102,7 +100,7 @@ private:
     }
     bool SwitchFromLocatedToPrepared(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 5)
         {
             return true;
         }
@@ -116,7 +114,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -127,7 +125,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -138,7 +136,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -147,7 +145,7 @@ private:
     }
     bool SwitchFromPreparedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 5)
         {
             return true;
         }
@@ -161,7 +159,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -170,7 +168,7 @@ private:
     }
     bool SwitchFromCruisingToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 5)
         {
             return true;
         }
@@ -183,7 +181,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -194,7 +192,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -205,7 +203,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -216,7 +214,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -227,7 +225,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -239,7 +237,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -248,7 +246,7 @@ private:
     }
     bool SwitchFromParkingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 5)
         {
             return true;
         }
@@ -261,7 +259,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -272,7 +270,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -283,7 +281,7 @@ private:
     {
         if (GetCount() > 20)
         {
-            return true;
+            return false;
         }
         else
         {
@@ -316,7 +314,7 @@ private:
     // *******************************SwitchFromSuccess*******************************
     bool SwitchFromSuccessToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 3)
         {
             return true;
         }
@@ -401,7 +399,7 @@ public:
 
         SwitchSubTable idle_to_table = 
         {
-            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
+            {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromIdleToStandby, this, std::placeholders::_1, std::placeholders::_2)},
         };
          
         SwitchSubTable standby_to_table = 
