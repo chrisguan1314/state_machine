@@ -1,14 +1,20 @@
 #pragma once
 
+#include "base/concept_base.h"
+
 #include <unordered_map>
 #include <type_traits>
 #include <string>
 
+#if __cplusplus >= 202002L
+template <is_enum T>
+#else
 template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
-using str_unordered_map = std::unordered_map<T, std::string>;
+#endif
+using StateStrMap = std::unordered_map<T, std::string>;
 
 template<typename T>
-const std::string Format(const std::string& str, const str_unordered_map<T>& str_map)
+const std::string Format(const std::string& str, const StateStrMap<T>& str_map)
 {
     uint32_t max_size = 0;
     for (auto it = std::begin(str_map); it != std::end(str_map); it++)

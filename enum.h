@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <string>
+#include <unordered_map>
 
 // 作用域内枚举
 enum class AvpCruisingStateType : uint8_t
