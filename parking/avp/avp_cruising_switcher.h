@@ -1,19 +1,21 @@
 #pragma once
 
-#include "../../base/state_machine_switcher_base.h"
+#include "avp_cruising_printer.h"
 #include "../../base/state_switch_table.h"
+#include "../../base/state_machine_switcher_base.h"
 
 #include <any>
 
 namespace parking
 {
-const std::string AvpFormator(const std::string& str)
-{
-    return Format(str, avp_cruising_str_map);
-}
+// const std::string AvpFormator(const std::string& str)
+// {
+//     return Format(str, avp_cruising_str_map);
+// }
 class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
 {
 private:
+    AvpCruisingPrinter printer_;
     StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer> table_;
 public:
     AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>()
@@ -513,12 +515,13 @@ public:
         }
         return crnt_state;
     };
-    void PrintStateSwitchInfo() const override
+    void PrintStateSwitchInfo() override
     {
-        std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
-            << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
-            << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
-            << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
+        printer_.PrintStateSwitchInfo(GetCrntState(), GetLastState(), GetPrvsState(), GetCount() / 20);
+        // std::cout << "[Avp] Crnt State : " << AvpFormator(avp_cruising_str_map.at(GetCrntState())) 
+        //     << ", Last State : " << AvpFormator(avp_cruising_str_map.at(GetLastState()))
+        //     << ", Prvs State : " << AvpFormator(avp_cruising_str_map.at(GetPrvsState())) 
+        //     << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
     }
 };
 };

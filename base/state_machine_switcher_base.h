@@ -44,10 +44,10 @@ private:
     uint32_t freq_{20};
 public:
     virtual void Init() = 0; 
-    virtual void PrintStateSwitchInfo() const = 0;
+    virtual void PrintStateSwitchInfo() = 0;
     virtual StateType CalcNextState(ParamSPtr param, InputerSPtr input) = 0;
 public:
-    void PrintInfo() const
+    void PrintInfo()
     {
         if (IsStateChanged())
         {
