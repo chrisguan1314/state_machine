@@ -7,10 +7,10 @@
 
 namespace parking
 {
-class AvpCruisingInputer : public StateMachineInputerBase<AvpCruisingParam>
+class AvpCruisingInputer : public StateMachineInputerBase<AvpCruisingParam, AvpCruisingEvent>
 {
 public:
-    AvpCruisingInputer() : StateMachineInputerBase<AvpCruisingParam>(std::make_shared<AvpCruisingEvent>())
+    AvpCruisingInputer() : StateMachineInputerBase<AvpCruisingParam, AvpCruisingEvent>(std::make_shared<AvpCruisingEvent>())
     {
 
     }

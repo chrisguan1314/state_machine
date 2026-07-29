@@ -6,13 +6,13 @@
 
 namespace parking
 {
-class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
+class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingEvent, AvpCruisingInputer>
 {
 private:
     AvpCruisingPrinter printer_;
-    StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer> table_;
+    StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingEvent, AvpCruisingInputer> table_;
 public:
-    AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>()
+    AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingEvent, AvpCruisingInputer>()
     {
 
     }
@@ -55,7 +55,7 @@ private:
     // *******************************SwitchFromLocating*******************************
     bool SwitchFromLocatingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return false;
         }
@@ -66,7 +66,7 @@ private:
     }
     bool SwitchFromLocatingToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 * 5)
+        if (GetCount() > 20 * 5 || input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::LOCATED_1)
         {
             return true;
         }
@@ -78,7 +78,7 @@ private:
     // *******************************SwitchFromLocated*******************************
     bool SwitchFromLocatedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return false;
         }
@@ -89,7 +89,7 @@ private:
     }
     bool SwitchFromLocatedToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::UNLOCATED_2)
         {
             return false;
         }
@@ -100,7 +100,7 @@ private:
     }
     bool SwitchFromLocatedToPrepared(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 * 5)
+        if (GetCount() > 20 * 5 || input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::PREPARED_3)
         {
             return true;
         }
@@ -112,7 +112,7 @@ private:
     // *******************************SwitchFromPrepared*******************************
     bool SwitchFromPreparedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return false;
         }
@@ -123,7 +123,7 @@ private:
     }
     bool SwitchFromPreparedToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::UNLOCATED_2)
         {
             return false;
         }
@@ -134,7 +134,7 @@ private:
     }
     bool SwitchFromPreparedToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::UNPREPARED_4)
         {
             return false;
         }
@@ -145,7 +145,7 @@ private:
     }
     bool SwitchFromPreparedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 * 5)
+        if (GetCount() > 20 * 5 || input->GetEvent()->GetOperationType() == StateMachineOperationType::ACTIVE_2)
         {
             return true;
         }
@@ -157,7 +157,7 @@ private:
     // *******************************SwitchFromCruising*******************************
     bool SwitchFromCruisingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return false;
         }
@@ -168,7 +168,7 @@ private:
     }
     bool SwitchFromCruisingToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 * 5)
+        if (GetCount() > 20 * 5 || input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::SWITCH_TO_PARKING_5)
         {
             return true;
         }
@@ -179,7 +179,7 @@ private:
     }
     bool SwitchFromCruisingToOverride(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOverrideType() > StateMachineOverrideType::NONE_0)
         {
             return false;
         }
@@ -190,9 +190,9 @@ private:
     }
     bool SwitchFromCruisingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::SUCCESS_6)
         {
-            return false;
+            return true;
         }
         else
         {
@@ -201,9 +201,9 @@ private:
     }
     bool SwitchFromCruisingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::FAILURE_7)
         {
-            return false;
+            return true;
         }
         else
         {
@@ -212,20 +212,21 @@ private:
     }
     bool SwitchFromCruisingToSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetRecoverableType() > StateMachineRecoverableType::NONE_0)
         {
-            return false;
+            return true;
         }
         else
         {
             return false;
         }
+        // Removed redundant and unreachable code
     }
     bool SwitchFromCruisingToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetUnrecoverableType() > StateMachineUnrecoverableType::NONE_0)
         {
-            return false;
+            return true;
         }
         else
         {
@@ -235,7 +236,7 @@ private:
     // *******************************SwitchFromParking*******************************
     bool SwitchFromParkingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return false;
         }
@@ -246,7 +247,7 @@ private:
     }
     bool SwitchFromParkingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 * 5)
+        if (GetCount() > 20 * 5 || input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::SUCCESS_6)
         {
             return true;
         }
@@ -257,9 +258,9 @@ private:
     }
     bool SwitchFromParkingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 || input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::FAILURE_7)
         {
-            return false;
+            return true;
         }
         else
         {
@@ -268,9 +269,9 @@ private:
     }
     bool SwitchFromParkingToSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetRecoverableType() > StateMachineRecoverableType::NONE_0)
         {
-            return false;
+            return true;
         }
         else
         {
@@ -279,9 +280,9 @@ private:
     }
     bool SwitchFromParkingToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetUnrecoverableType() > StateMachineUnrecoverableType::NONE_0)
         {
-            return false;
+            return true;
         }
         else
         {
@@ -291,7 +292,7 @@ private:
     // *******************************SwitchFromOverride*******************************
     bool SwitchFromOverrideToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return true;
         }
@@ -302,7 +303,7 @@ private:
     }
     bool SwitchFromOverrideToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOverrideType() == StateMachineOverrideType::NONE_0)
         {
             return true;
         }
@@ -314,7 +315,9 @@ private:
     // *******************************SwitchFromSuccess*******************************
     bool SwitchFromSuccessToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 * 3)
+        if (GetCount() > 20 * 3 || 
+            input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5 || 
+            input->GetEvent()->GetOperationType() == StateMachineOperationType::FINISH_4)
         {
             return true;
         }
@@ -326,7 +329,9 @@ private:
     // *******************************SwitchFromFailed*******************************
     bool SwitchFromFailedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (GetCount() > 20 * 3 ||
+            input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5 || 
+            input->GetEvent()->GetOperationType() == StateMachineOperationType::FINISH_4)   
         {
             return true;
         }
@@ -338,7 +343,7 @@ private:
     // *******************************SwitchFromSuspend*******************************
     bool SwitchFromSuspenedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return true;
         }
@@ -349,7 +354,7 @@ private:
     }
     bool SwitchFromSuspenedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::RESUME_3 && GetPrvsState() == AvpCruisingStateType::CRUISING_5)
         {
             return true;
         }
@@ -360,7 +365,7 @@ private:
     }
     bool SwitchFromSuspenedToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::RESUME_3 && GetPrvsState() == AvpCruisingStateType::PARKING_6)
         {
             return true;
         }
@@ -383,7 +388,7 @@ private:
     // *******************************SwitchFromgTerminate*******************************
     bool SwitchFromTerminateToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > (20 * 3))
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
         {
             return true;
         }
@@ -395,7 +400,7 @@ private:
 public:
     void Init() override 
     {
-        using SwitchSubTable = StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>::SwitchSubTable;
+        using SwitchSubTable = StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingEvent, AvpCruisingInputer>::SwitchSubTable;
 
         SwitchSubTable idle_to_table = 
         {

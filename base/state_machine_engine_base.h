@@ -13,14 +13,15 @@
 // 在定义类模板时，不再需要指定默认模板参数
 // don't need to specify that default template argument when define the class template 
 #if __cplusplus >= 202002L
-template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer, is_switcher_base<State, Param, Inputer> Switcher, is_outputer_base<State, Param, Inputer, Switcher> Outputer>
+template <is_enum State, is_param_base Param, is_event_base Event, is_inputer_base<Param, Event> Inputer, is_switcher_base<State, Param, Event, Inputer> Switcher, is_outputer_base<State, Param, Event, Inputer, Switcher> Outputer>
 #else
-template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer,
+template <typename State, typename Param, typename Event, typename Inputer, typename Switcher, typename Outputer,
           typename = typename std::enable_if_t<std::is_enum_v<State>>,
           typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
-          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
-          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineEventBase, Event>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param, Event>, Inputer>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Event, Inputer>, Switcher>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Event, Inputer, Switcher>, Outputer>>>
 #endif
 class StateMachineEngineBase
 {
@@ -82,7 +83,7 @@ public:
     void Init() 
     {
         param_sptr_->Init();
-        input_sptr_->Init();;
+        input_sptr_->Init();
         switch_sptr_->Init();
         output_sptr_->Init();
 

@@ -15,12 +15,13 @@ using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>:
 
 
 #if __cplusplus >= 202002L
-template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer>
+template <is_enum State, is_param_base Param, is_event_base Event, is_inputer_base<Param, Event> Inputer>
 #else
-template <typename State, typename Param, typename Inputer,
+template <typename State, typename Param, typename Event, typename Inputer,
           typename = typename std::enable_if_t<std::is_enum_v<State>>,
           typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineEventBase, Event>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param, Event>, Inputer>>>
 #endif
 class StateMachineSwitcherBase
 {
@@ -151,10 +152,11 @@ public:
 };
 
 #if __cplusplus >= 202002L
-template <typename T, typename State, typename Param, typename Inputer>
+template <typename T, typename State, typename Param, typename Event, typename Inputer>
 concept is_switcher_base = 
     is_enum<State> &&
     is_param_base<Param> && 
-    is_inputer_base<Inputer, Param> && 
-    std::derived_from<T, StateMachineSwitcherBase<typename T::StateType, Param, Inputer>>;
+    is_event_base<Event> &&
+    is_inputer_base<Inputer, Param, Event> && 
+    std::derived_from<T, StateMachineSwitcherBase<typename T::StateType, Param, Event, Inputer>>;
 #endif

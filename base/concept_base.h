@@ -13,9 +13,6 @@ template <typename T>
 concept is_convertible_to_string = std::is_convertible_v<T, std::string>;
 
 template <typename T>
-concept is_event_base = std::derived_from<T, StateMachineEventBase>;
-
-template <typename T>
 concept is_event_sptr_base = std::derived_from<typename T::element_type, StateMachineEventBase>;
 
 template <typename T>

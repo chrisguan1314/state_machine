@@ -8,12 +8,13 @@
 #include <functional>
 
 #if __cplusplus >= 202002L
-template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer, is_switcher_base<State, Param, Inputer> Switcher>
+template <is_enum State, is_param_base Param, is_event_base Event, is_inputer_base<Param, Event> Inputer, is_switcher_base<State, Param, Event, Inputer> Switcher>
 #else
-template <typename State, typename Param, typename Inputer, typename Switcher,
+template <typename State, typename Param, typename Event, typename Inputer, typename Switcher,
           typename = typename std::enable_if_t<std::is_enum_v<State>>,
           typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineEventBase, Event>>,
+          typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param, Event>, Inputer>>,
           typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>>
 #endif
 class StateMachineOutputerBase
@@ -72,11 +73,11 @@ protected:
 };
 
 #if __cplusplus >= 202002L
-template <typename T, typename State, typename Param, typename Inputer, typename Switcher>
+template <typename T, typename State, typename Param, typename Event, typename Inputer, typename Switcher>
 concept is_outputer_base =
     is_enum<State> &&
     is_param_base<Param> &&     
-    is_inputer_base<Inputer, Param> && 
-    is_switcher_base<Switcher, State, Param, Inputer> &&
-    std::derived_from<T, StateMachineOutputerBase<typename T::StateType, Param, Inputer, Switcher>>;
+    is_inputer_base<Inputer, Param, Event> && 
+    is_switcher_base<Switcher, State, Param, Event, Inputer> &&
+    std::derived_from<T, StateMachineOutputerBase<typename T::StateType, Param, Event, Inputer, Switcher>>;
 #endif

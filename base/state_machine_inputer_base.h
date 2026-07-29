@@ -8,16 +8,19 @@
 #include <stdexcept>
 
 #if __cplusplus >= 202002L
-template <is_param_base Param>
+template <is_param_base Param, is_event_base Event>
 #else
-template <typename Param, typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>>
+template <typename Param, typename Event,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineEventBase, Event>>>
 #endif
 class StateMachineInputerBase
 {
 public:
     using ParamType = Param;
+    using EventType = Event;
     using ParamSPtr = std::shared_ptr<ParamType>;
-    using EventSPtr = std::shared_ptr<StateMachineEventBase>;
+    using EventSPtr = std::shared_ptr<EventType>;
 private:
     EventSPtr event_sptr_{nullptr};
 public:
@@ -41,11 +44,15 @@ public:
 public:
     virtual void InitReaders() = 0;
     virtual void UpdateEvent(ParamSPtr param) = 0;
+    EventSPtr GetEvent() const noexcept
+    {
+        return event_sptr_;
+    }
 };
 
 
 
 #if __cplusplus >= 202002L
-template <typename T, typename Param>
-concept is_inputer_base = is_param_base<Param> && std::derived_from<T, StateMachineInputerBase<Param>>;
+template <typename T, typename Param, typename Event>
+concept is_inputer_base = is_param_base<Param> && is_event_base<Event> && std::derived_from<T, StateMachineInputerBase<Param, Event>>;
 #endif

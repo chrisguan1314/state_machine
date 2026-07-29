@@ -13,12 +13,13 @@
 #include <type_traits>
 
 #if __cplusplus >= 202002L
-template <is_enum State, is_param_base Param, is_inputer_base<Param> Inputer, typename Container = std::vector<State>>
+template <is_enum State, is_param_base Param, is_event_base Event, is_inputer_base<Param, Event> Inputer, typename Container = std::vector<State>>
 #else
-template <typename State, typename Param, typename Inputer, typename Container = std::vector<State>,
+template <typename State, typename Param, typename Event, typename Inputer, typename Container = std::vector<State>,
 typename = typename std::enable_if_t<std::is_enum_v<State>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineEventBase, Event>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param, Event>, Inputer>>>
 #endif
 class StateSwitchTable
 {
