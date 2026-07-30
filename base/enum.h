@@ -25,6 +25,20 @@ enum class GearCtrlEnableType : uint8_t
     ENABLE_1    
 };
 };
+
+namespace eps
+{
+enum class SteerAglEnbType : uint8_t
+{
+    DISABLE_0,
+    ENABLE_1
+};
+enum class SteerAglVldType : uint8_t
+{
+    INVALID_0,
+    VALID_1
+};
+};
 };
 
 namespace driver
@@ -75,5 +89,33 @@ enum class DriverGearOverrideType : uint8_t
     NOT_OVERRIDE_0,
     OVERRIDE_1
 };
+};
+
+namespace eps
+{
+    enum class AglCtrlAvlType : uint8_t
+    {
+        NOT_AVAILABLE_0,
+        AVAILABLE_1,
+        AVAILABLE_DEGRADED_2,
+        CRITICAL_DEGRADED_3
+    };
+    enum class AglCtrlStsType : uint8_t
+    {
+        NOT_ACTIVE_0,
+        ACTIVE_1,
+        ACTIVE_WITH_ERROR_2
+    };
+    enum class EpsRqstErrType : uint8_t
+    {
+        NO_ERROR_0,
+        TORQUE_INVALID_OR_TIMEOUT_1,
+        TORQUE_OUT_OF_LIMIT_2,
+        ANGLE_INVALID_OR_TIMEOUT_3,
+        ANGLE_SPEED_OUT_OF_LIMIT_4,
+        ANGLE_OUT_OF_LIMIT_5,
+        E2E_ERROR_6,
+        OTHER_ERROR_7
+    };
 };
 };
