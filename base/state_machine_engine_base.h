@@ -35,6 +35,11 @@ public:
     using InputerSPtr = std::shared_ptr<InputerType>;
     using SwitcherSPtr = std::shared_ptr<SwitcherType>;
     using OutputerSPtr = std::shared_ptr<OutputerType>;
+#if __cplusplus >= 202002L
+    using ThreadUPtr = std::unique_ptr<std::jthread>;
+#else
+    using ThreadUPtr = std::unique_ptr<std::thread>;
+#endif
 private:
     std::string name_;
     uint32_t freq_{20};
@@ -44,7 +49,7 @@ private:
     InputerSPtr input_sptr_{std::make_shared<InputerType>()};
     SwitcherSPtr switch_sptr_{std::make_shared<SwitcherType>()};
     OutputerSPtr output_sptr_{std::make_shared<OutputerType>()};
-    std::unique_ptr<std::thread> thrd_uptr_{nullptr};
+    ThreadUPtr thrd_uptr_{nullptr};
 protected:
     template <is_convertible_to_string T>
     StateMachineEngineBase(T && name, uint32_t freq = 20) : name_(std::forward<T>(name)), freq_{freq}
@@ -73,11 +78,14 @@ protected:
     }
     ~StateMachineEngineBase()
     {
+#if __cplusplus >= 202002L
+#else
         if (thrd_uptr_ && thrd_uptr_->joinable())
         {
             thrd_uptr_->join();
         }
         Stop();
+#endif
     }
 public:
     void Init() 
@@ -88,8 +96,11 @@ public:
         output_sptr_->Init();
 
         SetInitFlag(true);
-
+#if __cplusplus >= 202002L
+        thrd_uptr_ = std::make_unique<std::jthread>(&StateMachineEngineBase::Run, this);
+#else
         thrd_uptr_ = std::make_unique<std::thread>(&StateMachineEngineBase::Run, this);
+#endif
     }
     void Start()
     {
@@ -107,12 +118,18 @@ public:
         SetRunFlag(false);
         SetInitFlag(false);
     }
-    void Run()
+    void Run(std::stop_token st)
     {
+        std::cout << std::this_thread::get_id() << __func__ << '\n';
+    #if __cplusplus >= 202002L
+        std::cout << "st.stop_requested(): " << st.stop_requested() << std::endl;
         while (GetInitFlag())
+    #else
+        while (GetInitFlag())
+    #endif
         {
             auto start_time = steady_clock::now();
-            if (GetRunFlag())
+            if (GetRunFlag() )
             {
                 param_sptr_->UpdateParam();
                 input_sptr_->UpdateEvent(param_sptr_);
