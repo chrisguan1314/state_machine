@@ -7,7 +7,7 @@ enum class StateMachineOperationType : uint8_t
     ACTIVE_2,
     RESUME_3,
     FINISH_4,
-    EXIT_5,
+    CLOSE_5,
 };
 
 enum class StateMachineRecoverableType : uint8_t
@@ -32,6 +32,12 @@ enum class StateMachineOverrideType : uint8_t
     BRAKE_PEDAL_2,
 };
 
+enum class StateMachineReadyType : uint8_t
+{
+    NONE_0,
+    READY_1,
+};
+
 class StateMachineEventBase
 {
 private:
@@ -39,6 +45,7 @@ private:
     StateMachineRecoverableType recoverable_type_{StateMachineRecoverableType::NONE_0};
     StateMachineUnrecoverableType unrecoverable_type_{StateMachineUnrecoverableType::NONE_0};
     StateMachineOverrideType override_type_{StateMachineOverrideType::NONE_0};
+    StateMachineReadyType ready_type_{StateMachineReadyType::NONE_0};
 public:
     StateMachineEventBase() noexcept = default;
 public:
@@ -58,6 +65,10 @@ public:
     {
         return override_type_;
     }
+    StateMachineReadyType GetReadyType() const noexcept
+    {
+        return ready_type_;
+    }
     void SetOperationType(StateMachineOperationType operation_type = StateMachineOperationType::NONE_0) noexcept
     {
         operation_type_ = operation_type;
@@ -73,6 +84,10 @@ public:
     void SetOverrideType(StateMachineOverrideType override_type = StateMachineOverrideType::NONE_0) noexcept
     {
         override_type_ = override_type;
+    }
+    void SetReadyType(StateMachineReadyType ready_type = StateMachineReadyType::NONE_0) noexcept
+    {
+        ready_type_ = ready_type;
     }
 };
 

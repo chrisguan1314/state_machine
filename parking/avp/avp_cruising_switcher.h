@@ -20,7 +20,7 @@ private:
     // *******************************SwitchFromIdle*******************************
     bool SwitchFromIdleToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > (20 * 5))
+        if (GetCount() > (20 * 5) || input->GetEvent()->GetReadyType() == StateMachineReadyType::READY_1)
         {
             return true;
         }
@@ -32,7 +32,7 @@ private:
     // *******************************SwitchFromStandby*******************************
     bool SwitchFromStandbyToIdle(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > (20 * 5))
+        if (input->GetEvent()->GetReadyType() == StateMachineReadyType::NONE_0)
         {
             return false;
         }
@@ -43,7 +43,7 @@ private:
     }
     bool SwitchFromStandbyToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > (20 * 5))
+        if (GetCount() > (20 * 5) || input->GetEvent()->GetOperationType() == StateMachineOperationType::OPEN_1)
         {
             return true;
         }
@@ -55,7 +55,7 @@ private:
     // *******************************SwitchFromLocating*******************************
     bool SwitchFromLocatingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return false;
         }
@@ -78,7 +78,7 @@ private:
     // *******************************SwitchFromLocated*******************************
     bool SwitchFromLocatedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return false;
         }
@@ -112,7 +112,7 @@ private:
     // *******************************SwitchFromPrepared*******************************
     bool SwitchFromPreparedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return false;
         }
@@ -157,7 +157,7 @@ private:
     // *******************************SwitchFromCruising*******************************
     bool SwitchFromCruisingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return false;
         }
@@ -236,7 +236,7 @@ private:
     // *******************************SwitchFromParking*******************************
     bool SwitchFromParkingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return false;
         }
@@ -258,7 +258,7 @@ private:
     }
     bool SwitchFromParkingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (GetCount() > 20 || input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::FAILURE_7)
+        if (input->GetEvent()->GetAvpCruisingEventType() == AvpCruisingEventType::FAILURE_7)
         {
             return true;
         }
@@ -292,7 +292,7 @@ private:
     // *******************************SwitchFromOverride*******************************
     bool SwitchFromOverrideToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return true;
         }
@@ -316,7 +316,7 @@ private:
     bool SwitchFromSuccessToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20 * 3 || 
-            input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5 || 
+            input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5 || 
             input->GetEvent()->GetOperationType() == StateMachineOperationType::FINISH_4)
         {
             return true;
@@ -330,7 +330,7 @@ private:
     bool SwitchFromFailedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
         if (GetCount() > 20 * 3 ||
-            input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5 || 
+            input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5 || 
             input->GetEvent()->GetOperationType() == StateMachineOperationType::FINISH_4)   
         {
             return true;
@@ -343,7 +343,7 @@ private:
     // *******************************SwitchFromSuspend*******************************
     bool SwitchFromSuspenedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return true;
         }
@@ -388,7 +388,7 @@ private:
     // *******************************SwitchFromgTerminate*******************************
     bool SwitchFromTerminateToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
     {
-        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::EXIT_5)
+        if (input->GetEvent()->GetOperationType() == StateMachineOperationType::CLOSE_5)
         {
             return true;
         }
