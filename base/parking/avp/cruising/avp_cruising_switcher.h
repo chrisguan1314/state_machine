@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../base/state_machine_switcher_base.h"
-#include "../../base/state_switch_table.h"
+#include "../../../state_machine_switcher_base.h"
+#include "../../../state_switch_table.h"
 
 #include <any>
 

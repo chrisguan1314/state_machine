@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../enum.h"
-#include "../../str_map.h"
-#include "../../base/state_machine_engine_base.h"
+#include "../../../../enum.h"
+#include "../../../../str_map.h"
+#include "../../../state_machine_engine_base.h"
 #include "avp_cruising_param.h"
 #include "avp_cruising_inputer.h"
 #include "avp_cruising_switcher.h"
@@ -12,13 +12,7 @@ namespace parking
 {
 class AvpCruisingStateMachineEngine : public StateMachineEngineBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher, AvpCruisingOutputer>
 {
-public:
-    static std::unique_ptr<AvpCruisingStateMachineEngine>& GetInstance()
-    {
-        static std::unique_ptr<AvpCruisingStateMachineEngine> avp_sm_uptr_(new AvpCruisingStateMachineEngine);
-        return avp_sm_uptr_;
-    }
-private: 
+public: 
     AvpCruisingStateMachineEngine() : StateMachineEngineBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher, AvpCruisingOutputer>("AvpCruising")
     {
         

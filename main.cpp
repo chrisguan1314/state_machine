@@ -1,7 +1,6 @@
 #include "random.h"
 #include "cat.h"
 #include "singleton.h"
-#include "state_machine_scheduler.h"
 #include "threadsafe_stack.h"
 #include "threadsafe_queue.h"
 #include "custom_queue.h"
@@ -11,6 +10,7 @@
 #include "structure\base\point6d.h"
 #include "structure\algorithm\perception\obstacle.h"
 #include "structure\concurrent\spsc_queue.h"
+#include "base\system_mode_scheduler.h"
 
 #include <vector>
 #include <algorithm>
@@ -139,10 +139,10 @@ int main()
     // std::shared_ptr<uint32_t> ptr = std::allocate_shared<uint32_t>(MyAllocator<uint32_t>(), 42);
     // std::cout << *ptr << std::endl;
     
-    if (std::unique_ptr<StateMachineScheduler> sm_manager = std::make_unique<StateMachineScheduler>(""))
-    {
-        sm_manager->Init();
-    }
+    // if (std::unique_ptr<StateMachineScheduler> sm_manager = std::make_unique<StateMachineScheduler>(""))
+    // {
+    //     sm_manager->Init();
+    // }
     // std::function<int(int, int)> func = std::plus<int>();
     // // std::bind
     // std::function<int(int)> func1 = std::bind(func, 2, std::placeholders::_1);
@@ -267,6 +267,15 @@ int main()
     //         break;
     //     }
     // }
+
+    if (std::unique_ptr<function::SystemModeScheduler> system_mode_scheduler = std::make_unique<function::SystemModeScheduler>())
+    {
+        if (system_mode_scheduler->Init())
+        {
+            system_mode_scheduler->Setup();
+        }
+        // Use system_mode_scheduler here
+    }
     
     return 0;
 }
