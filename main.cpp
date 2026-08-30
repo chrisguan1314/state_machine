@@ -268,12 +268,11 @@ int main()
     //     }
     // }
 
-    if (std::unique_ptr<function::SystemModeScheduler> system_mode_scheduler = std::make_unique<function::SystemModeScheduler>())
+    if (std::unique_ptr<function::SystemScheduler> system_mode_scheduler = std::make_unique<function::SystemScheduler>())
     {
-        if (system_mode_scheduler->Init())
-        {
-            system_mode_scheduler->Setup();
-        }
+        system_mode_scheduler->Init();
+        system_mode_scheduler->Setup();
+
         // Use system_mode_scheduler here
     }
     
