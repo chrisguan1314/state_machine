@@ -32,14 +32,14 @@ public:
 public:
     StateMachineSwitcherBase() noexcept = default;
 private:
-    atomic_T crnt_state_{static_cast<StateType>(0)};
-    atomic_T last_state_{static_cast<StateType>(0)};
-    atomic_T prvs_state_{static_cast<StateType>(0)};
-    uint32_t count_{0};
-    system_clock::time_point system_start_time_{system_clock::now()};
-    steady_clock::time_point steady_start_time_{steady_clock::now()};
-    seconds duration_{0}; 
-    uint32_t freq_{20};
+    inline static atomic_T crnt_state_{static_cast<StateType>(0)};
+    inline static atomic_T last_state_{static_cast<StateType>(0)};
+    inline static atomic_T prvs_state_{static_cast<StateType>(0)};
+    inline static uint32_t count_{0};
+    inline static system_clock::time_point system_start_time_{system_clock::now()};
+    inline static steady_clock::time_point steady_start_time_{steady_clock::now()};
+    inline static seconds duration_{0};
+    inline static uint32_t freq_{20};
 public:
     virtual void Init() = 0; 
     virtual void PrintStateSwitchInfo() = 0;
@@ -77,72 +77,72 @@ public:
         UpdateState(CalcNextState(param, input));
     }
 public:
-    const StateType GetCrntState() const noexcept
+    static StateType GetCrntState() noexcept
     {
         return crnt_state_.load();
     }
-    const StateType GetLastState() const noexcept
+    static StateType GetLastState() noexcept
     {
         return last_state_.load();
     }
-    const StateType GetPrvsState() const noexcept
+    static StateType GetPrvsState() noexcept
     {
         return prvs_state_.load();
     }
-    const uint32_t GetCount() const noexcept
+    static uint32_t GetCount() noexcept
     {
         return count_;
     }
-    const system_clock::time_point& GetStartSystemTime() const noexcept
+    static const system_clock::time_point& GetStartSystemTime() noexcept
     {
         return system_start_time_;
     }
-    const steady_clock::time_point& GetStartSteadyTime() const noexcept
+    static const steady_clock::time_point& GetStartSteadyTime() noexcept
     {
         return steady_start_time_;
     }
-    const seconds& GetDuration() const noexcept
+    static const seconds& GetDuration() noexcept
     {
         return duration_;
     }
-    uint32_t GetFrequency() const noexcept
+    static uint32_t GetFrequency() noexcept
     {
         return freq_;
     }
 public:
-    bool IsStateChanged() const noexcept
+    static bool IsStateChanged() noexcept
     {
         return crnt_state_.load() != last_state_.load();
     }
 public:
-    void SetCrntState(StateType state = static_cast<StateType>(0)) noexcept
+    static void SetCrntState(StateType state = static_cast<StateType>(0)) noexcept
     {
         crnt_state_.store(state);
     }
-    void SetLastState(StateType state = static_cast<StateType>(0)) noexcept
+    static void SetLastState(StateType state = static_cast<StateType>(0)) noexcept
     {
         last_state_.store(state);
     }
-    void SetPrvsState(StateType state = static_cast<StateType>(0)) noexcept
+    static void SetPrvsState(StateType state = static_cast<StateType>(0)) noexcept
     {
         prvs_state_.store(state);
     }
-    void SetCount(uint32_t count = 0) noexcept
+    static void SetCount(uint32_t count = 0) noexcept
     {
         count_ = count;
     }
     template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, system_clock::time_point>::value>>
-    void SetStartSystemTime(TimePoint && time_point) noexcept
+    static void SetStartSystemTime(TimePoint && time_point) noexcept
     {
         system_start_time_ = std::forward<TimePoint>(time_point);
     }
     template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, steady_clock::time_point>::value>>
-    void SetStartSteadyTime(TimePoint && time_point) noexcept
+    static void SetStartSteadyTime(TimePoint && time_point) noexcept
     {
         steady_start_time_ = std::forward<TimePoint>(time_point);
     }
     template <typename Duration, typename = typename std::enable_if_t<is_decay_same<Duration, seconds>::value>>
-    void SetDuration(Duration && duration) noexcept
+    static void SetDuration(Duration && duration) noexcept
     {
         duration_ = std::forward<Duration>(duration);
     }

@@ -140,23 +140,22 @@ namespace function
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         }
-        SystemModeInfo<SystemMode> GetSystemMode() const noexcept
+        static SystemModeInfo<SystemMode> GetSystemMode() noexcept
         {
             return sysmode_mode_;
         }
-        SystemModeInfo<SystemSubMode> GetSystemSubMode() const noexcept
+        static SystemModeInfo<SystemSubMode> GetSystemSubMode() noexcept
         {
             return sysmode_sub_mode_;
         }
 
     private:
-        SystemModeInfo<SystemMode> sysmode_mode_;
-        SystemModeInfo<SystemSubMode> sysmode_sub_mode_;
+        inline static SystemModeInfo<SystemMode> sysmode_mode_{};
+        inline static SystemModeInfo<SystemSubMode> sysmode_sub_mode_{};
 
         std::unique_ptr<SystemParam> system_param_{nullptr};
         std::unique_ptr<std::jthread> scheduler_thread_{nullptr};
-
-        bool avp_cruising_engine_enable_{false};
+        
         std::unique_ptr<parking::AvpCruisingStateMachineEngine> avp_cruising_engine_{nullptr};
     };
 
