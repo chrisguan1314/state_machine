@@ -2,6 +2,22 @@
 
 #include <stdint.h>
 
+enum class ApaStateType : uint8_t
+{
+    IDLE_0,
+    STANDBY_1,
+    SEARCHING_2,
+    SEARCHED_3,
+    PREPARED_4,
+    RPA_PREPARED_5,
+    PARKING_6,
+    SUSPEND_7,
+    OVERRIDE_8,
+    SUCCESS_9,
+    FAILED_10,
+    TERMINATE_11,
+};
+
 // 作用域内枚举
 enum class AvpCruisingStateType : uint8_t
 {
@@ -17,6 +33,18 @@ enum class AvpCruisingStateType : uint8_t
     FAILED_9,
     SUSPEND_10,
     TERMINATE_11
+};
+
+enum class AvpMappingStateType : uint8_t
+{
+    IDLE_0,
+    STANDBY_1,
+    ONLINE_LEARNING_2,
+    OFFLINE_LEARNING_3,
+    PARKING_4,
+    SUCCESS_5,
+    FAILED_6,
+    TERMINATE_7,
 };
 
 enum class AvpCruisingRecoverableInterruption : uint8_t

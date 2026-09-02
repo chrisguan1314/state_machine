@@ -2,10 +2,6 @@
 
 #include <cstdint>
 
-namespace structure
-{
-namespace function
-{
 namespace parking
 {
 
@@ -83,6 +79,4 @@ enum class ApaExitType : std::uint8_t
     VEH_COND_5,
 };
 
-}
-}
 }

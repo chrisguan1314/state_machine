@@ -2,10 +2,6 @@
 
 #include <cstdint>
 
-namespace structure
-{
-namespace function
-{
 namespace parking
 {
 
@@ -32,6 +28,4 @@ enum class ParkingEventType : std::uint8_t
     EXIT_8,
 };
 
-}
-}
 }

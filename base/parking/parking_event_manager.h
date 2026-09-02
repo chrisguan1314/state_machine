@@ -7,10 +7,6 @@
 #include "parking_event_base.h"
 #include "parking_event_enum.h"
 
-namespace structure
-{
-namespace function
-{
 namespace parking
 {
 
@@ -432,5 +428,3 @@ public:
 };
 
 }  // namespace parking
-}  // namespace function
-}  // namespace structure

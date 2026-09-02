@@ -2,10 +2,6 @@
 
 #include <cstdint>
 
-namespace structure
-{
-namespace function
-{
 namespace parking
 {
 template <typename ActvType,
@@ -36,5 +32,3 @@ struct ParkingEventBase
     ExitType exit_{static_cast<ExitType>(0)};
 };
 }  // namespace parking
-}  // namespace function
-}  // namespace structure

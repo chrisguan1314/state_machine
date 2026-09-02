@@ -5,12 +5,8 @@
 
 #include "apa_event_enum.h"
 
-namespace structure
+namespace parking
 {
-    namespace function
-    {
-        namespace parking
-        {
 
             /** @brief APA 激活来源到字符串的映射。 */
             inline const std::map<ApaActvType, std::string> apa_actv_strmap = {
@@ -78,6 +74,4 @@ namespace structure
                 {ApaExitType::VEH_COND_5, "VEH_COND[5]"},
             };
 
-        } // namespace parking
-    } // namespace function
-} // namespace structure
+} // namespace parking

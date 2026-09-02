@@ -11,81 +11,87 @@ using namespace std::chrono;
 template <typename T1, typename T2>
 using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>::type;
 
-template <typename State>
+template <typename Mode>
 class SystemModeInfo
 {
 public:
-    using StateType = State;
+    using ModeType = Mode;
 public:
     SystemModeInfo() noexcept = default;
 private:
-    StateType crnt_state_{};
-    StateType last_state_{};
-    StateType prvs_state_{};
+    ModeType crnt_{};
+    ModeType last_{};
+    ModeType prvs_{};
     uint32_t count_{0};
-    system_clock::time_point system_start_time_{system_clock::now()};
-    steady_clock::time_point steady_start_time_{steady_clock::now()};
+    steady_clock::time_point start_time_{steady_clock::now()};
     seconds duration_{0}; 
 public:
-    const StateType GetCrntState() const noexcept
+    void Update(ModeType mode)
     {
-        return crnt_state_;
+        if (mode != crnt_)
+        {
+            prvs_ = crnt_;
+            count_ = 0;
+            start_time_ = steady_clock::now();
+        }
+        else
+        {
+            ++count_;
+            duration_ = duration_cast<seconds>(steady_clock::now() - start_time_);
+        }
+        last_ = crnt_;
+        crnt_ = mode;
     }
-    const StateType GetLastState() const noexcept
+    const ModeType GetCrnt() const noexcept
     {
-        return last_state_;
+        return crnt_;
     }
-    const StateType GetPrvsState() const noexcept
+    const ModeType GetLast() const noexcept
     {
-        return prvs_state_;
+        return last_;
+    }
+    const ModeType GetPrvs() const noexcept
+    {
+        return prvs_;
     }
     const uint32_t GetCount() const noexcept
     {
         return count_;
     }
-    const system_clock::time_point& GetStartSystemTime() const noexcept
+    const steady_clock::time_point& GetSteadyTime() const noexcept
     {
-        return system_start_time_;
-    }
-    const steady_clock::time_point& GetStartSteadyTime() const noexcept
-    {
-        return steady_start_time_;
+        return start_time_;
     }
     const seconds& GetDuration() const noexcept
     {
         return duration_;
     }
 public:
-    bool IsStateChanged() const noexcept
+    bool IsChanged() const noexcept
     {
-        return crnt_state_ != last_state_;
+        return crnt_ != last_;
     }
 public:
-    void SetCrntState(StateType state = StateType{}) noexcept
+    void SetCrnt(ModeType state = ModeType{}) noexcept
     {
-        crnt_state_ = state;
+        crnt_ = state;
     }
-    void SetLastState(StateType state = StateType{}) noexcept
+    void SetLast(ModeType state = ModeType{}) noexcept
     {
-        last_state_ = state;
+        last_ = state;
     }
-    void SetPrvsState(StateType state = StateType{}) noexcept
+    void SetPrvs(ModeType state = ModeType{}) noexcept
     {
-        prvs_state_ = state;
+        prvs_ = state;
     }
     void SetCount(uint32_t count = 0) noexcept
     {
         count_ = count;
     }
-    template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, system_clock::time_point>::value>>
-    void SetStartSystemTime(TimePoint && time_point) noexcept
-    {
-        system_start_time_ = std::forward<TimePoint>(time_point);
-    }
     template <typename TimePoint, typename = typename std::enable_if_t<is_decay_same<TimePoint, steady_clock::time_point>::value>>
-    void SetStartSteadyTime(TimePoint && time_point) noexcept
+    void SetStartTime(TimePoint && time_point) noexcept
     {
-        steady_start_time_ = std::forward<TimePoint>(time_point);
+        start_time_ = std::forward<TimePoint>(time_point);
     }
     template <typename Duration, typename = typename std::enable_if_t<is_decay_same<Duration, seconds>::value>>
     void SetDuration(Duration && duration) noexcept

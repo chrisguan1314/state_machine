@@ -8,11 +8,12 @@
 #include <string>
 #include <thread>
 #include <atomic>
+#include <iostream>
 #include <stdexcept>
 
-// 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename State, typename Param, typename Inputer, typename Switcher, typename Outputer, 
 typename = typename std::enable_if_t<std::is_enum_v<State>>,
+// 类模板的模板声明（the declaration of class template, including 1 default template argument）
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
