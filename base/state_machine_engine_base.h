@@ -68,7 +68,8 @@ protected:
         {
             throw std::invalid_argument("StateMachineEngineBase: output_sptr_ is nullptr");
         }
-        std::cout << "StateMachineEngineBase: " << name_ << " is Created, Frequency : " << freq_ << std::endl;
+        std::cout << "\n[StateMachine] ***************************************\n" << std::endl;
+        std::cout << "[StateMachine] StateMachineEngineBase: " << name_ << " is Created, Frequency : " << freq_ << std::endl;
     }
     ~StateMachineEngineBase()
     {

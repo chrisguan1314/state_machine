@@ -15,7 +15,7 @@ public:
 
     void InitReaders() override
     {
-        std::cout << "Init ApaInputer Readers" << std::endl;
+        std::cout << "[StateMachine] Init ApaInputer Readers" << std::endl;
     }
 
     void UpdateEvent(std::shared_ptr<ApaParam> param) override {}

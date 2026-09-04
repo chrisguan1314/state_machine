@@ -42,7 +42,6 @@ public:
     template <typename T, typename = typename std::enable_if_t<std::is_convertible_v<T, std::string>>>
     explicit SystemParam(T && path) : param_path_(std::forward<T>(path))
     {
-        LoadParameters();
     }
     ~SystemParam() = default;
 
@@ -57,6 +56,7 @@ public:
         {
             // throw std::runtime_error("Parameter file not found: " + parameter_file_path);
             parking_enable_param_.apa_enable_ = true;
+            parking_enable_param_.apo_enable_ = true;
             parking_enable_param_.avp_cruising_enable_ = true;
             parking_enable_param_.avp_mapping_enable_ = true;
 
@@ -71,6 +71,7 @@ public:
             // Load parameters from the file
             // For example, you can use a JSON library to parse the file and set the parameters accordingly
             parking_enable_param_.apa_enable_ = true;
+            parking_enable_param_.apo_enable_ = true;
             parking_enable_param_.avp_cruising_enable_ = true;
             parking_enable_param_.avp_mapping_enable_ = true;
 
@@ -87,6 +88,7 @@ private:
     void PrintParkingParams() const noexcept
     {
         std::cout << "[SystemScheduler][Param][Parking] APA Enable: " << std::boolalpha << parking_enable_param_.apa_enable_ << std::endl;
+        std::cout << "[SystemScheduler][Param][Parking] APO Enable: " << std::boolalpha << parking_enable_param_.apo_enable_ << std::endl;
         std::cout << "[SystemScheduler][Param][Parking] AVP Cruising Enable: " << std::boolalpha << parking_enable_param_.avp_cruising_enable_ << std::endl;
         std::cout << "[SystemScheduler][Param][Parking] AVP Mapping Enable: " << std::boolalpha << parking_enable_param_.avp_mapping_enable_ << std::endl;
     }

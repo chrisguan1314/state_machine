@@ -5,12 +5,8 @@
 
 #include "rpo_event_enum.h"
 
-namespace structure
+namespace parking
 {
-    namespace function
-    {
-        namespace parking
-        {
 
             inline const std::map<RpoActvType, std::string> rpo_actv_strmap = {
                 {RpoActvType::NONE_0, "NONE[0]"},
@@ -63,6 +59,4 @@ namespace structure
                 {RpoExitType::VEH_COND_5, "VEH_COND[5]"},
             };
 
-        } // namespace parking
-    } // namespace function
-} // namespace structure
+} // namespace parking

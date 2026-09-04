@@ -18,6 +18,20 @@ enum class ApaStateType : uint8_t
     TERMINATE_11,
 };
 
+enum class ApoStateType : uint8_t
+{
+    IDLE_0,
+    STANDBY_1,
+    PREPARING_2,
+    PREPARED_3,
+    PARKING_4,
+    SUSPEND_5,
+    OVERRIDE_6,
+    SUCCESS_7,
+    FAILED_8,
+    TERMINATE_9,
+};
+
 // 作用域内枚举
 enum class AvpCruisingStateType : uint8_t
 {

@@ -25,6 +25,20 @@ str_unordered_map<ApaStateType> apa_str_map =
     {ApaStateType::TERMINATE_11, Convert("TERMINATE_11")},
 };
 
+str_unordered_map<ApoStateType> apo_str_map =
+{
+    {ApoStateType::IDLE_0, Convert("IDLE_0")},
+    {ApoStateType::STANDBY_1, Convert("STANDBY_1")},
+    {ApoStateType::PREPARING_2, Convert("PREPARING_2")},
+    {ApoStateType::PREPARED_3, Convert("PREPARED_3")},
+    {ApoStateType::PARKING_4, Convert("PARKING_4")},
+    {ApoStateType::SUSPEND_5, Convert("SUSPEND_5")},
+    {ApoStateType::OVERRIDE_6, Convert("OVERRIDE_6")},
+    {ApoStateType::SUCCESS_7, Convert("SUCCESS_7")},
+    {ApoStateType::FAILED_8, Convert("FAILED_8")},
+    {ApoStateType::TERMINATE_9, Convert("TERMINATE_9")},
+};
+
 // 可以统一抽象出一个Convert函数，这样想要修改输出字符串格式的时候就不用一个一个修改了
 str_unordered_map<AvpCruisingStateType> avp_cruising_str_map = 
 {

@@ -65,11 +65,14 @@ namespace function
         }
         void AddSwitchEntry(SystemSubMode from_mode, SystemSubMode to_mode, SwitchFunction && func)
         {
-            if (switch_table_.find(from_mode) != std::end(switch_table_))
+            if (switch_table_.find(from_mode) == std::end(switch_table_))
             {
                 switch_table_[from_mode] = {{to_mode, std::move(func)}};
             }
-            switch_table_[from_mode][to_mode] = std::move(func);
+            else
+            {
+                switch_table_[from_mode][to_mode] = std::move(func);
+            }
         }
         void AddSwitchTable(SystemSubMode from_mode, SwitchSubTable && sub_table)
         {

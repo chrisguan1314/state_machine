@@ -33,35 +33,35 @@ public:
 private:
     void ActionIdle(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : IDLE" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : IDLE" << std::endl;
     };
     void ActionStandby(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : STANDBY" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : STANDBY" << std::endl;
     };
     void ActionOnlineLearning(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : ONLINE_LEARNING" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : ONLINE_LEARNING" << std::endl;
     };
     void ActionOfflineLearning(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : OFFLINE_LEARNING" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : OFFLINE_LEARNING" << std::endl;
     };
     void ActionParking(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : PARKING" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : PARKING" << std::endl;
     };
     void ActionSuccess(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : SUCCESS" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : SUCCESS" << std::endl;
     };
     void ActionFailed(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : FAILED" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : FAILED" << std::endl;
     };
     void ActionTerminate(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input, std::shared_ptr<AvpMappingStateSwitcher> switcher)
     {
-        std::cout << "AvpMappingOutputer Action : TERMINATE" << std::endl;
+        // std::cout << "AvpMappingOutputer Action : TERMINATE" << std::endl;
     };
 };
 };

@@ -5,12 +5,8 @@
 
 #include "straight_summon_event_enum.h"
 
-namespace structure
+namespace parking
 {
-    namespace function
-    {
-        namespace parking
-        {
 
             inline const std::map<StraightSummonActvType, std::string> straight_summon_actv_strmap = {
                 {StraightSummonActvType::NONE_0, "NONE[0]"},
@@ -63,6 +59,4 @@ namespace structure
                 {StraightSummonExitType::VEH_COND_5, "VEH_COND[5]"},
             };
 
-        } // namespace parking
-    } // namespace function
-} // namespace structure
+} // namespace parking

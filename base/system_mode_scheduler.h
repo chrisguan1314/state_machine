@@ -15,6 +15,7 @@
 #include "system_switcher.h"
 
 #include "parking/apa/apa/apa_state_machine_engine.h"
+#include "parking/apo/apo/apo_state_machine_engine.h"
 #include "parking/avp/cruising/avp_cruising_state_machine_engine.h"
 #include "parking/avp/mapping/avp_mapping_state_machine_engine.h"
 
@@ -76,10 +77,17 @@ namespace function
         {
             if (system_switcher_ = std::make_unique<SystemSwitcher>())
             {
-                // system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_ACC_10, [] { return true; });
-                // system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_LCC_11, [] { return true; });
-                // system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APA_30, [] { return true; });
-                // system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APO_31, [] { return true; });
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_ACC_10, [] { 
+                    return true; 
+                });
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_LCC_11, [] { 
+                    return true; 
+                });
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APA_30, []{ 
+                    return parking::ApaStateSwitcher::IsRunning();
+                });
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APO_31, []{
+                     return parking::ApoStateSwitcher::IsRunning(); });
                 std::cout << "[SystemScheduler] SystemSwitcher initialized successfully." << std::endl;
             }
             else
@@ -119,6 +127,19 @@ namespace function
                 else
                 {
                     std::cerr << "[SystemScheduler] Failed to initialize APA Engine." << std::endl;
+                }
+            }
+            if (system_param_->GetParkingEnableParam().apo_enable_)
+            {
+                if (apo_engine_ = std::make_unique<parking::ApoStateMachineEngine>())
+                {
+                    apo_engine_->Init();
+                    apo_engine_->Start();
+                    std::cout << "[SystemScheduler] APO Engine initialized successfully." << std::endl;
+                }
+                else
+                {
+                    std::cerr << "[SystemScheduler] Failed to initialize APO Engine." << std::endl;
                 }
             }
             if (system_param_->GetParkingEnableParam().avp_cruising_enable_)
@@ -161,8 +182,29 @@ namespace function
          */
         SystemMode Convert(SystemSubMode sub_mode)
         {
-            // Implement the conversion logic here
-            return SystemMode::MANUL_0; // Replace with actual conversion logic
+            static const std::unordered_map<SystemSubMode, SystemMode> sub_mode_to_mode_map = {
+                {SystemSubMode::MANUL_LOW_0, SystemMode::MANUL_0},
+                {SystemSubMode::MANUL_HIGH_1, SystemMode::MANUL_0},
+                {SystemSubMode::PILOT_ACC_10, SystemMode::PILOT_1},
+                {SystemSubMode::PILOT_LCC_11, SystemMode::PILOT_1},
+                {SystemSubMode::PARKING_APA_30, SystemMode::PARKING_2},
+                {SystemSubMode::PARKING_APO_31, SystemMode::PARKING_2},
+                {SystemSubMode::PARKING_AVM_32, SystemMode::PARKING_2},
+                {SystemSubMode::PARKING_AVP_MAPPING_33, SystemMode::PARKING_2},
+                {SystemSubMode::PARKING_AVP_CRUISING_34, SystemMode::PARKING_2},
+                {SystemSubMode::AS_AEB_50, SystemMode::ACTIVE_SAFETY_3},
+                {SystemSubMode::AS_AES_51, SystemMode::ACTIVE_SAFETY_3},
+                {SystemSubMode::AS_MEB_52, SystemMode::ACTIVE_SAFETY_3},
+                {SystemSubMode::AS_BSD_53, SystemMode::ACTIVE_SAFETY_3}
+            };
+            if (sub_mode_to_mode_map.find(sub_mode) != std::end(sub_mode_to_mode_map))
+            {
+                return sub_mode_to_mode_map.at(sub_mode);
+            }
+            else
+            {
+                throw std::runtime_error("Unsupported system sub-mode");
+            }
         }
         /**
          * @brief 执行系统模式调度循环。
@@ -175,67 +217,17 @@ namespace function
                 // Update system mode and sub-mode based on conditions
                 // For demonstration, we will just set some dummy values
                 SystemSubMode next_sub_mode = GetSystemSubMode().GetCrnt();
-
-                switch (GetSystemSubMode().GetCrnt())
+                auto sub_table = system_switcher_->At(next_sub_mode);
+                if (sub_table.has_value())
                 {
-                case SystemSubMode::MANUL_LOW_0:
-                {
-                    if (parking::AvpCruisingStateSwitcher::IsRunning())
+                    for (const auto &entry : sub_table.value())
                     {
-                        next_sub_mode = SystemSubMode::PARKING_AVP_CRUISING_34;
+                        // Process each entry in the sub-table
+                        if (entry.second())
+                        {
+                            next_sub_mode = entry.first;
+                        }
                     }
-                    else if (parking::ApaStateSwitcher::IsRunning())
-                    {
-                        next_sub_mode = SystemSubMode::PARKING_APA_30;
-                    }
-                    else if (parking::AvpMappingStateSwitcher::IsRunning())
-                    {
-                        next_sub_mode = SystemSubMode::PARKING_AVP_MAPPING_33;
-                    }
-                    break;
-                }
-                case SystemSubMode::MANUL_HIGH_1:
-                {
-                    if (parking::AvpCruisingStateSwitcher::IsRunning())
-                    {
-                        next_sub_mode = SystemSubMode::PARKING_AVP_CRUISING_34;
-                    }
-                    break;
-                }
-                case SystemSubMode::PILOT_ACC_10:
-                {
-                    break;
-                }
-                case SystemSubMode::PILOT_LCC_11:
-                {
-                    break;
-                }
-                case SystemSubMode::PARKING_APA_30:
-                {
-                    break;
-                }
-                case SystemSubMode::PARKING_APO_31:
-                {
-                    break;
-                }
-                case SystemSubMode::PARKING_AVM_32:
-                {
-                    break;
-                }
-                case SystemSubMode::PARKING_AVP_MAPPING_33:
-                {
-                    break;
-                }
-                case SystemSubMode::PARKING_AVP_CRUISING_34:
-                {
-                    break;
-                }
-                case SystemSubMode::AS_AEB_50:
-                {
-                    break;
-                }
-                default:
-                    break;
                 }
 
                 sub_mode_.Update(next_sub_mode);
@@ -300,6 +292,7 @@ namespace function
         std::unique_ptr<std::jthread> scheduler_thread_{nullptr};
         /** @brief APA 状态机引擎。 */
         std::unique_ptr<parking::ApaStateMachineEngine> apa_engine_{nullptr};
+        std::unique_ptr<parking::ApoStateMachineEngine> apo_engine_{nullptr};
         /** @brief AVP 巡航状态机引擎。 */
         std::unique_ptr<parking::AvpCruisingStateMachineEngine> avp_cruising_engine_{nullptr};
         /** @brief AVP 建图状态机引擎。 */

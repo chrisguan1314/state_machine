@@ -6,6 +6,7 @@
 #include "../../../state_switch_table.h"
 #include "avp_mapping_inputer.h"
 #include "avp_mapping_param.h"
+#include "../.././../base.h"
 
 namespace parking
 {
@@ -25,7 +26,14 @@ public:
 private:
     bool SwitchFromIdleToStandby(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
-        return false;
+        if (GetCount() > seconds * 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromStandbyToIdle(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
@@ -33,15 +41,36 @@ private:
     }
     bool SwitchFromStandbyToOnlineLearning(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
-        return false;
+        if (GetCount() > seconds * 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromOnlineLearningToOfflineLearning(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
-        return false;
+        if (GetCount() > seconds * 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromOnlineLearningToParking(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
-        return false;
+        if (GetCount() > seconds * 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromOnlineLearningToTerminate(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
@@ -49,7 +78,14 @@ private:
     }
     bool SwitchFromOfflineLearningToSuccess(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
-        return false;
+        if (GetCount() > seconds * 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     bool SwitchFromOfflineLearningToFailure(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
@@ -59,11 +95,7 @@ private:
     {
         return false;
     }
-    bool SwitchFromParkingToSuccess(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromParkingToFailure(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
+    bool SwitchFromParkingToOfflineLearning(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
     {
         return false;
     }
@@ -71,6 +103,26 @@ private:
     {
         return false;
     }
+    bool SwitchFromSuccessToStandby(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
+    {
+        if (GetCount() > seconds * 20)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool SwitchFromFailedToStandby(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
+    {
+        return false;
+    }
+    bool SwitchFromTerminateToStandby(std::shared_ptr<AvpMappingParam> param, std::shared_ptr<AvpMappingInputer> input) const noexcept
+    {
+        return false;
+    }
+
 public:
     void Init() override 
     {
@@ -103,24 +155,23 @@ public:
 
         SwitchSubTable parking_to_table = 
         {
-            {AvpMappingStateType::SUCCESS_5, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToSuccess, this, std::placeholders::_1, std::placeholders::_2)},
-            {AvpMappingStateType::FAILED_6, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToFailure, this, std::placeholders::_1, std::placeholders::_2)},
+            {AvpMappingStateType::OFFLINE_LEARNING_3, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToOfflineLearning, this, std::placeholders::_1, std::placeholders::_2)},
             {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
         };
 
         SwitchSubTable success_to_table = 
         {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
+            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromSuccessToStandby, this, std::placeholders::_1, std::placeholders::_2)},
         };
 
         SwitchSubTable failed_to_table = 
         {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
+            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromFailedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
         };
 
         SwitchSubTable terminate_to_table = 
         {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
+            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromTerminateToStandby, this, std::placeholders::_1, std::placeholders::_2)},
         };
 
         table_.AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));

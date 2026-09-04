@@ -213,6 +213,8 @@ namespace parking
             table_.AddStateSwitch(ApaStateType::SUCCESS_9, std::move(success_to_table));
             table_.AddStateSwitch(ApaStateType::FAILED_10, std::move(failed_to_table));
             table_.AddStateSwitch(ApaStateType::TERMINATE_11, std::move(terminate_to_table));
+
+            std::cout << "[StateMachine] Init Switcher Table" << std::endl;
         }
 
         ApaStateType CalcNextState(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) override

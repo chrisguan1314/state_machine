@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <atomic>
 #include <chrono>
+#include <mutex>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 template <typename State, typename Param, typename Inputer, 
@@ -39,6 +40,8 @@ private:
     inline static steady_clock::time_point steady_start_time_{steady_clock::now()};
     inline static seconds duration_{0};
     uint32_t freq_{20};
+
+    static std::mutex mtx_;
 public:
     virtual void Init() = 0; 
     virtual void PrintStateSwitchInfo() = 0;
@@ -54,8 +57,9 @@ public:
         {
             if (crnt_state_ >= static_cast<StateType>(2))
             {
-                if (GetCount() % GetFrequency() * 5 == 0)
+                if (GetCount() % (GetFrequency() * 1) == 0)
                 {
+                    // std::cout << "count : " << GetCount() << std::endl;
                     PrintStateSwitchInfo(); 
                 }
             }

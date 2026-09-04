@@ -3,10 +3,6 @@
 #include "rpo_event_map.h"
 #include "../../parking_event_manager.h"
 
-namespace structure
-{
-namespace function
-{
 namespace parking
 {
 
@@ -41,5 +37,3 @@ protected:
 };
 
 }  // namespace parking
-}  // namespace function
-}  // namespace structure
