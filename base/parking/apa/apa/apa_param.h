@@ -15,5 +15,16 @@ public:
     }
 
     void UpdateParam() override {}
+private:
+    bool rpa_enable_{false};
+public:
+    bool IsRpaEnable() const noexcept
+    {
+        return rpa_enable_;
+    }
+    void SetRpaEnable(bool enable) noexcept
+    {
+        rpa_enable_ = enable;
+    }
 };
 }

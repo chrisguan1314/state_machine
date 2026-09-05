@@ -71,6 +71,7 @@ public:
             // Load parameters from the file
             // For example, you can use a JSON library to parse the file and set the parameters accordingly
             parking_enable_param_.apa_enable_ = true;
+            parking_enable_param_.rpa_enable_ = true;
             parking_enable_param_.apo_enable_ = true;
             parking_enable_param_.avp_cruising_enable_ = true;
             parking_enable_param_.avp_mapping_enable_ = true;

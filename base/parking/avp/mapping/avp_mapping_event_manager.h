@@ -60,5 +60,4 @@ namespace parking
             }
         }
     };
-
 } // namespace parking

@@ -28,7 +28,7 @@ namespace parking
         {
             return false;
         }
-        bool SwitchFromStandbyToIdle(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromStandbyToIdle(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) noexcept
         {
             return false;
         }
@@ -62,7 +62,14 @@ namespace parking
         }
         bool SwitchFromPreparedToRpaPrepared(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
         {
-            return false;
+            if (param->IsRpaEnable())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         bool SwitchFromPreparedToParking(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
         {

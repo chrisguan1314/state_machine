@@ -1,13 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <chrono>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
-#include <unordered_map>
-#include <vector>
-#include <variant>
 #include <thread>
-#include <filesystem>
 
 #include "system_mode_info.h"
 #include "system_param.h"
@@ -73,21 +71,28 @@ namespace function
                 throw std::runtime_error("[SystemScheduler] Failed to create SystemParam instance.");
             }
         }
-        void InitSystemSwitcher()   
+        /**
+         * @brief 初始化系统子模式切换器及其转换条件。
+         *
+         * 当前仅注册由低阶人工驾驶模式切换至驾驶或泊车功能的入口；
+         * 泊车功能的切换条件由对应状态机是否正在运行决定。
+         */
+        void InitSystemSwitcher()
         {
             if (system_switcher_ = std::make_unique<SystemSwitcher>())
             {
-                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_ACC_10, [] { 
-                    return true; 
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_ACC_10, [this] {
+                    return system_param_->GetPilotEnableParam().acc_enable_;
                 });
-                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_LCC_11, [] { 
-                    return true; 
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PILOT_LCC_11, [this] {
+                    return system_param_->GetPilotEnableParam().lcc_enable_;
                 });
-                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APA_30, []{ 
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APA_30, [] {
                     return parking::ApaStateSwitcher::IsRunning();
                 });
-                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APO_31, []{
-                     return parking::ApoStateSwitcher::IsRunning(); });
+                system_switcher_->AddSwitchEntry(SystemSubMode::MANUL_LOW_0, SystemSubMode::PARKING_APO_31, [] {
+                    return parking::ApoStateSwitcher::IsRunning();
+                });
                 std::cout << "[SystemScheduler] SystemSwitcher initialized successfully." << std::endl;
             }
             else
@@ -180,30 +185,30 @@ namespace function
          * @param sub_mode 要转换的系统子模式。
          * @return 与子模式对应的系统模式。
          */
-        SystemMode Convert(SystemSubMode sub_mode)
+        static SystemMode Convert(SystemSubMode sub_mode)
         {
-            static const std::unordered_map<SystemSubMode, SystemMode> sub_mode_to_mode_map = {
-                {SystemSubMode::MANUL_LOW_0, SystemMode::MANUL_0},
-                {SystemSubMode::MANUL_HIGH_1, SystemMode::MANUL_0},
-                {SystemSubMode::PILOT_ACC_10, SystemMode::PILOT_1},
-                {SystemSubMode::PILOT_LCC_11, SystemMode::PILOT_1},
-                {SystemSubMode::PARKING_APA_30, SystemMode::PARKING_2},
-                {SystemSubMode::PARKING_APO_31, SystemMode::PARKING_2},
-                {SystemSubMode::PARKING_AVM_32, SystemMode::PARKING_2},
-                {SystemSubMode::PARKING_AVP_MAPPING_33, SystemMode::PARKING_2},
-                {SystemSubMode::PARKING_AVP_CRUISING_34, SystemMode::PARKING_2},
-                {SystemSubMode::AS_AEB_50, SystemMode::ACTIVE_SAFETY_3},
-                {SystemSubMode::AS_AES_51, SystemMode::ACTIVE_SAFETY_3},
-                {SystemSubMode::AS_MEB_52, SystemMode::ACTIVE_SAFETY_3},
-                {SystemSubMode::AS_BSD_53, SystemMode::ACTIVE_SAFETY_3}
-            };
-            if (sub_mode_to_mode_map.find(sub_mode) != std::end(sub_mode_to_mode_map))
+            switch (sub_mode)
             {
-                return sub_mode_to_mode_map.at(sub_mode);
-            }
-            else
-            {
+            case SystemSubMode::MANUL_LOW_0:
+            case SystemSubMode::MANUL_HIGH_1:
+                return SystemMode::MANUL_0;
+            case SystemSubMode::PILOT_ACC_10:
+            case SystemSubMode::PILOT_LCC_11:
+                return SystemMode::PILOT_1;
+            case SystemSubMode::PARKING_APA_30:
+            case SystemSubMode::PARKING_APO_31:
+            case SystemSubMode::PARKING_AVM_32:
+            case SystemSubMode::PARKING_AVP_MAPPING_33:
+            case SystemSubMode::PARKING_AVP_CRUISING_34:
+                return SystemMode::PARKING_2;
+            case SystemSubMode::AS_AEB_50:
+            case SystemSubMode::AS_AES_51:
+            case SystemSubMode::AS_MEB_52:
+            case SystemSubMode::AS_BSD_53:
+                return SystemMode::ACTIVE_SAFETY_3;
+            default:
                 throw std::runtime_error("Unsupported system sub-mode");
+                break;
             }
         }
         /**
@@ -214,28 +219,25 @@ namespace function
         {
             while (!stop_token.stop_requested())
             {
-                // Update system mode and sub-mode based on conditions
-                // For demonstration, we will just set some dummy values
+                // 以当前子模式为起点，按已注册规则计算下一子模式。
                 SystemSubMode next_sub_mode = GetSystemSubMode().GetCrnt();
                 auto sub_table = system_switcher_->At(next_sub_mode);
                 if (sub_table.has_value())
                 {
                     for (const auto &entry : sub_table.value())
                     {
-                        // Process each entry in the sub-table
+                        // 满足条件的目标子模式将作为本轮更新结果。
                         if (entry.second())
                         {
                             next_sub_mode = entry.first;
+                            break;
                         }
                     }
                 }
-
                 sub_mode_.Update(next_sub_mode);
                 system_mode_.Update(Convert(next_sub_mode));
 
-                parking::AvpCruisingStateSwitcher::GetCrntState();
-
-                // Simulate some processing delay
+                // 固定调度周期，避免循环持续占用 CPU。
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         }
@@ -246,13 +248,9 @@ namespace function
          */
         void Init()
         {
-            // Initialize the system scheduler by setting up readers, writers, and loading parameters
             InitReadersAndWriters();
-            //  Load the parameters from the parameter file
             InitParameters();
-            // Initialize the system switcher
             InitSystemSwitcher();
-            // Initialize the scheduler thread
             InitThread();
         }
         /** @brief 启用已配置的驾驶、泊车和主动安全功能。 */
@@ -267,7 +265,7 @@ namespace function
          * @brief 获取当前系统模式信息。
          * @return 当前系统模式的副本。
          */
-        static SystemModeInfo<SystemMode> GetSystemMode() noexcept
+        static SystemModeInfo<SystemMode> GetSystemMode()
         {
             return system_mode_;
         }
@@ -275,7 +273,7 @@ namespace function
          * @brief 获取当前系统子模式信息。
          * @return 当前系统子模式的副本。
          */
-        static SystemModeInfo<SystemSubMode> GetSystemSubMode() noexcept
+        static SystemModeInfo<SystemSubMode> GetSystemSubMode()
         {
             return sub_mode_;
         }
@@ -287,11 +285,13 @@ namespace function
     private:
         /** @brief 系统功能配置参数。 */
         std::unique_ptr<SystemParam> system_param_{nullptr};
+        /** @brief 系统子模式转换规则管理器。 */
         std::unique_ptr<SystemSwitcher> system_switcher_{nullptr};
         /** @brief 执行模式调度循环的后台线程。 */
         std::unique_ptr<std::jthread> scheduler_thread_{nullptr};
         /** @brief APA 状态机引擎。 */
         std::unique_ptr<parking::ApaStateMachineEngine> apa_engine_{nullptr};
+        /** @brief APO 状态机引擎。 */
         std::unique_ptr<parking::ApoStateMachineEngine> apo_engine_{nullptr};
         /** @brief AVP 巡航状态机引擎。 */
         std::unique_ptr<parking::AvpCruisingStateMachineEngine> avp_cruising_engine_{nullptr};

@@ -40,31 +40,64 @@ namespace parking
     private:
         void ActionIdle(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
         { 
-            // std::cout << "ApaOutputer Action : IDLE" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::IDLE_0))
+            {
+                std::cout << "ApaOutputer Action : IDLE" << std::endl; 
+            }
         }
-        void ActionStandby(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
+        void ActionStandby(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> inputer, std::shared_ptr<ApaStateSwitcher> switcher) 
         { 
-            std::cout << "ApaOutputer Action : STANDBY" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::STANDBY_1))
+            {
+                ApaStateSwitcher::SetOpenType(FuncOpenType::NONE_0);
+                ApaStateSwitcher::SetActvType(FuncActvType::NONE_0);
+                std::cout << "ApaOutputer Action : STANDBY" << std::endl; 
+            }
         }
-        void ActionSearching(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
+        void ActionSearching(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> inputer, std::shared_ptr<ApaStateSwitcher> switcher) 
         { 
-            std::cout << "ApaOutputer Action : SEARCHING" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::SEARCHING_2))
+            {
+                ApaStateSwitcher::SetOpenType(FuncOpenType::TICE_1);
+                std::cout << "ApaOutputer Action : SEARCHING" << std::endl; 
+            }
         }
         void ActionSearched(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
         { 
-            std::cout << "ApaOutputer Action : SEARCHED" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::SEARCHED_3))
+            {
+                std::cout << "ApaOutputer Action : SEARCHED" << std::endl; 
+            }
         }
         void ActionPrepared(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
         { 
-            std::cout << "ApaOutputer Action : PREPARED" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::PREPARED_4))
+            {
+                std::cout << "ApaOutputer Action : PREPARED" << std::endl; 
+            }
         }
         void ActionRpaPrepared(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
         { 
-            std::cout << "ApaOutputer Action : RPA_PREPARED" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::RPA_PREPARED_5))
+            {
+                std::cout << "ApaOutputer Action : RPA_PREPARED" << std::endl; 
+            }
         }
-        void ActionParking(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
+        void ActionParking(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> inputer, std::shared_ptr<ApaStateSwitcher> switcher) 
         { 
-            std::cout << "ApaOutputer Action : PARKING" << std::endl; 
+            if (ApaStateSwitcher::IsChangeTo(ApaStateType::PARKING_6))
+            {
+                if (ApaStateSwitcher::IsChangeFrom(ApaStateType::PREPARED_4))
+                {
+                    ApaStateSwitcher::SetActvType(FuncActvType::TICE_1);
+                    std::cout << "ApaOutputer Action : PARKING" << std::endl; 
+                }
+                else if (ApaStateSwitcher::IsChangeFrom(ApaStateType::RPA_PREPARED_5))
+                {
+                    ApaStateSwitcher::SetActvType(FuncActvType::KEY_5);
+                    std::cout << "ApaOutputer Action : PARKING" << std::endl; 
+                }
+            }
         }
         void ActionSuspend(std::shared_ptr<ApaParam>, std::shared_ptr<ApaInputer>, std::shared_ptr<ApaStateSwitcher>) 
         { 

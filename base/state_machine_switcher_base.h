@@ -2,6 +2,7 @@
 
 #include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
+#include "enum.h"
 
 #include <type_traits>
 #include <atomic>
@@ -39,6 +40,8 @@ private:
     inline static uint32_t count_{0};
     inline static steady_clock::time_point steady_start_time_{steady_clock::now()};
     inline static seconds duration_{0};
+    inline static FuncOpenType open_type_{FuncOpenType::NONE_0};
+    inline static FuncActvType actv_type_{FuncActvType::NONE_0};
     uint32_t freq_{20};
 
     static std::mutex mtx_;
@@ -109,6 +112,14 @@ public:
     {
         return duration_;
     }
+    static FuncOpenType GetOpenType() noexcept
+    {
+        return open_type_;
+    }
+    static FuncActvType GetActvType() noexcept
+    {
+        return actv_type_;
+    }
 private:
     uint32_t GetFrequency() noexcept
     {
@@ -118,6 +129,14 @@ public:
     static bool IsStateChanged() noexcept
     {
         return crnt_state_.load() != last_state_.load();
+    }
+    static bool IsChangeTo(StateType state) noexcept
+    {
+        return crnt_state_.load() == state && last_state_.load() != state;
+    }
+    static bool IsChangeFrom(StateType state) noexcept
+    {
+        return last_state_.load() == state && crnt_state_.load() != state;
     }
 public:
     static void SetCrntState(StateType state = static_cast<StateType>(0)) noexcept
@@ -145,5 +164,13 @@ public:
     static void SetDuration(Duration && duration) noexcept
     {
         duration_ = std::forward<Duration>(duration);
+    }
+    static void SetOpenType(FuncOpenType open_type = FuncOpenType::NONE_0) noexcept
+    {
+        open_type_ = open_type;
+    }
+    static void SetActvType(FuncActvType actv_type = FuncActvType::NONE_0) noexcept
+    {
+        actv_type_ = actv_type;
     }
 };
