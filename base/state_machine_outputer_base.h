@@ -6,25 +6,16 @@
 #include <map>
 #include <functional>
 
-template <typename State, typename Param, typename Inputer, typename Switcher,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase, Inputer>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State>, Switcher>>>
+template <typename State, typename = typename std::enable_if_t<std::is_enum_v<State>>>
 class StateMachineOutputerBase
 {
 public: 
     using StateType = State;
-    using ParamType = Param;
-    using InputerType = Inputer;
-    using SwitcherType = Switcher;
-    using ParamSPtr = std::shared_ptr<ParamType>;
-    using InputerSPtr = std::shared_ptr<InputerType>;
-    using SwitcherSPtr = std::shared_ptr<SwitcherType>;
-    using ActionFunction = std::function<void(ParamSPtr, InputerSPtr, SwitcherSPtr)>;
+    using ActionFunction = std::function<void()>;
     using ActionTable = std::map<State, ActionFunction>;
 private:
     std::shared_ptr<StateMachineActionBase> action_sptr_{nullptr};
-    ActionTable action_table_{ActionTable()};
+    ActionTable action_table_{};
 public:
     StateMachineOutputerBase(std::shared_ptr<StateMachineActionBase> action = std::make_shared<StateMachineActionBase>()) : action_sptr_(action)
     {
@@ -38,14 +29,15 @@ public:
 public:
     virtual void InitWriters() = 0;
     virtual void InitActionTable() = 0;
+    virtual State GetCrntState() const noexcept = 0;
 public:
-    void UpdateAction(const ParamSPtr& param, const InputerSPtr& input, const SwitcherSPtr& switcher)
+    void UpdateAction()
     {
-        auto crnt_state = switcher->GetCrntState();
+        auto crnt_state = GetCrntState();
         auto iter = action_table_.find(crnt_state);
         if (iter != action_table_.end())
         {
-            iter->second(param, input, switcher);
+            iter->second();
         }
     }
 protected:

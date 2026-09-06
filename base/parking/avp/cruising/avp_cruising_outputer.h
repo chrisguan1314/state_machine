@@ -7,10 +7,10 @@
 
 namespace parking
 {
-class AvpCruisingOutputer : public StateMachineOutputerBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher>
+class AvpCruisingOutputer : public StateMachineOutputerBase<AvpCruisingStateType>
 {
 public:
-    AvpCruisingOutputer() : StateMachineOutputerBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer, AvpCruisingStateSwitcher>(std::make_shared<AvpCruisingAction>())
+    AvpCruisingOutputer() : StateMachineOutputerBase<AvpCruisingStateType>(std::make_shared<AvpCruisingAction>())
     {
 
     }
@@ -21,65 +21,70 @@ public:
     };
     void InitActionTable() override 
     {
-        AddAction(AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingOutputer::ActionIdle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingOutputer::ActionStandby, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingOutputer::ActionLocating, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingOutputer::ActionLocated, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingOutputer::ActionPrepared, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingOutputer::ActionCruising, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingOutputer::ActionParking, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingOutputer::ActionOverride, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingOutputer::ActionSuccess, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingOutputer::ActionFailed, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingOutputer::ActionSuspend, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-        AddAction(AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingOutputer::ActionTerminate, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        AddAction(AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingOutputer::ActionIdle, this));
+        AddAction(AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingOutputer::ActionStandby, this));
+        AddAction(AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingOutputer::ActionLocating, this));
+        AddAction(AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingOutputer::ActionLocated, this));
+        AddAction(AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingOutputer::ActionPrepared, this));
+        AddAction(AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingOutputer::ActionCruising, this));
+        AddAction(AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingOutputer::ActionParking, this));
+        AddAction(AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingOutputer::ActionOverride, this));
+        AddAction(AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingOutputer::ActionSuccess, this));
+        AddAction(AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingOutputer::ActionFailed, this));
+        AddAction(AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingOutputer::ActionSuspend, this));
+        AddAction(AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingOutputer::ActionTerminate, this));
     };
+
+    AvpCruisingStateType GetCrntState() const noexcept override
+    {
+        return AvpCruisingStateSwitcher::GetCrntState();
+    }
 private:
-    void ActionIdle(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionIdle()
     {
         // std::cout << "AvpCruisingOutputer Action : IDLE" << std::endl;
     };
-    void ActionStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionStandby()
     {
         // std::cout << "AvpCruisingOutputer Action : STANDBY" << std::endl;
     };
-    void ActionLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionLocating()
     {
         // std::cout << "AvpCruisingOutputer Action : LOCATING" << std::endl;
     };
-    void ActionLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionLocated()
     {
         // std::cout << "AvpCruisingOutputer Action : LOCATED" << std::endl;
     };
-    void ActionPrepared(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionPrepared()
     {
         // std::cout << "AvpCruisingOutputer Action : PREPARED" << std::endl;
     };
-    void ActionCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionCruising()
     {
         // std::cout << "AvpCruisingOutputer Action : CRUISING" << std::endl;
     };
-    void ActionParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionParking()
     {
         // std::cout << "AvpCruisingOutputer Action : PARKING" << std::endl;
     };
-    void ActionOverride(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionOverride()
     {
         // std::cout << "AvpCruisingOutputer Action : OVERRIDE" << std::endl;
     };
-    void ActionSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionSuccess()
     {
         // std::cout << "AvpCruisingOutputer Action : SUCCESS" << std::endl;
     };
-    void ActionFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionFailed()
     {
         // std::cout << "AvpCruisingOutputer Action : FAILED" << std::endl;
     };
-    void ActionSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionSuspend()
     {
         // std::cout << "AvpCruisingOutputer Action : SUSPEND" << std::endl;
     };
-    void ActionTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input, std::shared_ptr<AvpCruisingStateSwitcher> switcher)
+    void ActionTerminate()
     {
         // std::cout << "AvpCruisingOutputer Action : TERMINATE" << std::endl;
     };

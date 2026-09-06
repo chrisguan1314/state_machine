@@ -17,7 +17,7 @@ typename = typename std::enable_if_t<std::is_enum_v<State>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase, Inputer>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State>, Switcher>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State>, Outputer>>>
 class StateMachineEngineBase;
 
 // 在定义类模板时，不再需要指定默认模板参数
@@ -117,7 +117,7 @@ public:
                 param_sptr_->UpdateParam();
                 input_sptr_->UpdateEvent();
                 switch_sptr_->UpdateState();
-                output_sptr_->UpdateAction(param_sptr_, input_sptr_, switch_sptr_);
+                output_sptr_->UpdateAction();
             }
             auto elapsed_time = duration_cast<milliseconds>(steady_clock::now() - start_time).count();
             if (elapsed_time < (1000 / freq_))  
