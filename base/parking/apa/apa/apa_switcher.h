@@ -203,18 +203,18 @@ namespace parking
                 {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromTerminateToStandby, this)},
             };
 
-            GetSwtichTable().AddStateSwitch(ApaStateType::IDLE_0, std::move(idle_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::STANDBY_1, std::move(standby_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::SEARCHING_2, std::move(searching_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::SEARCHED_3, std::move(searched_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::PREPARED_4, std::move(prepared_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::RPA_PREPARED_5, std::move(rpa_prepared_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::PARKING_6, std::move(parking_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::SUSPEND_7, std::move(suspend_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::OVERRIDE_8, std::move(override_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::SUCCESS_9, std::move(success_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::FAILED_10, std::move(failed_to_table));
-            GetSwtichTable().AddStateSwitch(ApaStateType::TERMINATE_11, std::move(terminate_to_table));
+            AddStateSwitch(ApaStateType::IDLE_0, std::move(idle_to_table));
+            AddStateSwitch(ApaStateType::STANDBY_1, std::move(standby_to_table));
+            AddStateSwitch(ApaStateType::SEARCHING_2, std::move(searching_to_table));
+            AddStateSwitch(ApaStateType::SEARCHED_3, std::move(searched_to_table));
+            AddStateSwitch(ApaStateType::PREPARED_4, std::move(prepared_to_table));
+            AddStateSwitch(ApaStateType::RPA_PREPARED_5, std::move(rpa_prepared_to_table));
+            AddStateSwitch(ApaStateType::PARKING_6, std::move(parking_to_table));
+            AddStateSwitch(ApaStateType::SUSPEND_7, std::move(suspend_to_table));
+            AddStateSwitch(ApaStateType::OVERRIDE_8, std::move(override_to_table));
+            AddStateSwitch(ApaStateType::SUCCESS_9, std::move(success_to_table));
+            AddStateSwitch(ApaStateType::FAILED_10, std::move(failed_to_table));
+            AddStateSwitch(ApaStateType::TERMINATE_11, std::move(terminate_to_table));
 
             std::cout << "[StateMachine] Init Switcher Table" << std::endl;
         }

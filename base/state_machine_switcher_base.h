@@ -187,4 +187,9 @@ protected:
     {
         return table_;
     } 
+
+    void AddStateSwitch(StateType from_state, StateSwitchTable<StateType>::SwitchSubTable &&table)
+    {
+
+    }
 };

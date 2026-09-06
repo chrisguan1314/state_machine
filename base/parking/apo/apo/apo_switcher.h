@@ -104,44 +104,44 @@ private:
     public:
         void Init() override
         {
-            GetSwtichTable().AddStateSwitch(ApoStateType::IDLE_0, {
+            AddStateSwitch(ApoStateType::IDLE_0, {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromIdleToStandby, this)}
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::STANDBY_1, {
+            AddStateSwitch(ApoStateType::STANDBY_1, {
                 {ApoStateType::IDLE_0, std::bind(&ApoStateSwitcher::SwitchFromStandbyToIdle, this)},
                 {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromStandbyToPreparing, this)}
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::PREPARING_2, {
+            AddStateSwitch(ApoStateType::PREPARING_2, {
                 {ApoStateType::PREPARED_3, std::bind(&ApoStateSwitcher::SwitchFromPreparingToPrepared, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparingToTerminate, this)}
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::PREPARED_3, {
+            AddStateSwitch(ApoStateType::PREPARED_3, {
                 {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromPreparedToPreparing, this)},
                 {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromPreparedToParking, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparedToTerminate, this)},
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::PARKING_4, {
+            AddStateSwitch(ApoStateType::PARKING_4, {
                 {ApoStateType::SUSPEND_5, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuspend, this)},
                 {ApoStateType::OVERRIDE_6, std::bind(&ApoStateSwitcher::SwitchFromParkingToOverride, this)},
                 {ApoStateType::SUCCESS_7, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuccess, this)},
                 {ApoStateType::FAILED_8, std::bind(&ApoStateSwitcher::SwitchFromParkingToFailed, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromParkingToTerminate, this)}
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::SUSPEND_5, {
+            AddStateSwitch(ApoStateType::SUSPEND_5, {
                 {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromSuspendToParking, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromSuspendToTerminate, this)}
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::OVERRIDE_6, {
+            AddStateSwitch(ApoStateType::OVERRIDE_6, {
                 {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromOverrideToParking, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromOverrideToTerminate, this)},
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::SUCCESS_7,  {
+            AddStateSwitch(ApoStateType::SUCCESS_7,  {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromSuccessToStandby, this)},
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::FAILED_8, {
+            AddStateSwitch(ApoStateType::FAILED_8, {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromFailedToStandby, this)},
             });
-            GetSwtichTable().AddStateSwitch(ApoStateType::TERMINATE_9, {
+            AddStateSwitch(ApoStateType::TERMINATE_9, {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromTerminateToStandby, this)},
             });
         }

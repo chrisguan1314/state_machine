@@ -172,14 +172,14 @@ public:
             {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromTerminateToStandby, this)},
         };
 
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::STANDBY_1, std::move(standby_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::ONLINE_LEARNING_2, std::move(online_learning_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::OFFLINE_LEARNING_3, std::move(offline_learning_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::PARKING_4, std::move(parking_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::SUCCESS_5, std::move(success_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::FAILED_6, std::move(failed_to_table));
-        GetSwtichTable().AddStateSwitch(AvpMappingStateType::TERMINATE_7, std::move(terminate_to_table));
+        AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));
+        AddStateSwitch(AvpMappingStateType::STANDBY_1, std::move(standby_to_table));
+        AddStateSwitch(AvpMappingStateType::ONLINE_LEARNING_2, std::move(online_learning_to_table));
+        AddStateSwitch(AvpMappingStateType::OFFLINE_LEARNING_3, std::move(offline_learning_to_table));
+        AddStateSwitch(AvpMappingStateType::PARKING_4, std::move(parking_to_table));
+        AddStateSwitch(AvpMappingStateType::SUCCESS_5, std::move(success_to_table));
+        AddStateSwitch(AvpMappingStateType::FAILED_6, std::move(failed_to_table));
+        AddStateSwitch(AvpMappingStateType::TERMINATE_7, std::move(terminate_to_table));
     }; 
 public:
     static bool IsRunning() noexcept

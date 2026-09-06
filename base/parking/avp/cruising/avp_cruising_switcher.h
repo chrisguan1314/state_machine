@@ -362,18 +362,18 @@ namespace parking
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromTerminateToStandby, this)},
                 };
 
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::IDLE_0, std::move(idle_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::STANDBY_1, std::move(standby_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::LOCATING_2, std::move(locating_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::LOCATED_3, std::move(located_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::PREPARED_4, std::move(prepared_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::CRUISING_5, std::move(cruising_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::PARKING_6, std::move(parking_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, std::move(override_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::SUCCESS_8, std::move(success_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::FAILED_9, std::move(failed_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::SUSPEND_10, std::move(suspend_to_table));
-            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::TERMINATE_11, std::move(terminate_to_table));
+            AddStateSwitch(AvpCruisingStateType::IDLE_0, std::move(idle_to_table));
+            AddStateSwitch(AvpCruisingStateType::STANDBY_1, std::move(standby_to_table));
+            AddStateSwitch(AvpCruisingStateType::LOCATING_2, std::move(locating_to_table));
+            AddStateSwitch(AvpCruisingStateType::LOCATED_3, std::move(located_to_table));
+            AddStateSwitch(AvpCruisingStateType::PREPARED_4, std::move(prepared_to_table));
+            AddStateSwitch(AvpCruisingStateType::CRUISING_5, std::move(cruising_to_table));
+            AddStateSwitch(AvpCruisingStateType::PARKING_6, std::move(parking_to_table));
+            AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, std::move(override_to_table));
+            AddStateSwitch(AvpCruisingStateType::SUCCESS_8, std::move(success_to_table));
+            AddStateSwitch(AvpCruisingStateType::FAILED_9, std::move(failed_to_table));
+            AddStateSwitch(AvpCruisingStateType::SUSPEND_10, std::move(suspend_to_table));
+            AddStateSwitch(AvpCruisingStateType::TERMINATE_11, std::move(terminate_to_table));
         };
 
     public:
