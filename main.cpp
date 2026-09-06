@@ -275,6 +275,20 @@ int main()
     }
 
     // Use system_mode_scheduler here
+
+    // constexpr std::size_t array_size = 2;
+    // // 姑且称之为动态分配数组，可以对动态分配数组进行统一初始化
+    // // 初始化参数个数不能大于动态分配数组的size
+    // // 当初始化参数个数小于动态分配数组的size，则其余元素会被默认初始化为0
+    // uint32_t p[] = {1, 2, 3};
+    // // 如果对数组在使用之前必须进行初始化
+    // std::cout << sizeof(p) << std::endl;
+    // std::for_each(p, p + sizeof(p) / sizeof(p[0]), [](auto x){ std::cout << x << " "; });
+    // std::cout << std::endl;
+
+    // uint32_t * p = new uint32_t(0);
+    // delete p;
+    // p = nullptr;
     
     return 0;
 }

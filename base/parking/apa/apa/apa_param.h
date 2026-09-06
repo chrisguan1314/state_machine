@@ -16,13 +16,13 @@ public:
 
     void UpdateParam() override {}
 private:
-    bool rpa_enable_{false};
+    inline static bool rpa_enable_{false};
 public:
-    bool IsRpaEnable() const noexcept
+    static bool IsRpaEnable() noexcept
     {
         return rpa_enable_;
     }
-    void SetRpaEnable(bool enable) noexcept
+    static void SetRpaEnable(bool enable) noexcept
     {
         rpa_enable_ = enable;
     }

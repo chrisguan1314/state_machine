@@ -62,7 +62,7 @@ namespace parking
         }
         bool SwitchFromPreparedToRpaPrepared(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
         {
-            if (param->IsRpaEnable())
+            if (ApaParam::IsRpaEnable())
             {
                 return true;
             }

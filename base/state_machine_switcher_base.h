@@ -138,6 +138,10 @@ public:
     {
         return last_state_.load() == state && crnt_state_.load() != state;
     }
+    static bool IsChangeFromTo(StateType from, StateType to) noexcept
+    {
+        return last_state_.load() == from && crnt_state_.load() == to;
+    }
 public:
     static void SetCrntState(StateType state = static_cast<StateType>(0)) noexcept
     {
