@@ -3,6 +3,9 @@
 #include "enum.h"
 #include "log_base.h"
 
+template <typename T, typename = typename std::enable_if_t<std::is_enum_v<T>>>
+using str_unordered_map = std::unordered_map<T, std::string>;
+
 const std::string Convert(std::string&& str)
 {
     auto pos = str.find('_');

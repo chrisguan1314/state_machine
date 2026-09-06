@@ -1,5 +1,7 @@
 #pragma once
 
+#include "str_map.h"
+
 #include <unordered_map>
 #include <type_traits>
 #include <string>

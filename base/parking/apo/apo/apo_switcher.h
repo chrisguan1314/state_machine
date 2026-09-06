@@ -16,9 +16,7 @@ namespace parking
 
     class ApoStateSwitcher : public StateMachineSwitcherBase<ApoStateType>
     {
-    private:
-        StateSwitchTable<ApoStateType> table_;
-
+private:
         bool SwitchFromIdleToStandby() const noexcept
         {
             return false;
@@ -106,60 +104,46 @@ namespace parking
     public:
         void Init() override
         {
-            table_.AddStateSwitch(ApoStateType::IDLE_0, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::IDLE_0, {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromIdleToStandby, this)}
             });
-            table_.AddStateSwitch(ApoStateType::STANDBY_1, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::STANDBY_1, {
                 {ApoStateType::IDLE_0, std::bind(&ApoStateSwitcher::SwitchFromStandbyToIdle, this)},
                 {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromStandbyToPreparing, this)}
             });
-            table_.AddStateSwitch(ApoStateType::PREPARING_2, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::PREPARING_2, {
                 {ApoStateType::PREPARED_3, std::bind(&ApoStateSwitcher::SwitchFromPreparingToPrepared, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparingToTerminate, this)}
             });
-            table_.AddStateSwitch(ApoStateType::PREPARED_3, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::PREPARED_3, {
                 {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromPreparedToPreparing, this)},
                 {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromPreparedToParking, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparedToTerminate, this)},
             });
-            table_.AddStateSwitch(ApoStateType::PARKING_4, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::PARKING_4, {
                 {ApoStateType::SUSPEND_5, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuspend, this)},
                 {ApoStateType::OVERRIDE_6, std::bind(&ApoStateSwitcher::SwitchFromParkingToOverride, this)},
                 {ApoStateType::SUCCESS_7, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuccess, this)},
                 {ApoStateType::FAILED_8, std::bind(&ApoStateSwitcher::SwitchFromParkingToFailed, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromParkingToTerminate, this)}
             });
-            table_.AddStateSwitch(ApoStateType::SUSPEND_5, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::SUSPEND_5, {
                 {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromSuspendToParking, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromSuspendToTerminate, this)}
             });
-            table_.AddStateSwitch(ApoStateType::OVERRIDE_6, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::OVERRIDE_6, {
                 {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromOverrideToParking, this)},
                 {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromOverrideToTerminate, this)},
             });
-            table_.AddStateSwitch(ApoStateType::SUCCESS_7,  {
+            GetSwtichTable().AddStateSwitch(ApoStateType::SUCCESS_7,  {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromSuccessToStandby, this)},
             });
-            table_.AddStateSwitch(ApoStateType::FAILED_8, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::FAILED_8, {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromFailedToStandby, this)},
             });
-            table_.AddStateSwitch(ApoStateType::TERMINATE_9, {
+            GetSwtichTable().AddStateSwitch(ApoStateType::TERMINATE_9, {
                 {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromTerminateToStandby, this)},
             });
-        }
-
-        ApoStateType CalcNextState() override
-        {
-            const auto current_state = GetCrntState();
-            const auto &transitions = table_.GetStateSwitchTable(current_state);
-            for (const auto &[next_state, switch_func] : transitions)
-            {
-                if (switch_func())
-                {
-                    return next_state;
-                }
-            }
-            return current_state;
         }
 
         static bool IsRunning() noexcept

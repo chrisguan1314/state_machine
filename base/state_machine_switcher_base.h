@@ -2,6 +2,7 @@
 
 #include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
+#include "state_switch_table.h"
 #include "enum.h"
 
 #include <type_traits>
@@ -9,16 +10,12 @@
 #include <chrono>
 #include <mutex>
 
-// 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename State, typename = typename std::enable_if_t<std::is_enum_v<State>>>
-class StateMachineSwitcherBase;
-
 using namespace std::chrono;
 
 template <typename T1, typename T2>
 using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>::type;
 
-template <typename State, typename>
+template <typename State, typename = typename std::enable_if_t<std::is_enum_v<State>>>
 class StateMachineSwitcherBase
 {
 public:
@@ -36,12 +33,27 @@ private:
     inline static FuncOpenType open_type_{FuncOpenType::NONE_0};
     inline static FuncActvType actv_type_{FuncActvType::NONE_0};
     uint32_t freq_{20};
-
-    static std::mutex mtx_;
+    StateSwitchTable<StateType> table_{};
 public:
     virtual void Init() = 0; 
     virtual void PrintStateSwitchInfo() = 0;
-    virtual StateType CalcNextState() = 0;
+private:
+    StateType CalcNextState()
+    {
+        auto crnt_state = GetCrntState();
+        auto state_switch_list = table_.GetStateSwitchTable(crnt_state);
+        for (auto iter = std::begin(state_switch_list); iter != std::end(state_switch_list); ++iter)
+        {
+            auto to_state = iter->first;
+            auto switch_function = iter->second;
+            if (switch_function())
+            {
+                crnt_state = to_state;
+                break;
+            }
+        }
+        return crnt_state;
+    }
 public:
     void PrintInfo()
     {
@@ -170,4 +182,9 @@ public:
     {
         actv_type_ = actv_type;
     }
+protected:
+    StateSwitchTable<StateType> & GetSwtichTable()
+    {
+        return table_;
+    } 
 };

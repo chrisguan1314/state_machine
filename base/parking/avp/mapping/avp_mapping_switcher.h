@@ -16,8 +16,6 @@ const std::string AvpMappingFormator(const std::string& str)
 }
 class AvpMappingStateSwitcher : public StateMachineSwitcherBase<AvpMappingStateType>
 {
-private:
-    StateSwitchTable<AvpMappingStateType> table_;
 public:
     AvpMappingStateSwitcher() : StateMachineSwitcherBase<AvpMappingStateType>()
     {
@@ -174,32 +172,16 @@ public:
             {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromTerminateToStandby, this)},
         };
 
-        table_.AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::STANDBY_1, std::move(standby_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::ONLINE_LEARNING_2, std::move(online_learning_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::OFFLINE_LEARNING_3, std::move(offline_learning_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::PARKING_4, std::move(parking_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::SUCCESS_5, std::move(success_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::FAILED_6, std::move(failed_to_table));
-        table_.AddStateSwitch(AvpMappingStateType::TERMINATE_7, std::move(terminate_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::STANDBY_1, std::move(standby_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::ONLINE_LEARNING_2, std::move(online_learning_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::OFFLINE_LEARNING_3, std::move(offline_learning_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::PARKING_4, std::move(parking_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::SUCCESS_5, std::move(success_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::FAILED_6, std::move(failed_to_table));
+        GetSwtichTable().AddStateSwitch(AvpMappingStateType::TERMINATE_7, std::move(terminate_to_table));
     }; 
 public:
-    AvpMappingStateType CalcNextState() override
-    {
-        auto crnt_state = GetCrntState();
-        auto state_switch_list = table_.GetStateSwitchTable(crnt_state);
-        for (auto iter = std::begin(state_switch_list); iter != std::end(state_switch_list); ++iter)
-        {
-            auto to_state = iter->first;
-            auto switch_function = iter->second;
-            if (switch_function())
-            {
-                crnt_state = to_state;
-                break;
-            }
-        }
-        return crnt_state;
-    };
     static bool IsRunning() noexcept
     {
         return GetCrntState() >= AvpMappingStateType::STANDBY_1;

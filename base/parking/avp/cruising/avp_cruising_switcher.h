@@ -2,9 +2,7 @@
 
 #include "../../../state_machine_switcher_base.h"
 #include "../../../state_switch_table.h"
-#include "../.././../base.h"
-
-#include <any>
+#include "../../../../log_base.h"
 
 namespace parking
 {
@@ -15,9 +13,6 @@ namespace parking
     }
     class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType>
     {
-    private:
-        StateSwitchTable<AvpCruisingStateType> table_;
-
     public:
         AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType>()
         {
@@ -367,37 +362,21 @@ namespace parking
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromTerminateToStandby, this)},
                 };
 
-            table_.AddStateSwitch(AvpCruisingStateType::IDLE_0, std::move(idle_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::STANDBY_1, std::move(standby_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::LOCATING_2, std::move(locating_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::LOCATED_3, std::move(located_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::PREPARED_4, std::move(prepared_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::CRUISING_5, std::move(cruising_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::PARKING_6, std::move(parking_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, std::move(override_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::SUCCESS_8, std::move(success_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::FAILED_9, std::move(failed_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::SUSPEND_10, std::move(suspend_to_table));
-            table_.AddStateSwitch(AvpCruisingStateType::TERMINATE_11, std::move(terminate_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::IDLE_0, std::move(idle_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::STANDBY_1, std::move(standby_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::LOCATING_2, std::move(locating_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::LOCATED_3, std::move(located_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::PREPARED_4, std::move(prepared_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::CRUISING_5, std::move(cruising_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::PARKING_6, std::move(parking_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::OVERRIDE_7, std::move(override_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::SUCCESS_8, std::move(success_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::FAILED_9, std::move(failed_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::SUSPEND_10, std::move(suspend_to_table));
+            GetSwtichTable().AddStateSwitch(AvpCruisingStateType::TERMINATE_11, std::move(terminate_to_table));
         };
 
     public:
-        AvpCruisingStateType CalcNextState() override
-        {
-            auto crnt_state = GetCrntState();
-            auto state_switch_list = table_.GetStateSwitchTable(crnt_state);
-            for (auto iter = std::begin(state_switch_list); iter != std::end(state_switch_list); ++iter)
-            {
-                auto to_state = iter->first;
-                auto switch_function = iter->second;
-                if (switch_function())
-                {
-                    crnt_state = to_state;
-                    break;
-                }
-            }
-            return crnt_state;
-        };
         static bool IsRunning() noexcept
         {
             return GetCrntState() >= AvpCruisingStateType::STANDBY_1;
