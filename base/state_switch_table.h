@@ -10,13 +10,13 @@
 #include "state_machine_param_base.h"
 #include "state_machine_inputer_base.h"
 
-template <typename T, typename ParamType, typename InputerType, typename Container = std::vector<T>, typename = typename std::enable_if_t<std::is_enum_v<T>>>
+template <typename T, typename Container = std::vector<T>, typename = typename std::enable_if_t<std::is_enum_v<T>>>
 class StateSwitchTable
 {
 public:
     using StateType = T;
     using ToStateList = Container;
-    using SwitchFunction = std::function<bool(std::shared_ptr<ParamType>, std::shared_ptr<InputerType>)>;
+    using SwitchFunction = std::function<bool()>;
     using SwitchSubTable = std::map<T, SwitchFunction>;
     using SwitchTable = std::map<T, SwitchSubTable>;
 

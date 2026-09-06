@@ -15,8 +15,8 @@ template <typename State, typename Param, typename Inputer, typename Switcher, t
 typename = typename std::enable_if_t<std::is_enum_v<State>>,
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase, Inputer>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State>, Switcher>>,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State, Param, Inputer, Switcher>, Outputer>>>
 class StateMachineEngineBase;
 
@@ -115,8 +115,8 @@ public:
             if (GetRunFlag())
             {
                 param_sptr_->UpdateParam();
-                input_sptr_->UpdateEvent(param_sptr_);
-                switch_sptr_->UpdateState(param_sptr_, input_sptr_);
+                input_sptr_->UpdateEvent();
+                switch_sptr_->UpdateState();
                 output_sptr_->UpdateAction(param_sptr_, input_sptr_, switch_sptr_);
             }
             auto elapsed_time = duration_cast<milliseconds>(steady_clock::now() - start_time).count();

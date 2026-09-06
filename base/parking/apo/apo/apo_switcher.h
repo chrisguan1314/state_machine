@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../../../../str_map.h"
-#include "apo_inputer.h"
-#include "apo_param.h"
 #include "../../../state_machine_switcher_base.h"
 #include "../../../state_switch_table.h"
 #include "../.././../base.h"
@@ -16,92 +14,92 @@ namespace parking
         return Format(value, apo_str_map);
     }
 
-    class ApoStateSwitcher : public StateMachineSwitcherBase<ApoStateType, ApoParam, ApoInputer>
+    class ApoStateSwitcher : public StateMachineSwitcherBase<ApoStateType>
     {
     private:
-        StateSwitchTable<ApoStateType, ApoParam, ApoInputer> table_;
+        StateSwitchTable<ApoStateType> table_;
 
-        bool SwitchFromIdleToStandby(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromIdleToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromStandbyToIdle(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromStandbyToIdle() const noexcept
         {
             return false;
         }
-        bool SwitchFromStandbyToPreparing(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromStandbyToPreparing() const noexcept
         {
             return false;
         }
-        bool SwitchFromStandbyToTerminate(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromStandbyToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparingToPrepared(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromPreparingToPrepared() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparingToTerminate(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromPreparingToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToPreparing(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromPreparedToPreparing() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToParking(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromPreparedToParking() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToTerminate(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromPreparedToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToSuspend(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromParkingToSuspend() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToOverride(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromParkingToOverride() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToSuccess(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromParkingToSuccess() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToFailed(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromParkingToFailed() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToTerminate(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromParkingToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromSuspendToParking(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromSuspendToParking() const noexcept
         {
             return false;
         }
-        bool SwitchFromSuspendToTerminate(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromSuspendToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromOverrideToParking(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromOverrideToParking() const noexcept
         {
             return false;
         }
-        bool SwitchFromOverrideToTerminate(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromOverrideToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromSuccessToStandby(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromSuccessToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromFailedToStandby(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromFailedToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromTerminateToStandby(std::shared_ptr<ApoParam>, std::shared_ptr<ApoInputer>) const noexcept
+        bool SwitchFromTerminateToStandby() const noexcept
         {
             return false;
         }
@@ -109,55 +107,54 @@ namespace parking
         void Init() override
         {
             table_.AddStateSwitch(ApoStateType::IDLE_0, {
-                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromIdleToStandby, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromIdleToStandby, this)}
             });
             table_.AddStateSwitch(ApoStateType::STANDBY_1, {
-                {ApoStateType::IDLE_0, std::bind(&ApoStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromStandbyToPreparing, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApoStateType::IDLE_0, std::bind(&ApoStateSwitcher::SwitchFromStandbyToIdle, this)},
+                {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromStandbyToPreparing, this)}
             });
             table_.AddStateSwitch(ApoStateType::PREPARING_2, {
-                {ApoStateType::PREPARED_3, std::bind(&ApoStateSwitcher::SwitchFromPreparingToPrepared, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparingToTerminate, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApoStateType::PREPARED_3, std::bind(&ApoStateSwitcher::SwitchFromPreparingToPrepared, this)},
+                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparingToTerminate, this)}
             });
             table_.AddStateSwitch(ApoStateType::PREPARED_3, {
-                {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromPreparedToPreparing, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromPreparedToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparedToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApoStateType::PREPARING_2, std::bind(&ApoStateSwitcher::SwitchFromPreparedToPreparing, this)},
+                {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromPreparedToParking, this)},
+                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromPreparedToTerminate, this)},
             });
             table_.AddStateSwitch(ApoStateType::PARKING_4, {
-                {ApoStateType::SUSPEND_5, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuspend, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::OVERRIDE_6, std::bind(&ApoStateSwitcher::SwitchFromParkingToOverride, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::SUCCESS_7, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuccess, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::FAILED_8, std::bind(&ApoStateSwitcher::SwitchFromParkingToFailed, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromParkingToTerminate, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApoStateType::SUSPEND_5, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuspend, this)},
+                {ApoStateType::OVERRIDE_6, std::bind(&ApoStateSwitcher::SwitchFromParkingToOverride, this)},
+                {ApoStateType::SUCCESS_7, std::bind(&ApoStateSwitcher::SwitchFromParkingToSuccess, this)},
+                {ApoStateType::FAILED_8, std::bind(&ApoStateSwitcher::SwitchFromParkingToFailed, this)},
+                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromParkingToTerminate, this)}
             });
             table_.AddStateSwitch(ApoStateType::SUSPEND_5, {
-                {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromSuspendToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromSuspendToTerminate, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromSuspendToParking, this)},
+                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromSuspendToTerminate, this)}
             });
             table_.AddStateSwitch(ApoStateType::OVERRIDE_6, {
-                {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromOverrideToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromOverrideToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApoStateType::PARKING_4, std::bind(&ApoStateSwitcher::SwitchFromOverrideToParking, this)},
+                {ApoStateType::TERMINATE_9, std::bind(&ApoStateSwitcher::SwitchFromOverrideToTerminate, this)},
             });
             table_.AddStateSwitch(ApoStateType::SUCCESS_7,  {
-                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromSuccessToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromSuccessToStandby, this)},
             });
             table_.AddStateSwitch(ApoStateType::FAILED_8, {
-                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromFailedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromFailedToStandby, this)},
             });
             table_.AddStateSwitch(ApoStateType::TERMINATE_9, {
-                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromTerminateToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApoStateType::STANDBY_1, std::bind(&ApoStateSwitcher::SwitchFromTerminateToStandby, this)},
             });
         }
 
-        ApoStateType CalcNextState(std::shared_ptr<ApoParam> param,
-                                   std::shared_ptr<ApoInputer> input) override
+        ApoStateType CalcNextState() override
         {
             const auto current_state = GetCrntState();
             const auto &transitions = table_.GetStateSwitchTable(current_state);
             for (const auto &[next_state, switch_func] : transitions)
             {
-                if (switch_func(param, input))
+                if (switch_func())
                 {
                     return next_state;
                 }

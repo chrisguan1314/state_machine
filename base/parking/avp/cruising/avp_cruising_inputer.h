@@ -7,10 +7,10 @@
 
 namespace parking
 {
-class AvpCruisingInputer : public StateMachineInputerBase<AvpCruisingParam>
+class AvpCruisingInputer : public StateMachineInputerBase
 {
 public:
-    AvpCruisingInputer() : StateMachineInputerBase<AvpCruisingParam>(std::make_shared<AvpCruisingEvent>())
+    AvpCruisingInputer() : StateMachineInputerBase(std::make_shared<AvpCruisingEvent>())
     {
 
     }
@@ -19,6 +19,6 @@ public:
     {
         std::cout << "Init AvpCruisingInputer Readers" << std::endl;
     };
-    void UpdateEvent(std::shared_ptr<AvpCruisingParam> param) override {};
+    void UpdateEvent() override {};
 };
-};
+}

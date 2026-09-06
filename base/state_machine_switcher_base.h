@@ -10,10 +10,7 @@
 #include <mutex>
 
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
-template <typename State, typename Param, typename Inputer, 
-typename = typename std::enable_if_t<std::is_enum_v<State>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>>
+template <typename State, typename = typename std::enable_if_t<std::is_enum_v<State>>>
 class StateMachineSwitcherBase;
 
 using namespace std::chrono;
@@ -21,15 +18,11 @@ using namespace std::chrono;
 template <typename T1, typename T2>
 using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>::type;
 
-template <typename State, typename Param, typename Inputer, typename, typename, typename>
+template <typename State, typename>
 class StateMachineSwitcherBase
 {
 public:
     using StateType = State;
-    using ParamType = Param;
-    using InputerType = Inputer;
-    using ParamSPtr = std::shared_ptr<ParamType>;
-    using InputerSPtr = std::shared_ptr<InputerType>;
     using atomic_T = std::atomic<StateType>;
 public:
     StateMachineSwitcherBase() noexcept = default;
@@ -48,7 +41,7 @@ private:
 public:
     virtual void Init() = 0; 
     virtual void PrintStateSwitchInfo() = 0;
-    virtual StateType CalcNextState(ParamSPtr param, InputerSPtr input) = 0;
+    virtual StateType CalcNextState() = 0;
 public:
     void PrintInfo()
     {
@@ -83,9 +76,9 @@ public:
         SetDuration(duration_cast<seconds>(steady_clock::now() - steady_start_time_));
         PrintInfo();
     }
-    void UpdateState(ParamSPtr param, InputerSPtr input)
+    void UpdateState()
     {
-        UpdateState(CalcNextState(param, input));
+        UpdateState(CalcNextState());
     }
 public:
     static StateType GetCrntState() noexcept

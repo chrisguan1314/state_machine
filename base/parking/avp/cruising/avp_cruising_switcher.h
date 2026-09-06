@@ -13,19 +13,19 @@ namespace parking
     {
         return Format(str, avp_cruising_str_map);
     }
-    class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>
+    class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType>
     {
     private:
-        StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer> table_;
+        StateSwitchTable<AvpCruisingStateType> table_;
 
     public:
-        AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>()
+        AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType>()
         {
         }
 
     private:
         // *******************************SwitchFromIdle*******************************
-        bool SwitchFromIdleToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromIdleToStandby() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -37,11 +37,11 @@ namespace parking
             }
         }
         // *******************************SwitchFromStandby*******************************
-        bool SwitchFromStandbyToIdle(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromStandbyToIdle() const noexcept
         {
             return false;
         }
-        bool SwitchFromStandbyToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromStandbyToLocating() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -53,11 +53,11 @@ namespace parking
             }
         }
         // *******************************SwitchFromLocating*******************************
-        bool SwitchFromLocatingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromLocatingToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromLocatingToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromLocatingToLocated() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -69,15 +69,15 @@ namespace parking
             }
         }
         // *******************************SwitchFromLocated*******************************
-        bool SwitchFromLocatedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromLocatedToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromLocatedToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromLocatedToLocating() const noexcept
         {
             return false;
         }
-        bool SwitchFromLocatedToPrepared(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromLocatedToPrepared() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -89,19 +89,19 @@ namespace parking
             }
         }
         // *******************************SwitchFromPrepared*******************************
-        bool SwitchFromPreparedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromPreparedToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToLocating(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromPreparedToLocating() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToLocated(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromPreparedToLocated() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromPreparedToCruising() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -113,11 +113,11 @@ namespace parking
             }
         }
         // *******************************SwitchFromCruising*******************************
-        bool SwitchFromCruisingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromCruisingToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToParking() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -128,32 +128,32 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromCruisingToOverride(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToOverride() const noexcept
         {
             return false;
         }
-        bool SwitchFromCruisingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToSuccess() const noexcept
         {
             return false;
         }
-        bool SwitchFromCruisingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToFailed() const noexcept
         {
             return false;
         }
-        bool SwitchFromCruisingToSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToSuspend() const noexcept
         {
             return false;
         }
-        bool SwitchFromCruisingToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromCruisingToTerminate() const noexcept
         {
             return false;
         }
         // *******************************SwitchFromParking*******************************
-        bool SwitchFromParkingToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromParkingToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToSuccess(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromParkingToSuccess() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -164,20 +164,20 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromParkingToFailed(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromParkingToFailed() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToSuspend(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromParkingToSuspend() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromParkingToTerminate() const noexcept
         {
             return false;
         }
         // *******************************SwitchFromOverride*******************************
-        bool SwitchFromOverrideToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromOverrideToStandby() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -188,7 +188,7 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromOverrideToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromOverrideToCruising() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -200,7 +200,7 @@ namespace parking
             }
         }
         // *******************************SwitchFromSuccess*******************************
-        bool SwitchFromSuccessToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromSuccessToStandby() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -212,7 +212,7 @@ namespace parking
             }
         }
         // *******************************SwitchFromFailed*******************************
-        bool SwitchFromFailedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromFailedToStandby() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -224,7 +224,7 @@ namespace parking
             }
         }
         // *******************************SwitchFromSuspend*******************************
-        bool SwitchFromSuspenedToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromSuspenedToStandby() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -235,7 +235,7 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromSuspenedToCruising(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromSuspenedToCruising() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -246,7 +246,7 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromSuspenedToParking(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromSuspenedToParking() const noexcept
         {
             if (GetCount() > seconds * 20)
             {
@@ -257,7 +257,7 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromSuspenedToTerminate(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromSuspenedToTerminate() const noexcept
         {
             if (GetCount() > (seconds * 20 * 30))
             {
@@ -269,7 +269,7 @@ namespace parking
             }
         }
         // *******************************SwitchFromgTerminate*******************************
-        bool SwitchFromTerminateToStandby(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) const noexcept
+        bool SwitchFromTerminateToStandby() const noexcept
         {
             if (GetCount() > (seconds * 20 * 3))
             {
@@ -284,87 +284,87 @@ namespace parking
     public:
         void Init() override
         {
-            using SwitchSubTable = StateSwitchTable<AvpCruisingStateType, AvpCruisingParam, AvpCruisingInputer>::SwitchSubTable;
+            using SwitchSubTable = StateSwitchTable<AvpCruisingStateType>::SwitchSubTable;
 
             SwitchSubTable idle_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromIdleToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromIdleToStandby, this)},
                 };
 
             SwitchSubTable standby_to_table =
                 {
-                    {AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToLocating, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToIdle, this)},
+                    {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToLocating, this)},
                 };
 
             SwitchSubTable locating_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatingToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatingToLocated, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatingToStandby, this)},
+                    {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatingToLocated, this)},
                 };
 
             SwitchSubTable located_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToLocating, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToPrepared, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToStandby, this)},
+                    {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToLocating, this)},
+                    {AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToPrepared, this)},
                 };
 
             SwitchSubTable prepared_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToLocating, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToLocated, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToCruising, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToStandby, this)},
+                    {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToLocating, this)},
+                    {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToLocated, this)},
+                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToCruising, this)},
                 };
 
             SwitchSubTable cruising_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToOverride, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToSuccess, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToFailed, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToSuspend, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToStandby, this)},
+                    {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToParking, this)},
+                    {AvpCruisingStateType::OVERRIDE_7, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToOverride, this)},
+                    {AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToSuccess, this)},
+                    {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToFailed, this)},
+                    {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToSuspend, this)},
+                    {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToTerminate, this)},
                 };
 
             SwitchSubTable parking_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToSuccess, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToFailed, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToSuspend, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToStandby, this)},
+                    {AvpCruisingStateType::SUCCESS_8, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToSuccess, this)},
+                    {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToFailed, this)},
+                    {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToSuspend, this)},
+                    {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToTerminate, this)},
                 };
 
             SwitchSubTable override_to_table =
                 {
-                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromOverrideToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromOverrideToCruising, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromOverrideToStandby, this)},
+                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromOverrideToCruising, this)},
                 };
 
             SwitchSubTable success_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuccessToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuccessToStandby, this)},
                 };
 
             SwitchSubTable failed_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromFailedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromFailedToStandby, this)},
                 };
 
             SwitchSubTable suspend_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToCruising, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                    {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToStandby, this)},
+                    {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToCruising, this)},
+                    {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToParking, this)},
+                    {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToTerminate, this)},
                 };
 
             SwitchSubTable terminate_to_table =
                 {
-                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromTerminateToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                    {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromTerminateToStandby, this)},
                 };
 
             table_.AddStateSwitch(AvpCruisingStateType::IDLE_0, std::move(idle_to_table));
@@ -382,7 +382,7 @@ namespace parking
         };
 
     public:
-        AvpCruisingStateType CalcNextState(std::shared_ptr<AvpCruisingParam> param, std::shared_ptr<AvpCruisingInputer> input) override
+        AvpCruisingStateType CalcNextState() override
         {
             auto crnt_state = GetCrntState();
             auto state_switch_list = table_.GetStateSwitchTable(crnt_state);
@@ -390,7 +390,7 @@ namespace parking
             {
                 auto to_state = iter->first;
                 auto switch_function = iter->second;
-                if (switch_function(param, input))
+                if (switch_function())
                 {
                     crnt_state = to_state;
                     break;

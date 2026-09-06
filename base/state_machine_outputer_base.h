@@ -8,8 +8,8 @@
 
 template <typename State, typename Param, typename Inputer, typename Switcher,
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase<Param>, Inputer>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State, Param, Inputer>, Switcher>>>
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase, Inputer>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State>, Switcher>>>
 class StateMachineOutputerBase
 {
 public: 

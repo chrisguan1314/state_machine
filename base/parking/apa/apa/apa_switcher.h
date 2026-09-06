@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../../../../str_map.h"
-#include "apa_inputer.h"
-#include "apa_param.h"
 #include "../../../state_machine_switcher_base.h"
 #include "../../../state_switch_table.h"
 
@@ -15,52 +13,52 @@ namespace parking
         return Format(value, apa_str_map);
     }
 
-    class ApaStateSwitcher : public StateMachineSwitcherBase<ApaStateType, ApaParam, ApaInputer>
+    class ApaStateSwitcher : public StateMachineSwitcherBase<ApaStateType>
     {
     private:
-        StateSwitchTable<ApaStateType, ApaParam, ApaInputer> table_;
+        StateSwitchTable<ApaStateType> table_;
 
     public:
-        ApaStateSwitcher() : StateMachineSwitcherBase<ApaStateType, ApaParam, ApaInputer>() {}
+        ApaStateSwitcher() : StateMachineSwitcherBase<ApaStateType>() {}
 
     private:
-        bool SwitchFromIdleToStandby(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromIdleToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromStandbyToIdle(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) noexcept
+        bool SwitchFromStandbyToIdle() noexcept
         {
             return false;
         }
-        bool SwitchFromStandbyToSearching(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromStandbyToSearching() const noexcept
         {
             return false;
         }
-        bool SwitchFromSearchingToSearched(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSearchingToSearched() const noexcept
         {
             return false;
         }
-        bool SwitchFromSearchingToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSearchingToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromSearchedToSearching(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSearchedToSearching() const noexcept
         {
             return false;
         }
-        bool SwitchFromSearchedToPrepared(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSearchedToPrepared() const noexcept
         {
             return false;
         }
-        bool SwitchFromSearchedToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSearchedToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToSearching(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromPreparedToSearching() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToRpaPrepared(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromPreparedToRpaPrepared() const noexcept
         {
             if (ApaParam::IsRpaEnable())
             {
@@ -71,141 +69,141 @@ namespace parking
                 return false;
             }
         }
-        bool SwitchFromPreparedToParking(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromPreparedToParking() const noexcept
         {
             return false;
         }
-        bool SwitchFromPreparedToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromPreparedToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromRpaPreparedToPrepared(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromRpaPreparedToPrepared() const noexcept
         {
             return false;
         }
-        bool SwitchFromRpaPreparedToParking(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromRpaPreparedToParking() const noexcept
         {
             return false;
         }
-        bool SwitchFromRpaPreparedToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromRpaPreparedToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToSuspend(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromParkingToSuspend() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToOverride(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromParkingToOverride() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToSuccess(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromParkingToSuccess() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToFailed(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromParkingToFailed() const noexcept
         {
             return false;
         }
-        bool SwitchFromParkingToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromParkingToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromSuspendToParking(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSuspendToParking() const noexcept
         {
             return false;
         }
-        bool SwitchFromSuspendToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSuspendToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromOverrideToParking(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromOverrideToParking() const noexcept
         {
             return false;
         }   
-        bool SwitchFromOverrideToTerminate(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromOverrideToTerminate() const noexcept
         {
             return false;
         }
-        bool SwitchFromSuccessToStandby(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromSuccessToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromFailedToStandby(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromFailedToStandby() const noexcept
         {
             return false;
         }
-        bool SwitchFromTerminateToStandby(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) const noexcept
+        bool SwitchFromTerminateToStandby() const noexcept
         {
             return false;
         }
     public:
         void Init() override
         {
-            using SwitchSubTable = StateSwitchTable<ApaStateType, ApaParam, ApaInputer>::SwitchSubTable;
+            using SwitchSubTable = StateSwitchTable<ApaStateType>::SwitchSubTable;
 
             SwitchSubTable idle_to_table =
             {
-                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromIdleToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromIdleToStandby, this)},
             };
             SwitchSubTable standby_to_table =
             {
-                {ApaStateType::IDLE_0, std::bind(&ApaStateSwitcher::SwitchFromStandbyToIdle, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::SEARCHING_2, std::bind(&ApaStateSwitcher::SwitchFromStandbyToSearching, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::IDLE_0, std::bind(&ApaStateSwitcher::SwitchFromStandbyToIdle, this)},
+                {ApaStateType::SEARCHING_2, std::bind(&ApaStateSwitcher::SwitchFromStandbyToSearching, this)},
             };
             SwitchSubTable searching_to_table =
             {
-                {ApaStateType::SEARCHED_3, std::bind(&ApaStateSwitcher::SwitchFromSearchingToSearched, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromSearchingToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::SEARCHED_3, std::bind(&ApaStateSwitcher::SwitchFromSearchingToSearched, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromSearchingToTerminate, this)},
             };
             SwitchSubTable searched_to_table =
             {
-                {ApaStateType::SEARCHING_2, std::bind(&ApaStateSwitcher::SwitchFromSearchedToSearching, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::PREPARED_4, std::bind(&ApaStateSwitcher::SwitchFromSearchedToPrepared, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromSearchedToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::SEARCHING_2, std::bind(&ApaStateSwitcher::SwitchFromSearchedToSearching, this)},
+                {ApaStateType::PREPARED_4, std::bind(&ApaStateSwitcher::SwitchFromSearchedToPrepared, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromSearchedToTerminate, this)},
             };
             SwitchSubTable prepared_to_table =
             {
-                {ApaStateType::SEARCHING_2, std::bind(&ApaStateSwitcher::SwitchFromPreparedToSearching, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::RPA_PREPARED_5, std::bind(&ApaStateSwitcher::SwitchFromPreparedToRpaPrepared, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromPreparedToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromPreparedToTerminate, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApaStateType::SEARCHING_2, std::bind(&ApaStateSwitcher::SwitchFromPreparedToSearching, this)},
+                {ApaStateType::RPA_PREPARED_5, std::bind(&ApaStateSwitcher::SwitchFromPreparedToRpaPrepared, this)},
+                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromPreparedToParking, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromPreparedToTerminate, this)}
             };
             SwitchSubTable rpa_prepared_to_table =
             {
-                {ApaStateType::PREPARED_4, std::bind(&ApaStateSwitcher::SwitchFromRpaPreparedToPrepared, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromRpaPreparedToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromRpaPreparedToTerminate, this, std::placeholders::_1, std::placeholders::_2)}
+                {ApaStateType::PREPARED_4, std::bind(&ApaStateSwitcher::SwitchFromRpaPreparedToPrepared, this)},
+                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromRpaPreparedToParking, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromRpaPreparedToTerminate, this)}
             };
             SwitchSubTable parking_to_table =
             {
-                {ApaStateType::SUSPEND_7, std::bind(&ApaStateSwitcher::SwitchFromParkingToSuspend, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::OVERRIDE_8, std::bind(&ApaStateSwitcher::SwitchFromParkingToOverride, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::SUCCESS_9, std::bind(&ApaStateSwitcher::SwitchFromParkingToSuccess, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::FAILED_10, std::bind(&ApaStateSwitcher::SwitchFromParkingToFailed, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromParkingToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::SUSPEND_7, std::bind(&ApaStateSwitcher::SwitchFromParkingToSuspend, this)},
+                {ApaStateType::OVERRIDE_8, std::bind(&ApaStateSwitcher::SwitchFromParkingToOverride, this)},
+                {ApaStateType::SUCCESS_9, std::bind(&ApaStateSwitcher::SwitchFromParkingToSuccess, this)},
+                {ApaStateType::FAILED_10, std::bind(&ApaStateSwitcher::SwitchFromParkingToFailed, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromParkingToTerminate, this)},
             };
             SwitchSubTable suspend_to_table =
             {
-                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromSuspendToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromSuspendToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromSuspendToParking, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromSuspendToTerminate, this)},
             };
             SwitchSubTable override_to_table =
             {
-                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromOverrideToParking, this, std::placeholders::_1, std::placeholders::_2)},
-                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromOverrideToTerminate, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::PARKING_6, std::bind(&ApaStateSwitcher::SwitchFromOverrideToParking, this)},
+                {ApaStateType::TERMINATE_11, std::bind(&ApaStateSwitcher::SwitchFromOverrideToTerminate, this)},
             };
             SwitchSubTable success_to_table =
             {
-                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromSuccessToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromSuccessToStandby, this)},
             };
             SwitchSubTable failed_to_table =
             {
-                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromFailedToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromFailedToStandby, this)},
             };
             SwitchSubTable terminate_to_table =
             {
-                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromTerminateToStandby, this, std::placeholders::_1, std::placeholders::_2)},
+                {ApaStateType::STANDBY_1, std::bind(&ApaStateSwitcher::SwitchFromTerminateToStandby, this)},
             };
 
             table_.AddStateSwitch(ApaStateType::IDLE_0, std::move(idle_to_table));
@@ -224,13 +222,13 @@ namespace parking
             std::cout << "[StateMachine] Init Switcher Table" << std::endl;
         }
 
-        ApaStateType CalcNextState(std::shared_ptr<ApaParam> param, std::shared_ptr<ApaInputer> input) override
+        ApaStateType CalcNextState() override
         {
             auto crnt_state = GetCrntState();
             const auto& state_switch_list = table_.GetStateSwitchTable(crnt_state);
             for (const auto& [to_state, switch_function] : state_switch_list)
             {
-                if (switch_function(param, input))
+                if (switch_function())
                 {
                     crnt_state = to_state;
                     break;
