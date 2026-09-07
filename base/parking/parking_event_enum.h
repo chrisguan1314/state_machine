@@ -29,7 +29,7 @@ enum class ParkingEventType : std::uint8_t
     EXIT_8,
 };
 
-std::unordered_map<ParkingEventType, std::string> parking_event_strmap = {
+inline std::unordered_map<ParkingEventType, std::string> parking_event_strmap = {
     {ParkingEventType::NONE_0, "NONE[0]"},
     {ParkingEventType::ACTV_1, "ACTV[1]"},
     {ParkingEventType::ACTV_IHBT_2, "ACTV_IHBT[2]"},

@@ -5,18 +5,35 @@
 
 namespace parking
 {
+/**
+ * @brief 将通用停车事件名称格式化为可显示文本。
+ * @param value 停车事件名称。
+ * @return 对应的格式化文本。
+ */
 inline std::string EventFormator(const std::string &value)
 {
     return Format(value, parking_event_strmap);
 }
 /**
  * @brief 保存和查询 APA 事件。
+ *
+ * @details
+ * 该类以 APA 专用枚举实例化 ParkingEventManager，统一维护激活、激活抑制、
+ * 控车激活、控车激活抑制、暂停、成功、失败和退出事件。事件变更时，
+ * LogEventChange() 将具体枚举值转换为字符串并输出日志；查询接口则返回
+ * 当前通用事件类别及其 APA 专用事件名称。
  */
 class ApaEventManager : public ParkingEventManager<ApaActvType, ApaActvIhbtType, ApaGuidanceType,
                                          ApaGuidanceIhbtType, ApaPauseType, ApaSuccessType,
                                          ApaFailType, ApaExitType>
 {
 protected:
+    /**
+     * @brief 记录 APA 事件值的变化。
+     * @param event_type 发生变化的通用停车事件类别。
+     * @param value 对应 APA 事件枚举的底层整数值。
+     * @details 将值转换为对应 APA 枚举后查询字符串映射；未找到映射时不输出日志。
+     */
     void LogEventChange(ParkingEventType event_type, int value) noexcept override
     {
         const auto log = [](const auto& strmap, const char* event_name, auto event_value) {
@@ -40,10 +57,19 @@ protected:
         }
     }
 public:
+    /**
+     * @brief 获取当前已设置的 APA 通用事件类别名称。
+     * @return 由 parking_event_strmap 格式化的事件类别名称。
+     */
     static std::string GetEventName() noexcept 
     {
         return parking_event_strmap.at(GetEventType());
     }
+
+    /**
+     * @brief 获取当前已设置的 APA 具体事件名称。
+     * @return 当前事件类别对应的 APA 具体枚举名称；未设置任何事件时返回 "NONE"。
+     */
     static std::string GetEventTypeName() noexcept
     {
         switch (GetEventType())
