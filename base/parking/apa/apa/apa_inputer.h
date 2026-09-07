@@ -57,7 +57,7 @@ namespace parking
                 }
                 else if (ApaStateSwitcher::GetCrntState() == ApaStateType::PREPARED_4 && ApaStateSwitcher::GetCount()  >= 60)
                 {
-                    ApaEventManager::SetGuidance(ApaGuidanceType::ACTIVE_1);
+                    ApaEventManager::SetGuidance(ApaGuidanceType::AUTO_5);
                 }
                 else if (ApaStateSwitcher::GetCrntState() == ApaStateType::PARKING_6 && ApaStateSwitcher::GetCount()  >= 60)
                 {
@@ -72,7 +72,7 @@ namespace parking
                     // No event update logic implemented yet.
                 }
                 // ApaEventManager::SetActvInhibited(ApaActvIhbtType::NONE_0);
-                // ApaEventManager::SetGuidance(ApaGuidanceType::ACTIVE_1);
+                // ApaEventManager::SetGuidance(ApaGuidanceType::AUTO_5);
                 // ApaEventManager::SetGuidanceInhibited(ApaGuidanceIhbtType::NONE_0);
                 // ApaEventManager::SetPause(ApaPauseType::NONE_0);
                 // ApaEventManager::SetSuccess(ApaSuccessType::DATA_VALID_1);

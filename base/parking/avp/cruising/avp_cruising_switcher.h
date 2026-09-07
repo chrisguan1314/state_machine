@@ -410,7 +410,7 @@ namespace parking
         /**
          * @brief 输出当前、上一和前序状态，以及当前状态持续时间。
          */
-        void PrintStateInfo() override
+        void PrintStateInfo(bool flag) override
         {
             std::cout << "[AVPC] Crnt : " << AvpCruisingFormator(avp_cruising_str_map.at(GetCrntState()))
                       << ", Last : " << AvpCruisingFormator(avp_cruising_str_map.at(GetLastState()))

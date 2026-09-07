@@ -6,6 +6,7 @@
 #include "../../../state_switch_table.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace parking
 {
@@ -148,12 +149,19 @@ namespace parking
          * @details 将当前、上一和前序状态格式化后输出，同时输出当前状态持续时间，
          * 用于运行时状态机诊断。
          */
-        void PrintStateInfo() override
+        void PrintStateInfo(bool flag) override
         {
-            std::cout << "[APA] Last : " << ApaFormator(apa_str_map.at(GetLastState()))
-                      << ", Crnt : " << ApaFormator(apa_str_map.at(GetCrntState()))
-                      << ", Prvs : " << ApaFormator(apa_str_map.at(GetPrvsState()))
-                      << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
+            std::stringstream ss;
+            ss << "[APA] Last : " << ApaFormator(apa_str_map.at(GetLastState()))
+                << ", Crnt : " << ApaFormator(apa_str_map.at(GetCrntState()))
+                << ", Prvs : " << ApaFormator(apa_str_map.at(GetPrvsState()))
+                << ", Duration : " << GetDuration().count() << "(S)";
+            if (flag &&  ApaEventManager::GetEventType() > ParkingEventType::NONE_0)
+            {
+                ss << ", Event : " << EventFormator(ApaEventManager::GetEventName())
+                    << ", Type : " << ApaEventManager::GetEventTypeName();
+            }
+            std::cout << ss.str() << std::endl;
         }
 
     private:

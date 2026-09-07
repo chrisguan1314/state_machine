@@ -24,10 +24,14 @@ namespace parking
                 {ApaActvIhbtType::SYS_FAULT_2, "SYS_FAULT[2]"},
             };
 
-            /** @brief APA 控车激活状态到字符串的映射。 */
+            /** @brief APA 控车激活来源到字符串的映射。 */
             inline const std::map<ApaGuidanceType, std::string> apa_guidance_strmap = {
                 {ApaGuidanceType::NONE_0, "NONE[0]"},
-                {ApaGuidanceType::ACTIVE_1, "ACTIVE[1]"},
+                {ApaGuidanceType::BTN_1, "BTN[1]"},
+                {ApaGuidanceType::KEY_2, "KEY[2]"},
+                {ApaGuidanceType::APP_3, "APP[3]"},
+                {ApaGuidanceType::LEVER_4, "LEVER[4]"},
+                {ApaGuidanceType::AUTO_5, "AUTO[5]"},
             };
 
             /** @brief APA 控车激活抑制原因到字符串的映射。 */

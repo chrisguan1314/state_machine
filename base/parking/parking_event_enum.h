@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <unordered_map>
 
 namespace parking
 {
@@ -28,4 +29,15 @@ enum class ParkingEventType : std::uint8_t
     EXIT_8,
 };
 
-}
+std::unordered_map<ParkingEventType, std::string> parking_event_strmap = {
+    {ParkingEventType::NONE_0, "NONE[0]"},
+    {ParkingEventType::ACTV_1, "ACTV[1]"},
+    {ParkingEventType::ACTV_IHBT_2, "ACTV_IHBT[2]"},
+    {ParkingEventType::GUIDANCE_3, "GUIDANCE[3]"},
+    {ParkingEventType::GUIDANCE_IHBT_4, "GUIDANCE_IHBT[4]"},
+    {ParkingEventType::PAUSE_5, "PAUSE[5]"},
+    {ParkingEventType::SUCCESS_6, "SUCCESS[6]"},
+    {ParkingEventType::FAIL_7, "FAIL[7]"},
+    {ParkingEventType::EXIT_8, "EXIT[8]"},
+};
+}  // namespace parking

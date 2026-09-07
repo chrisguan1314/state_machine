@@ -151,7 +151,7 @@ private:
             return GetCrntState() > ApoStateType::STANDBY_1;
         }
 
-        void PrintStateInfo() override
+        void PrintStateInfo(bool flag) override
         {
             std::cout << "[APO] Crnt : " << ApoFormator(apo_str_map.at(GetCrntState()))
                       << ", Last : " << ApoFormator(apo_str_map.at(GetLastState()))

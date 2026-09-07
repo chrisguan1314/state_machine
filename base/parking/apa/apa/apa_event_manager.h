@@ -1,10 +1,14 @@
 #pragma once
 #include "apa_event_map.h"
 #include "../../parking_event_manager.h"
+#include "../../../../log_base.h"
 
 namespace parking
 {
-
+inline std::string EventFormator(const std::string &value)
+{
+    return Format(value, parking_event_strmap);
+}
 /**
  * @brief 保存和查询 APA 事件。
  */
@@ -33,6 +37,27 @@ protected:
             case ParkingEventType::FAIL_7: log(apa_fail_strmap, "FAIL", static_cast<ApaFailType>(value)); break;
             case ParkingEventType::EXIT_8: log(apa_exit_strmap, "EXIT", static_cast<ApaExitType>(value)); break;
             case ParkingEventType::NONE_0: default: break;
+        }
+    }
+public:
+    static std::string GetEventName() noexcept 
+    {
+        return parking_event_strmap.at(GetEventType());
+    }
+    static std::string GetEventTypeName() noexcept
+    {
+        switch (GetEventType())
+        {
+            case ParkingEventType::ACTV_1: return apa_actv_strmap.at(GetActv());
+            case ParkingEventType::ACTV_IHBT_2: return apa_actv_ihbt_strmap.at(GetActvInhibited());
+            case ParkingEventType::GUIDANCE_3: return apa_guidance_strmap.at(GetGuidance());
+            case ParkingEventType::GUIDANCE_IHBT_4: return apa_guidance_ihbt_strmap.at(GetGuidanceInhibited());
+            case ParkingEventType::PAUSE_5: return apa_pause_strmap.at(GetPause());
+            case ParkingEventType::SUCCESS_6: return apa_success_strmap.at(GetSuccess());
+            case ParkingEventType::FAIL_7: return apa_fail_strmap.at(GetFail());
+            case ParkingEventType::EXIT_8: return apa_exit_strmap.at(GetExit());
+            case ParkingEventType::NONE_0:
+            default: return "NONE";
         }
     }
 };

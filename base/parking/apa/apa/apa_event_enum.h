@@ -23,11 +23,15 @@ enum class ApaActvIhbtType : std::uint8_t
     SYS_FAULT_2,
 };
 
-/** @brief APA 控车激活状态。 */
+/** @brief APA 控车激活来源。 */
 enum class ApaGuidanceType : std::uint8_t
 {
     NONE_0,
-    ACTIVE_1,
+    BTN_1,
+    KEY_2,
+    APP_3,
+    LEVER_4,
+    AUTO_5,
 };
 
 /** @brief APA 控车激活抑制原因。 */
