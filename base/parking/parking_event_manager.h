@@ -60,18 +60,14 @@ public:
                                     ExitType>;   
 
 private:
-    EventBase event_base_;
-
+    /**
+     * @brief 当前模板实例共享的停车事件状态。
+     *
+     * 同一组模板枚举类型对应的所有 ParkingEventManager 实例共用此状态。
+     */
+    inline static EventBase event_base_{};
 protected:
-    /**
-     * @brief 记录事件变化的纯虚函数，子类必须实现。
-     */
-    virtual void LogEventChange(ParkingEventType event_type, int value) const noexcept = 0;
-    /**
-     * @brief 更新事件状态。
-     */
-    virtual void UpdateEvent() noexcept = 0;
-
+    virtual void LogEventChange(ParkingEventType event_type, int value) noexcept = 0;
 private:
     /**
      * @brief 检查指定事件是否已设置。
@@ -91,7 +87,7 @@ public:
      * @brief 获取当前的事件基类实例。
      * @return 当前事件基类实例。
      */
-    EventBase GetEvent() const noexcept
+    static EventBase GetEvent() noexcept
     {
         return event_base_;
     }
@@ -100,7 +96,7 @@ public:
      * @brief 获取激活事件值。
      * @return 当前激活事件的具体枚举值。
      */
-    ActvType GetActv() const noexcept
+    static ActvType GetActv() noexcept
     {
         return event_base_.actv_;
     }
@@ -109,7 +105,7 @@ public:
      * @brief 获取激活抑制事件值。
      * @return 当前激活抑制事件的具体枚举值。
      */
-    ActvIhbtType GetActvInhibited() const noexcept
+    static ActvIhbtType GetActvInhibited() noexcept
     {
         return event_base_.actv_inhibited_;
     }
@@ -118,7 +114,7 @@ public:
      * @brief 获取控车激活事件值。
      * @return 当前控车激活事件的具体枚举值。
      */
-    GuidanceType GetGuidance() const noexcept
+    static GuidanceType GetGuidance() noexcept
     {
         return event_base_.guidance_;
     }
@@ -127,7 +123,7 @@ public:
      * @brief 获取控车激活抑制事件值。
      * @return 当前控车激活抑制事件的具体枚举值。
      */
-    GuidanceIhbtType GetGuidanceInhibited() const noexcept
+    static GuidanceIhbtType GetGuidanceInhibited() noexcept
     {
         return event_base_.guidance_inhibited_;
     }
@@ -136,7 +132,7 @@ public:
      * @brief 获取暂停事件值。
      * @return 当前暂停事件的具体枚举值。
      */
-    PauseType GetPause() const noexcept
+    static PauseType GetPause() noexcept
     {
         return event_base_.pause_;
     }
@@ -145,7 +141,7 @@ public:
      * @brief 获取成功事件值。
      * @return 当前成功事件的具体枚举值。
      */
-    SuccessType GetSuccess() const noexcept
+    static SuccessType GetSuccess() noexcept
     {
         return event_base_.success_;
     }
@@ -154,7 +150,7 @@ public:
      * @brief 获取失败事件值。
      * @return 当前失败事件的具体枚举值。
      */
-    FailType GetFail() const noexcept
+    static FailType GetFail() noexcept
     {
         return event_base_.fail_;
     }
@@ -163,7 +159,7 @@ public:
      * @brief 获取退出事件值。
      * @return 当前退出事件的具体枚举值。
      */
-    ExitType GetExit() const noexcept
+    static ExitType GetExit() noexcept
     {
         return event_base_.exit_;
     }
@@ -178,7 +174,7 @@ public:
      * @param event 要获取的通用停车事件。
      * @return 对应事件成员的具体枚举值。
      */
-    EventValue GetEventType(ParkingEventType event) const noexcept
+    static EventValue GetEventType(ParkingEventType event) noexcept
     {
         switch (event)
         {
@@ -199,7 +195,7 @@ public:
      * @brief 获取当前设置的通用停车事件类型。
      * @return 当前设置的通用停车事件类型。
      */
-    ParkingEventType GetEventType() const noexcept
+    static ParkingEventType GetEventType() noexcept
     {
         if (IsEventSet(event_base_.actv_))
         {
@@ -245,7 +241,7 @@ public:
      * @param event 要查询的通用停车事件。
      * @return 事件已设置时返回 true。
      */
-    bool GetEventFlag(ParkingEventType event) const noexcept
+    static bool GetEventFlag(ParkingEventType event) noexcept
     {
         switch (event)
         {
@@ -266,88 +262,104 @@ public:
      * @brief 设置激活事件的具体枚举值。
      * @param value 要设置的激活事件值。
      */
-    void SetActv(ActvType value) noexcept 
+    static void SetActv(ActvType value) noexcept 
     { 
-        event_base_.actv_ = value; 
-        LogEventChange(ParkingEventType::ACTV_1,
-                   static_cast<int>(static_cast<std::underlying_type_t<ActvType>>(value)));
+        if (value != event_base_.actv_)
+        {
+            std::cout << "event_base_.actv_ : " << static_cast<int>(event_base_.actv_) << " -> " << static_cast<int>(value) << std::endl;
+        }
+        event_base_.actv_ = value;
+        // LogEventChange(ParkingEventType::ACTV_1,
+        //             static_cast<int>(static_cast<std::underlying_type_t<ActvType>>(value)));
     }
 
     /**
      * @brief 设置激活抑制事件的具体枚举值。
      * @param value 要设置的激活抑制事件值。
      */
-    void SetActvInhibited(ActvIhbtType value) noexcept 
+    static void SetActvInhibited(ActvIhbtType value) noexcept 
     { 
         event_base_.actv_inhibited_ = value; 
-        LogEventChange(ParkingEventType::ACTV_IHBT_2,
-                   static_cast<int>(static_cast<std::underlying_type_t<ActvIhbtType>>(value)));
+        // LogEventChange(ParkingEventType::ACTV_IHBT_2,
+        //            static_cast<int>(static_cast<std::underlying_type_t<ActvIhbtType>>(value)));
     }
 
     /**
      * @brief 设置控车激活事件的具体枚举值。
      * @param value 要设置的控车激活事件值。
      */
-    void SetGuidance(GuidanceType value) noexcept 
+    static void SetGuidance(GuidanceType value) noexcept 
     { 
+        if (value != event_base_.guidance_)
+        {
+            std::cout << "event_base_.guidance_ : " << static_cast<int>(event_base_.guidance_) << " -> " << static_cast<int>(value) << std::endl;
+        }
         event_base_.guidance_ = value; 
-        LogEventChange(ParkingEventType::GUIDANCE_3,
-                   static_cast<int>(static_cast<std::underlying_type_t<GuidanceType>>(value)));
+        // LogEventChange(ParkingEventType::GUIDANCE_3,
+        //            static_cast<int>(static_cast<std::underlying_type_t<GuidanceType>>(value)));
     }
 
     /**
      * @brief 设置控车激活抑制事件的具体枚举值。
      * @param value 要设置的控车激活抑制事件值。
      */
-    void SetGuidanceInhibited(GuidanceIhbtType value) noexcept
+    static void SetGuidanceInhibited(GuidanceIhbtType value) noexcept
     {
         event_base_.guidance_inhibited_ = value;
-        LogEventChange(ParkingEventType::GUIDANCE_IHBT_4,
-                   static_cast<int>(static_cast<std::underlying_type_t<GuidanceIhbtType>>(value)));
+        // LogEventChange(ParkingEventType::GUIDANCE_IHBT_4,
+        //            static_cast<int>(static_cast<std::underlying_type_t<GuidanceIhbtType>>(value)));
     }
 
     /**
      * @brief 设置暂停事件的具体枚举值。
      * @param value 要设置的暂停事件值。
      */
-    void SetPause(PauseType value) noexcept 
+    static void SetPause(PauseType value) noexcept 
     { 
         event_base_.pause_ = value; 
-        LogEventChange(ParkingEventType::PAUSE_5,
-                   static_cast<int>(static_cast<std::underlying_type_t<PauseType>>(value)));
+        // LogEventChange(ParkingEventType::PAUSE_5,
+        //            static_cast<int>(static_cast<std::underlying_type_t<PauseType>>(value)));
     }
 
     /**
      * @brief 设置成功事件的具体枚举值。
      * @param value 要设置的成功事件值。
      */
-    void SetSuccess(SuccessType value) noexcept 
+    static void SetSuccess(SuccessType value) noexcept 
     { 
+        if (value != event_base_.success_)
+        {
+            std::cout << "event_base_.success_ : " << static_cast<int>(event_base_.success_) << " -> " << static_cast<int>(value) << std::endl;
+        }
         event_base_.success_ = value; 
-        LogEventChange(ParkingEventType::SUCCESS_6,
-                   static_cast<int>(static_cast<std::underlying_type_t<SuccessType>>(value)));
+        // LogEventChange(ParkingEventType::SUCCESS_6,
+        //            static_cast<int>(static_cast<std::underlying_type_t<SuccessType>>(value)));
     }
 
     /**
      * @brief 设置失败事件的具体枚举值。
      * @param value 要设置的失败事件值。
      */
-    void SetFail(FailType value) noexcept 
+    static void SetFail(FailType value) noexcept 
     { 
         event_base_.fail_ = value; 
-        LogEventChange(ParkingEventType::FAIL_7,
-                   static_cast<int>(static_cast<std::underlying_type_t<FailType>>(value)));
+        // LogEventChange(ParkingEventType::FAIL_7,
+        //            static_cast<int>(static_cast<std::underlying_type_t<FailType>>(value)));
     }
 
     /**
      * @brief 设置退出事件的具体枚举值。
      * @param value 要设置的退出事件值。
      */
-    void SetExit(ExitType value) noexcept 
+    static void SetExit(ExitType value) noexcept 
     { 
+        if (value != event_base_.exit_)
+        {
+            std::cout << "event_base_.exit_ : " << static_cast<int>(event_base_.exit_) << " -> " << static_cast<int>(value) << std::endl;
+        }
         event_base_.exit_ = value; 
-        LogEventChange(ParkingEventType::EXIT_8,
-                   static_cast<int>(static_cast<std::underlying_type_t<ExitType>>(value)));
+        // LogEventChange(ParkingEventType::EXIT_8,
+        //            static_cast<int>(static_cast<std::underlying_type_t<ExitType>>(value)));
     }
 
     /**
@@ -356,7 +368,7 @@ public:
      * @param value 对应事件的具体枚举值。
      *              当 event 为 NONE_0 或无效值时，value 会被忽略。
      */
-    void SetEvent(ParkingEventType event, EventValue value) noexcept
+    static void SetEvent(ParkingEventType event, EventValue value) noexcept
     {
         switch (event)
         {
@@ -373,9 +385,9 @@ public:
         }
     }
 
-    void SetEvent(EventValue value) noexcept
+    static void SetEvent(EventValue value) noexcept
     {
-        std::visit([this](auto&& arg) {
+        std::visit([](auto&& arg) {
             using T = std::decay_t<decltype(arg)>;
             if constexpr (std::is_same_v<T, ActvType>) 
             {
@@ -413,7 +425,7 @@ public:
     }
 
     /** @brief 清除全部通用事件标志。 */
-    void Reset() noexcept
+    static void Reset() noexcept
     {
         event_base_.actv_ = static_cast<ActvType>(0);
         event_base_.actv_inhibited_ = static_cast<ActvIhbtType>(0);
@@ -423,7 +435,6 @@ public:
         event_base_.success_ = static_cast<SuccessType>(0);
         event_base_.fail_ = static_cast<FailType>(0);
         event_base_.exit_ = static_cast<ExitType>(0);
-        std::clog << "ParkingEventManager: RESET" << std::endl;
     }
 };
 

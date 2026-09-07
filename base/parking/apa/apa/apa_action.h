@@ -4,7 +4,7 @@
 
 namespace parking
 {
-class ApaAction : public StateMachineActionBase
+class ApaAction final : public StateMachineActionBase
 {
 };
 }

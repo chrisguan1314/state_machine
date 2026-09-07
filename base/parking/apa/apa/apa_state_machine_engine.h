@@ -9,7 +9,7 @@
 
 namespace parking
 {
-class ApaStateMachineEngine : public StateMachineEngineBase<ApaStateType, ApaParam, ApaInputer, ApaStateSwitcher, ApaOutputer>
+class ApaStateMachineEngine final : public StateMachineEngineBase<ApaStateType, ApaParam, ApaInputer, ApaStateSwitcher, ApaOutputer>
 {
 public:
     ApaStateMachineEngine() : StateMachineEngineBase<ApaStateType, ApaParam, ApaInputer, ApaStateSwitcher, ApaOutputer>("Apa") {}

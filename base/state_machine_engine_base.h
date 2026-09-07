@@ -117,7 +117,7 @@ public:
                 param_sptr_->UpdateParam();
                 input_sptr_->UpdateEvent();
                 switch_sptr_->UpdateState();
-                output_sptr_->UpdateAction();
+                // output_sptr_->UpdateAction();
             }
             auto elapsed_time = duration_cast<milliseconds>(steady_clock::now() - start_time).count();
             if (elapsed_time < (1000 / freq_))  

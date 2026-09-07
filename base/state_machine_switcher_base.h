@@ -36,7 +36,7 @@ private:
     StateSwitchTable<StateType> table_{};
 public:
     virtual void Init() = 0; 
-    virtual void PrintStateSwitchInfo() = 0;
+    virtual void PrintStateInfo() = 0;
 private:
     StateType CalcNextState()
     {
@@ -59,7 +59,7 @@ public:
     {
         if (IsStateChanged())
         {
-            PrintStateSwitchInfo();
+            PrintStateInfo();
         }
         else 
         {
@@ -68,7 +68,7 @@ public:
                 if (GetCount() % (GetFrequency() * 1) == 0)
                 {
                     // std::cout << "count : " << GetCount() << std::endl;
-                    PrintStateSwitchInfo(); 
+                    PrintStateInfo(); 
                 }
             }
         }
@@ -190,6 +190,6 @@ protected:
 
     void AddStateSwitch(StateType from_state, StateSwitchTable<StateType>::SwitchSubTable &&table)
     {
-
+        table_.AddStateSwitch(from_state, std::move(table));
     }
 };

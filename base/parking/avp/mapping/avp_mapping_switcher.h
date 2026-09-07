@@ -186,7 +186,7 @@ public:
     {
         return GetCrntState() >= AvpMappingStateType::STANDBY_1;
     }
-    void PrintStateSwitchInfo() override
+    void PrintStateInfo() override
     {
         std::cout << "[AVPM] Crnt : " << AvpMappingFormator(avp_mapping_str_map.at(GetCrntState())) 
             << ", Last : " << AvpMappingFormator(avp_mapping_str_map.at(GetLastState()))

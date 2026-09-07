@@ -18,8 +18,6 @@ namespace parking
                                                               AvpmFailType, AvpmExitType>
     {
     protected:
-        void UpdateEvent() noexcept override {}
-
         void LogEventChange(ParkingEventType event_type, int value) const noexcept override
         {
             const auto log = [](const auto &strmap, const char *event_name, auto event_value)

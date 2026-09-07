@@ -4,7 +4,7 @@
 
 namespace parking
 {
-class ApaEvent : public StateMachineEventBase
+class ApaEvent final : public StateMachineEventBase
 {
 };
 }

@@ -17,10 +17,8 @@ namespace parking
                                                                AvpcGuidanceIhbtType, AvpcPauseType, AvpcSuccessType,
                                                                AvpcFailType, AvpcExitType>
     {
-    protected:
-        void UpdateEvent() noexcept override {}
-
-        void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+    public:
+        static void LogEventChange(ParkingEventType event_type, int value) noexcept 
         {
             const auto log = [](const auto &strmap, const char *event_name, auto event_value)
             {

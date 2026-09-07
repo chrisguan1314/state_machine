@@ -24,16 +24,16 @@ namespace parking
 
         void InitActionTable() override
         {
-            AddAction(ApoStateType::IDLE_0, std::bind(&ApoOutputer::ActionIdle, this));
-            AddAction(ApoStateType::STANDBY_1, std::bind(&ApoOutputer::ActionStandby, this));
+            AddAction(ApoStateType::IDLE_0, std::bind(&ApoOutputer::ActionOfIdle, this));
+            AddAction(ApoStateType::STANDBY_1, std::bind(&ApoOutputer::ActionOfStandby, this));
             AddAction(ApoStateType::PREPARING_2, std::bind(&ApoOutputer::ActionPreparing, this));
-            AddAction(ApoStateType::PREPARED_3, std::bind(&ApoOutputer::ActionPrepared, this));
-            AddAction(ApoStateType::PARKING_4, std::bind(&ApoOutputer::ActionParking, this));
-            AddAction(ApoStateType::SUSPEND_5, std::bind(&ApoOutputer::ActionSuspend, this));
-            AddAction(ApoStateType::OVERRIDE_6, std::bind(&ApoOutputer::ActionOverride, this));
-            AddAction(ApoStateType::SUCCESS_7, std::bind(&ApoOutputer::ActionSuccess, this));
-            AddAction(ApoStateType::FAILED_8, std::bind(&ApoOutputer::ActionFailed, this));
-            AddAction(ApoStateType::TERMINATE_9, std::bind(&ApoOutputer::ActionTerminate, this));
+            AddAction(ApoStateType::PREPARED_3, std::bind(&ApoOutputer::ActionOfPrepared, this));
+            AddAction(ApoStateType::PARKING_4, std::bind(&ApoOutputer::ActionOfParking, this));
+            AddAction(ApoStateType::SUSPEND_5, std::bind(&ApoOutputer::ActionOfSuspend, this));
+            AddAction(ApoStateType::OVERRIDE_6, std::bind(&ApoOutputer::ActionOfOverride, this));
+            AddAction(ApoStateType::SUCCESS_7, std::bind(&ApoOutputer::ActionOfSuccess, this));
+            AddAction(ApoStateType::FAILED_8, std::bind(&ApoOutputer::ActionOfFailed, this));
+            AddAction(ApoStateType::TERMINATE_9, std::bind(&ApoOutputer::ActionOfTerminate, this));
         }
 
         ApoStateType GetCrntState() const noexcept override
@@ -41,11 +41,11 @@ namespace parking
             return ApoStateSwitcher::GetCrntState();
         }
     private:
-        void ActionIdle()
+        void ActionOfIdle()
         {
             // std::cout << "ApoOutputer Action : IDLE" << std::endl;
         }
-        void ActionStandby()
+        void ActionOfStandby()
         {
             std::cout << "ApoOutputer Action : STANDBY" << std::endl;
         }
@@ -53,31 +53,31 @@ namespace parking
         {
             std::cout << "ApoOutputer Action : PREPARING" << std::endl;
         }
-        void ActionPrepared()
+        void ActionOfPrepared()
         {
             std::cout << "ApoOutputer Action : PREPARED" << std::endl;
         }
-        void ActionParking()
+        void ActionOfParking()
         {
             std::cout << "ApoOutputer Action : PARKING" << std::endl;
         }
-        void ActionSuspend()
+        void ActionOfSuspend()
         {
             std::cout << "ApoOutputer Action : SUSPEND" << std::endl;
         }
-        void ActionOverride()
+        void ActionOfOverride()
         {
             std::cout << "ApoOutputer Action : OVERRIDE" << std::endl;
         }
-        void ActionSuccess()
+        void ActionOfSuccess()
         {
             std::cout << "ApoOutputer Action : SUCCESS" << std::endl;
         }
-        void ActionFailed()
+        void ActionOfFailed()
         {
             std::cout << "ApoOutputer Action : FAILED" << std::endl;
         }
-        void ActionTerminate()
+        void ActionOfTerminate()
         {
             std::cout << "ApoOutputer Action : TERMINATE" << std::endl;
         }

@@ -136,42 +136,42 @@ namespace function
             }
             if (system_param_->GetParkingEnableParam().apo_enable_)
             {
-                if (apo_engine_ = std::make_unique<parking::ApoStateMachineEngine>())
-                {
-                    apo_engine_->Init();
-                    apo_engine_->Start();
-                    std::cout << "[SystemScheduler] APO Engine initialized successfully." << std::endl;
-                }
-                else
-                {
-                    std::cerr << "[SystemScheduler] Failed to initialize APO Engine." << std::endl;
-                }
+                // if (apo_engine_ = std::make_unique<parking::ApoStateMachineEngine>())
+                // {
+                //     // apo_engine_->Init();
+                //     // apo_engine_->Start();
+                //     std::cout << "[SystemScheduler] APO Engine initialized successfully." << std::endl;
+                // }
+                // else
+                // {
+                //     std::cerr << "[SystemScheduler] Failed to initialize APO Engine." << std::endl;
+                // }
             }
             if (system_param_->GetParkingEnableParam().avp_cruising_enable_)
             {
-                if (avp_cruising_engine_ = std::make_unique<parking::AvpCruisingStateMachineEngine>())
-                {
-                    avp_cruising_engine_->Init();
-                    avp_cruising_engine_->Start();
-                    std::cout << "[SystemScheduler] AVP Cruising Engine initialized successfully." << std::endl;
-                }
-                else
-                {
-                    std::cerr << "[SystemScheduler] Failed to initialize AVP Cruising Engine." << std::endl;
-                }
+                // if (avp_cruising_engine_ = std::make_unique<parking::AvpCruisingStateMachineEngine>())
+                // {
+                //     // avp_cruising_engine_->Init();
+                //     // avp_cruising_engine_->Start();
+                //     std::cout << "[SystemScheduler] AVP Cruising Engine initialized successfully." << std::endl;
+                // }
+                // else
+                // {
+                //     std::cerr << "[SystemScheduler] Failed to initialize AVP Cruising Engine." << std::endl;
+                // }
             }
             if (system_param_->GetParkingEnableParam().avp_mapping_enable_)
             {
-                if (avp_mapping_engine_ = std::make_unique<parking::AvpMappingStateMachineEngine>())
-                {
-                    avp_mapping_engine_->Init();
-                    avp_mapping_engine_->Start();
-                    std::cout << "[SystemScheduler] AVP Mapping Engine initialized successfully." << std::endl;
-                }
-                else
-                {
-                    std::cerr << "[SystemScheduler] Failed to initialize AVP Mapping Engine." << std::endl;
-                }
+                // if (avp_mapping_engine_ = std::make_unique<parking::AvpMappingStateMachineEngine>())
+                // {
+                //     avp_mapping_engine_->Init();
+                //     avp_mapping_engine_->Start();
+                //     std::cout << "[SystemScheduler] AVP Mapping Engine initialized successfully." << std::endl;
+                // }
+                // else
+                // {
+                //     std::cerr << "[SystemScheduler] Failed to initialize AVP Mapping Engine." << std::endl;
+                // }
             }
             // Enable parking functionality here
         }

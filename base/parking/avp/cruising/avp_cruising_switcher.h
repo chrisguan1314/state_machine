@@ -6,14 +6,32 @@
 
 namespace parking
 {
+    /**
+     * @brief 状态转换条件使用的基础等待时间，单位为秒。
+     */
     const uint8_t seconds = 3;
+
+    /**
+     * @brief 将 AVP 巡航状态字符串转换为可显示文本。
+     * @param str 待转换的状态字符串。
+     * @return 格式化后的状态文本。
+     */
     const std::string AvpCruisingFormator(const std::string &str)
     {
         return Format(str, avp_cruising_str_map);
     }
+
+    /**
+     * @brief 管理 AVP 巡航功能的状态转换规则。
+     *
+     * 该类在初始化时注册各状态的可达目标状态及对应转换条件。
+     */
     class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType>
     {
     public:
+        /**
+         * @brief 构造 AVP 巡航状态切换器。
+         */
         AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType>()
         {
         }
@@ -277,6 +295,9 @@ namespace parking
         }
 
     public:
+        /**
+         * @brief 初始化 AVP 巡航状态及其转换条件表。
+         */
         void Init() override
         {
             using SwitchSubTable = StateSwitchTable<AvpCruisingStateType>::SwitchSubTable;
@@ -377,11 +398,19 @@ namespace parking
         };
 
     public:
+        /**
+         * @brief 判断 AVP 巡航功能是否处于运行状态。
+         * @return 当前状态不低于待命状态时返回 true，否则返回 false。
+         */
         static bool IsRunning() noexcept
         {
             return GetCrntState() >= AvpCruisingStateType::STANDBY_1;
         }
-        void PrintStateSwitchInfo() override
+
+        /**
+         * @brief 输出当前、上一和前序状态，以及当前状态持续时间。
+         */
+        void PrintStateInfo() override
         {
             std::cout << "[AVPC] Crnt : " << AvpCruisingFormator(avp_cruising_str_map.at(GetCrntState()))
                       << ", Last : " << AvpCruisingFormator(avp_cruising_str_map.at(GetLastState()))

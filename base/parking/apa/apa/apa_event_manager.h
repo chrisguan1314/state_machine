@@ -13,9 +13,7 @@ class ApaEventManager : public ParkingEventManager<ApaActvType, ApaActvIhbtType,
                                          ApaFailType, ApaExitType>
 {
 protected:
-    void UpdateEvent() noexcept override {}
-
-    void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+    void LogEventChange(ParkingEventType event_type, int value) noexcept override
     {
         const auto log = [](const auto& strmap, const char* event_name, auto event_value) {
             const auto it = strmap.find(event_value);
