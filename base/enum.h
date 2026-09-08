@@ -1,6 +1,9 @@
 #pragma once
 
+#include "../enum.h"
+
 #include <cstdint>
+#include <concepts>
 
 enum class FuncOpenType : uint8_t
 {
@@ -27,3 +30,11 @@ enum class FuncActvType : uint8_t
     AUTO_7 = 7U,
     MAX = 8U
 };
+
+#if defined(__cplusplus) && __cplusplus >= 202002L
+template <typename T>
+concept StateEnumType = (std::same_as<T, ApaStateType> || 
+                        std::same_as<T, ApoStateType> || 
+                        std::same_as<T, AvpCruisingStateType> ||
+                        std::same_as<T, AvpMappingStateType>);
+#endif

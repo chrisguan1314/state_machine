@@ -11,11 +11,11 @@
 
 namespace parking
 {
-    class ApoOutputer : public StateMachineOutputerBase<ApoStateType>
+    class ApoOutputer : public StateMachineOutputer<ApoStateType>
     {
     public:
         ApoOutputer()
-            : StateMachineOutputerBase<ApoStateType>(std::make_shared<ApoAction>()) {}
+            : StateMachineOutputer<ApoStateType>(std::make_shared<ApoAction>()) {}
 
         void InitWriters() override
         {

@@ -11,14 +11,10 @@ namespace parking
 {
 
 /** @brief 保存和查询 AVM 事件。 */
-class AvmEventManager : public ParkingEventManager<AvmActvType, AvmActvIhbtType, AvmGuidanceType,
-                                         AvmGuidanceIhbtType, AvmPauseType, AvmSuccessType,
-                                         AvmFailType, AvmExitType>
+class AvmEventManager : public ::parking::ParkingEventManager
 {
 protected:
-    void UpdateEvent() noexcept override {}
-
-    void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+    void LogEventChange(::parking::ParkingEventType event_type, int value) noexcept override
     {
         const auto log = [](const auto& strmap, const char* event_name, auto event_value) {
             const auto it = strmap.find(event_value);

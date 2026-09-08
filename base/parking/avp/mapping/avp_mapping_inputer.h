@@ -8,18 +8,13 @@
 
 namespace parking
 {
-class AvpMappingInputer : public StateMachineInputerBase
+class AvpMappingInputer : public StateMachineInputer
 {
-public:
-    AvpMappingInputer() : StateMachineInputerBase(std::make_shared<AvpMappingEvent>())
-    {
-
-    }
 public:
     virtual void InitReaders() override 
     {
         std::cout << "Init AvpMappingInputer Readers" << std::endl;
     };
-    void UpdateEvent() override {};
+    virtual void UpdateEvent() override {};
 };
 };

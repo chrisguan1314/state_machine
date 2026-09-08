@@ -15,9 +15,9 @@ template <typename State, typename Param, typename Inputer, typename Switcher, t
 typename = typename std::enable_if_t<std::is_enum_v<State>>,
 // 类模板的模板声明（the declaration of class template, including 1 default template argument）
 typename = typename std::enable_if_t<std::is_base_of_v<StateMachineParamBase, Param>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputerBase, Inputer>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcherBase<State>, Switcher>>,
-typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputerBase<State>, Outputer>>>
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineInputer, Inputer>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineSwitcher<State>, Switcher>>,
+typename = typename std::enable_if_t<std::is_base_of_v<StateMachineOutputer<State>, Outputer>>>
 class StateMachineEngineBase;
 
 // 在定义类模板时，不再需要指定默认模板参数

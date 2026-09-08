@@ -10,188 +10,206 @@
 
 namespace parking
 {
-const std::string AvpMappingFormator(const std::string& str)
-{
-    return Format(str, avp_mapping_str_map);
-}
-class AvpMappingStateSwitcher : public StateMachineSwitcherBase<AvpMappingStateType>
-{
-public:
-    AvpMappingStateSwitcher() : StateMachineSwitcherBase<AvpMappingStateType>()
+    const std::string AvpMappingFormator(const std::string &str)
     {
-
+        return Format(str, avp_mapping_str_map);
     }
-private:
-    bool SwitchFromIdleToStandby() const noexcept
+    class AvpMappingStateSwitcher : public StateMachineSwitcher<AvpMappingStateType>
     {
-        if (GetCount() > seconds * 20)
+    public:
+        AvpMappingStateSwitcher() : StateMachineSwitcher<AvpMappingStateType>()
         {
-            return true;
         }
-        else
+
+    private:
+        bool SwitchFromIdleToStandby() const noexcept
+        {
+            if (GetCount() > seconds * 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        bool SwitchFromStandbyToIdle() const noexcept
         {
             return false;
         }
-    }
-    bool SwitchFromStandbyToIdle() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromStandbyToOnlineLearning() const noexcept
-    {
-        if (GetCount() > seconds * 20)
+        bool SwitchFromStandbyToOnlineLearning() const noexcept
         {
-            return true;
+            if (GetCount() > seconds * 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
+        bool SwitchFromOnlineLearningToOfflineLearning() const noexcept
+        {
+            if (GetCount() > seconds * 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        bool SwitchFromOnlineLearningToParking() const noexcept
+        {
+            if (GetCount() > seconds * 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        bool SwitchFromOnlineLearningToTerminate() const noexcept
         {
             return false;
         }
-    }
-    bool SwitchFromOnlineLearningToOfflineLearning() const noexcept
-    {
-        if (GetCount() > seconds * 20)
+        bool SwitchFromOfflineLearningToSuccess() const noexcept
         {
-            return true;
+            if (GetCount() > seconds * 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
+        bool SwitchFromOfflineLearningToFailure() const noexcept
         {
             return false;
         }
-    }
-    bool SwitchFromOnlineLearningToParking() const noexcept
-    {
-        if (GetCount() > seconds * 20)
-        {
-            return true;
-        }
-        else
+        bool SwitchFromOfflineLearningToTerminate() const noexcept
         {
             return false;
         }
-    }
-    bool SwitchFromOnlineLearningToTerminate() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromOfflineLearningToSuccess() const noexcept
-    {
-        if (GetCount() > seconds * 20)
-        {
-            return true;
-        }
-        else
+        bool SwitchFromParkingToOfflineLearning() const noexcept
         {
             return false;
         }
-    }
-    bool SwitchFromOfflineLearningToFailure() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromOfflineLearningToTerminate() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromParkingToOfflineLearning() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromParkingToTerminate() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromSuccessToStandby() const noexcept
-    {
-        if (GetCount() > seconds * 20)
-        {
-            return true;
-        }
-        else
+        bool SwitchFromParkingToTerminate() const noexcept
         {
             return false;
         }
-    }
-    bool SwitchFromFailedToStandby() const noexcept
-    {
-        return false;
-    }
-    bool SwitchFromTerminateToStandby() const noexcept
-    {
-        return false;
-    }
-
-public:
-    void Init() override 
-    {
-        using SwitchSubTable = StateSwitchTable<AvpMappingStateType>::SwitchSubTable;
-
-        SwitchSubTable idle_to_table = 
+        bool SwitchFromSuccessToStandby() const noexcept
         {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromIdleToStandby, this)},
-        };
-         
-        SwitchSubTable standby_to_table = 
+            if (GetCount() > seconds * 20)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        bool SwitchFromFailedToStandby() const noexcept
         {
-            {AvpMappingStateType::IDLE_0, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToIdle, this)},
-            {AvpMappingStateType::ONLINE_LEARNING_2, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToOnlineLearning, this)},
-        };
-
-        SwitchSubTable online_learning_to_table = 
+            return false;
+        }
+        bool SwitchFromTerminateToStandby() const noexcept
         {
-            {AvpMappingStateType::OFFLINE_LEARNING_3, std::bind(&AvpMappingStateSwitcher::SwitchFromOnlineLearningToOfflineLearning, this)},
-            {AvpMappingStateType::PARKING_4, std::bind(&AvpMappingStateSwitcher::SwitchFromOnlineLearningToParking, this)},
-            {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromOnlineLearningToTerminate, this)},
-        };
+            return false;
+        }
 
-        SwitchSubTable offline_learning_to_table = 
+    public:
+        void Init() override
         {
-            {AvpMappingStateType::SUCCESS_5, std::bind(&AvpMappingStateSwitcher::SwitchFromOfflineLearningToSuccess, this)},
-            {AvpMappingStateType::FAILED_6, std::bind(&AvpMappingStateSwitcher::SwitchFromOfflineLearningToFailure, this)},
-            {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromOfflineLearningToTerminate, this)},
-        };
+            using SwitchSubTable = StateSwitchTable<AvpMappingStateType>::SwitchSubTable;
 
-        SwitchSubTable parking_to_table = 
+            SwitchSubTable idle_to_table =
+                {
+                    {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromIdleToStandby, this)},
+            };
+
+            SwitchSubTable standby_to_table =
+                {
+                    {AvpMappingStateType::IDLE_0, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToIdle, this)},
+                    {AvpMappingStateType::ONLINE_LEARNING_2, std::bind(&AvpMappingStateSwitcher::SwitchFromStandbyToOnlineLearning, this)},
+            };
+
+            SwitchSubTable online_learning_to_table =
+                {
+                    {AvpMappingStateType::OFFLINE_LEARNING_3, std::bind(&AvpMappingStateSwitcher::SwitchFromOnlineLearningToOfflineLearning, this)},
+                    {AvpMappingStateType::PARKING_4, std::bind(&AvpMappingStateSwitcher::SwitchFromOnlineLearningToParking, this)},
+                    {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromOnlineLearningToTerminate, this)},
+            };
+
+            SwitchSubTable offline_learning_to_table =
+                {
+                    {AvpMappingStateType::SUCCESS_5, std::bind(&AvpMappingStateSwitcher::SwitchFromOfflineLearningToSuccess, this)},
+                    {AvpMappingStateType::FAILED_6, std::bind(&AvpMappingStateSwitcher::SwitchFromOfflineLearningToFailure, this)},
+                    {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromOfflineLearningToTerminate, this)},
+            };
+
+            SwitchSubTable parking_to_table =
+                {
+                    {AvpMappingStateType::OFFLINE_LEARNING_3, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToOfflineLearning, this)},
+                    {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToTerminate, this)},
+            };
+
+            SwitchSubTable success_to_table =
+                {
+                    {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromSuccessToStandby, this)},
+            };
+
+            SwitchSubTable failed_to_table =
+                {
+                    {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromFailedToStandby, this)},
+            };
+
+            SwitchSubTable terminate_to_table =
+                {
+                    {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromTerminateToStandby, this)},
+            };
+
+            AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));
+            AddStateSwitch(AvpMappingStateType::STANDBY_1, std::move(standby_to_table));
+            AddStateSwitch(AvpMappingStateType::ONLINE_LEARNING_2, std::move(online_learning_to_table));
+            AddStateSwitch(AvpMappingStateType::OFFLINE_LEARNING_3, std::move(offline_learning_to_table));
+            AddStateSwitch(AvpMappingStateType::PARKING_4, std::move(parking_to_table));
+            AddStateSwitch(AvpMappingStateType::SUCCESS_5, std::move(success_to_table));
+            AddStateSwitch(AvpMappingStateType::FAILED_6, std::move(failed_to_table));
+            AddStateSwitch(AvpMappingStateType::TERMINATE_7, std::move(terminate_to_table));
+        };
+        virtual void Print() const override
         {
-            {AvpMappingStateType::OFFLINE_LEARNING_3, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToOfflineLearning, this)},
-            {AvpMappingStateType::TERMINATE_7, std::bind(&AvpMappingStateSwitcher::SwitchFromParkingToTerminate, this)},
-        };
+            if (IsStateChanged())
+            {
+                PrintStateInfo(true);
+            }
+            else
+            {
+                if (GetCrntState() >= AvpMappingStateType::ONLINE_LEARNING_2)
+                {
+                    if (GetCount() % (GetFrequency() * 60) == 0)
+                    {
+                        PrintStateInfo(false);
+                    }
+                }
+            }
+        }
 
-        SwitchSubTable success_to_table = 
+    public:
+        static bool IsRunning() noexcept
         {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromSuccessToStandby, this)},
-        };
-
-        SwitchSubTable failed_to_table = 
+            return GetCrntState() >= AvpMappingStateType::STANDBY_1;
+        }
+        void PrintStateInfo(bool flag) const override
         {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromFailedToStandby, this)},
-        };
-
-        SwitchSubTable terminate_to_table = 
-        {
-            {AvpMappingStateType::STANDBY_1, std::bind(&AvpMappingStateSwitcher::SwitchFromTerminateToStandby, this)},
-        };
-
-        AddStateSwitch(AvpMappingStateType::IDLE_0, std::move(idle_to_table));
-        AddStateSwitch(AvpMappingStateType::STANDBY_1, std::move(standby_to_table));
-        AddStateSwitch(AvpMappingStateType::ONLINE_LEARNING_2, std::move(online_learning_to_table));
-        AddStateSwitch(AvpMappingStateType::OFFLINE_LEARNING_3, std::move(offline_learning_to_table));
-        AddStateSwitch(AvpMappingStateType::PARKING_4, std::move(parking_to_table));
-        AddStateSwitch(AvpMappingStateType::SUCCESS_5, std::move(success_to_table));
-        AddStateSwitch(AvpMappingStateType::FAILED_6, std::move(failed_to_table));
-        AddStateSwitch(AvpMappingStateType::TERMINATE_7, std::move(terminate_to_table));
-    }; 
-public:
-    static bool IsRunning() noexcept
-    {
-        return GetCrntState() >= AvpMappingStateType::STANDBY_1;
-    }
-    void PrintStateInfo(bool flag) override
-    {
-        std::cout << "[AVPM] Crnt : " << AvpMappingFormator(avp_mapping_str_map.at(GetCrntState())) 
-            << ", Last : " << AvpMappingFormator(avp_mapping_str_map.at(GetLastState()))
-            << ", Prvs : " << AvpMappingFormator(avp_mapping_str_map.at(GetPrvsState())) 
-            << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
-    }
-};
+            std::cout << "[AVPM] Crnt : " << AvpMappingFormator(avp_mapping_str_map.at(GetCrntState()))
+                      << ", Last : " << AvpMappingFormator(avp_mapping_str_map.at(GetLastState()))
+                      << ", Prvs : " << AvpMappingFormator(avp_mapping_str_map.at(GetPrvsState()))
+                      << ", Duration : " << GetDuration().count() << "(S)" << std::endl;
+        }
+    };
 };

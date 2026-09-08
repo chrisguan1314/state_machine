@@ -29,23 +29,31 @@ namespace parking
      *
      * @note 在执行状态调度前必须调用 Init() 注册转换表。
      */
-    class ApaStateSwitcher final : public StateMachineSwitcherBase<ApaStateType>
+    class ApaStateSwitcher final : public StateMachineSwitcher<ApaStateType>
     {
     public:
         /**
-         * @brief 构造 APA 状态切换器。
+         * @brief 判断 APA 功能是否已进入运行阶段。
          *
-         * @details 初始化 APA 状态机切换基类；转换规则需随后通过 Init() 注册。
+         * @details 当前状态大于 STANDBY_1 时返回 true；空闲和待命状态均视为未运行。
+         * @return APA 状态机处于运行阶段时返回 true，否则返回 false。
          */
-        ApaStateSwitcher() : StateMachineSwitcherBase<ApaStateType>() {}
+        static bool IsRunning() noexcept
+        {
+            return GetCrntState() > ApaStateType::STANDBY_1;
+        }
 
     public:
         /**
          * @brief 初始化 APA 状态转换表。
          *
-         * @details 注册各 APA 源状态可达的目标状态及其条件函数。状态表包括：
-         * IDLE、STANDBY、SEARCHING、SEARCHED、PREPARED、RPA_PREPARED、PARKING、
-         * SUSPEND、OVERRIDE、SUCCESS、FAILED 和 TERMINATE。
+         * 为每个 APA 源状态注册可达的目标状态及对应条件函数。状态机计算下一状态时，
+         * 按本方法登记的顺序选择首个条件成立的目标状态；若没有条件成立，则保持当前状态。
+         *
+         * 转换表覆盖 IDLE、STANDBY、SEARCHING、SEARCHED、PREPARED、RPA_PREPARED、
+         * PARKING、SUSPEND、OVERRIDE、SUCCESS、FAILED 和 TERMINATE 状态。
+         *
+         * @note 调用 UpdateState() 前必须完成初始化。
          */
         void Init() override
         {
@@ -132,34 +140,43 @@ namespace parking
             std::cout << "[StateMachine] Init Switcher Table" << std::endl;
         }
 
-        /**
-         * @brief 判断 APA 功能是否已进入运行阶段。
-         *
-         * @details 当前状态大于 STANDBY_1 时返回 true；空闲和待命状态均视为未运行。
-         * @return APA 状态机处于运行阶段时返回 true，否则返回 false。
-         */
-        static bool IsRunning() noexcept
+        virtual void Print() const override
         {
-            return GetCrntState() > ApaStateType::STANDBY_1;
+            if (IsStateChanged())
+            {
+                PrintStateInfo(true);
+            }
+            else
+            {
+                if (GetCrntState() >= ApaStateType::SEARCHING_2)
+                {
+                    if (GetCount() % (GetFrequency() * 60) == 0)
+                    {
+                        PrintStateInfo(false);
+                    }
+                }
+            }
         }
 
+    private:
         /**
          * @brief 输出 APA 状态切换信息。
          *
          * @details 将当前、上一和前序状态格式化后输出，同时输出当前状态持续时间，
          * 用于运行时状态机诊断。
          */
-        void PrintStateInfo(bool flag) override
+
+        void PrintStateInfo(bool flag) const
         {
             std::stringstream ss;
             ss << "[APA] Last : " << ApaFormator(apa_str_map.at(GetLastState()))
-                << ", Crnt : " << ApaFormator(apa_str_map.at(GetCrntState()))
-                << ", Prvs : " << ApaFormator(apa_str_map.at(GetPrvsState()))
-                << ", Duration : " << GetDuration().count() << "(S)";
-            if (flag &&  ApaEventManager::GetEventType() > ParkingEventType::NONE_0)
+               << ", Crnt : " << ApaFormator(apa_str_map.at(GetCrntState()))
+               << ", Prvs : " << ApaFormator(apa_str_map.at(GetPrvsState()))
+               << ", Duration : " << GetDuration().count() << "(S)";
+            if (flag && ApaEventManager::GetEventType() > ParkingEventType::NONE_0)
             {
                 ss << ", Event : " << EventFormator(ApaEventManager::GetEventName())
-                    << ", Type : " << ApaEventManager::GetEventTypeName();
+                   << ", Type : " << ApaEventManager::GetEventTypeName();
             }
             std::cout << ss.str() << std::endl;
         }
@@ -182,7 +199,7 @@ namespace parking
         }
         bool SwitchFromStandbyToSearching() const noexcept
         {
-            if (ApaEventManager::GetActv() > ApaActvType::NONE_0)
+            if (ApaEventManager::GetActv() > PrkgFuncActvType::NONE_0)
             {
                 return true;
             }
@@ -246,7 +263,7 @@ namespace parking
         }
         bool SwitchFromPreparedToParking() const noexcept
         {
-            if (ApaEventManager::GetGuidance() > ApaGuidanceType::NONE_0)
+            if (ApaEventManager::GetGuidance() > PrkgFuncGuidanceType::NONE_0)
             {
                 return true;
             }
@@ -281,7 +298,7 @@ namespace parking
         }
         bool SwitchFromParkingToSuccess() const noexcept
         {
-            if (ApaEventManager::GetSuccess() > ApaSuccessType::NONE_0)
+            if (ApaEventManager::GetSuccess() > PrkgFuncSuccessType::NONE_0)
             {
                 return true;
             }
@@ -316,7 +333,7 @@ namespace parking
         }
         bool SwitchFromSuccessToStandby() const noexcept
         {
-            if (GetCount() > 60 || ApaEventManager::GetExit() > ApaExitType::NONE_0)
+            if (GetCount() > 60 || ApaEventManager::GetExit() > PrkgFuncExitType::NONE_0)
             {
                 return true;
             }

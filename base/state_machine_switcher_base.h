@@ -16,43 +16,56 @@ template <typename T1, typename T2>
 using is_decay_same = typename std::is_same<std::decay_t<T1>, std::decay_t<T2>>::type;
 
 /**
- * @brief 提供枚举状态机的通用状态转换与状态上下文管理。
+ * @brief 为枚举状态机提供转换计算和状态上下文管理。
  *
- * @details
- * 派生类通过 Init() 注册源状态、目标状态及转换条件，并通过 PrintStateInfo()
- * 实现状态信息输出。UpdateState() 会计算或接收下一个状态，维护当前、上一和
- * 前序状态、当前状态周期计数及持续时间，并在状态变化或达到输出周期时触发打印。
+ * 派生类在 Init() 中为每个源状态登记候选目标状态及其转换条件，并在
+ * PrintStateInfo() 中实现诊断输出。调用无参 UpdateState() 时，本类按登记顺序
+ * 执行条件判断，并切换到首个条件成立的目标状态；没有条件成立时保持当前状态。
  *
- * 当前、上一、前序状态以及功能开启和激活类型为按 State 模板实参共享的静态状态；
- * 因此相同状态枚举类型的多个切换器实例会共享这些状态上下文。转换表与执行频率
- * 则属于单个实例。
+ * 每次更新都会维护当前、上一和前序状态，以及当前状态的周期计数和持续时间；
+ * 状态变化或满足周期条件时会触发诊断输出。当前、上一、前序状态、功能开启类型
+ * 和激活类型按 State 模板实参共享，因此使用相同状态枚举的多个切换器实例会共享
+ * 这些状态上下文。转换表和诊断输出频率则由各实例独立持有。
  *
  * @tparam State 状态枚举类型，必须为枚举。
- * @note 调用 UpdateState() 前，派生类必须先调用 Init() 注册状态转换表。
+ * @note 调用 UpdateState() 前必须通过 Init() 注册状态转换表。
  */
+#if defined(__cplusplus) && __cplusplus >= 202002L
+template <StateEnumType State>
+#else
 template <typename State, typename = typename std::enable_if_t<std::is_enum_v<State>>>
-class StateMachineSwitcherBase
+#endif
+class StateMachineSwitcher
 {
 public:
     using StateType = State;
-    using atomic_T = std::atomic<StateType>;
+    using Atomic_State = std::atomic<StateType>;
+
 public:
     /** @brief 构造状态切换基类并使用默认状态上下文。 */
-    StateMachineSwitcherBase() noexcept = default;
+    StateMachineSwitcher() noexcept = default;
+    StateMachineSwitcher(const StateMachineSwitcher &) = delete;
+    StateMachineSwitcher &operator=(const StateMachineSwitcher &) = delete;
+    StateMachineSwitcher(StateMachineSwitcher &&) noexcept = delete;
+    StateMachineSwitcher &operator=(StateMachineSwitcher &&) noexcept = delete;
 
     /** @brief 提供多态销毁支持。 */
-    virtual ~StateMachineSwitcherBase() = default;
+    virtual ~StateMachineSwitcher() = default;
+
 private:
-    inline static atomic_T crnt_state_{static_cast<StateType>(0)};
-    inline static atomic_T last_state_{static_cast<StateType>(0)};
-    inline static atomic_T prvs_state_{static_cast<StateType>(0)};
+    inline static Atomic_State crnt_state_{static_cast<StateType>(0)};
+    inline static Atomic_State last_state_{static_cast<StateType>(0)};
+    inline static Atomic_State prvs_state_{static_cast<StateType>(0)};
     inline static uint32_t count_{0};
     inline static steady_clock::time_point steady_start_time_{steady_clock::now()};
     inline static seconds duration_{0};
     inline static FuncOpenType open_type_{FuncOpenType::NONE_0};
     inline static FuncActvType actv_type_{FuncActvType::NONE_0};
+
+private:
     uint32_t freq_{20};
     StateSwitchTable<StateType> table_{};
+
 public:
     /**
      * @brief 初始化派生状态机的状态转换表。
@@ -64,31 +77,35 @@ public:
      * @brief 输出派生状态机的状态诊断信息。
      * @details 由 PrintInfo() 在状态变化或达到周期输出条件时调用。
      */
-    virtual void PrintStateInfo(bool flag = false) = 0;
+    virtual void PrintStateInfo(bool flag = false) const
+    {
+
+    }
+
+    virtual void Print() const = 0;
 private:
-    StateType CalcNextState()
+    StateType CalcNextState() const noexcept
     {
         StateType crnt_state = GetCrntState();
         const auto &state_switch_list = table_.GetStateSwitchTable(crnt_state);
         for (auto iter = std::cbegin(state_switch_list); iter != std::cend(state_switch_list); ++iter)
         {
-            auto to_state = iter->first;
-            auto switch_function = iter->second;
+            auto & switch_function = iter->second;
             if (switch_function())
             {
-                crnt_state = to_state;
+                crnt_state = iter->first;
+                // 第一个条件成立的目标状态即为下一个状态，后续条件不再判断
                 break;
             }
         }
         return crnt_state;
     }
-public:
     /**
      * @brief 按需输出状态诊断信息。
      * @details 状态发生变化时立即输出；处于值不小于 2 的稳定状态时，
      * 按频率间隔输出。
      */
-    void PrintInfo()
+    void PrintInfo() const noexcept
     {
         if (IsStateChanged())
         {
@@ -98,13 +115,14 @@ public:
         {
             if (crnt_state_ >= static_cast<StateType>(2))
             {
-                if (GetCount() % (GetFrequency() * 2) == 0)
+                if (GetCount() % (GetFrequency() * 60) == 0)
                 {
                     PrintStateInfo(false);
                 }
             }
         }
     }
+
 
     /**
      * @brief 将状态机更新至指定状态。
@@ -125,9 +143,11 @@ public:
         SetCrntState(state);
         SetCount(GetCount() + 1);
         SetDuration(duration_cast<seconds>(steady_clock::now() - steady_start_time_));
-        PrintInfo();
+        // PrintInfo();
+        Print();
     }
-
+    
+public:
     /**
      * @brief 根据已注册的转换条件计算并更新下一个状态。
      * @details 按转换表中的顺序选择首个条件成立的目标状态；没有条件成立时
@@ -137,6 +157,7 @@ public:
     {
         UpdateState(CalcNextState());
     }
+
 public:
     /** @brief 获取当前状态。 @return 当前状态枚举值。 */
     static StateType GetCrntState() noexcept
@@ -185,7 +206,7 @@ public:
     {
         return actv_type_;
     }
-private:
+protected:
     uint32_t GetFrequency() const noexcept
     {
         return freq_;
@@ -218,6 +239,7 @@ public:
     {
         return last_state_.load() == from && crnt_state_.load() == to;
     }
+
 public:
     /** @brief 设置当前状态。 @param state 新当前状态，默认状态值为 0。 */
     static void SetCrntState(StateType state = static_cast<StateType>(0)) noexcept
@@ -297,7 +319,7 @@ protected:
      * @param from_state 源状态。
      * @param table 目标状态到转换条件的映射，调用后其内容会被移动。
      */
-    void AddStateSwitch(StateType from_state, StateSwitchTable<StateType>::SwitchSubTable &&table)
+    void AddStateSwitch(StateType from_state, typename StateSwitchTable<StateType>::SwitchSubTable &&table)
     {
         table_.AddStateSwitch(from_state, std::move(table));
     }

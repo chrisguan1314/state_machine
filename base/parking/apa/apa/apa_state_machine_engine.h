@@ -26,6 +26,6 @@ public:
      * @brief 构造名称为 "Apa" 的 APA 状态机引擎。
      * @details 使用 StateMachineEngineBase 的默认调度频率。
      */
-    ApaStateMachineEngine() : StateMachineEngineBase<ApaStateType, ApaParam, ApaInputer, ApaStateSwitcher, ApaOutputer>("Apa") {}
+    ApaStateMachineEngine() : StateMachineEngineBase<ApaStateType, ApaParam, ApaInputer, ApaStateSwitcher, ApaOutputer>("APA") {}
 };
 }

@@ -8,11 +8,9 @@
 
 namespace parking
 {
-    class ApoInputer : public StateMachineInputerBase
+    class ApoInputer : public StateMachineInputer
     {
     public:
-        ApoInputer() : StateMachineInputerBase(std::make_shared<ApoEvent>()) {}
-
         void InitReaders() override
         {
             std::cout << "Init ApoInputer Readers" << std::endl;

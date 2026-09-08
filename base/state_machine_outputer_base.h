@@ -6,8 +6,12 @@
 #include <map>
 #include <functional>
 
+#if defined(__cplusplus) && __cplusplus >= 202002L
+template <StateEnumType State>
+#else
 template <typename State, typename = typename std::enable_if_t<std::is_enum_v<State>>>
-class StateMachineOutputerBase
+#endif
+class StateMachineOutputer
 {
 public: 
     using StateType = State;
@@ -17,7 +21,7 @@ private:
     std::shared_ptr<StateMachineActionBase> action_sptr_{nullptr};
     ActionTable action_table_{};
 public:
-    StateMachineOutputerBase(std::shared_ptr<StateMachineActionBase> action = std::make_shared<StateMachineActionBase>()) : action_sptr_(action)
+    StateMachineOutputer(std::shared_ptr<StateMachineActionBase> action = std::make_shared<StateMachineActionBase>()) : action_sptr_(action)
     {
     }
 public:

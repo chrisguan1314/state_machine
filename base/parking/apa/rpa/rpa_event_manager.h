@@ -13,14 +13,10 @@ namespace parking
 /**
  * @brief 保存和查询 RPA 事件。
  */
-class RpaEventManager : public ParkingEventManager<RpaActvType, RpaActvIhbtType, RpaGuidanceType,
-                                         RpaGuidanceIhbtType, RpaPauseType, RpaSuccessType,
-                                         RpaFailType, RpaExitType>
+class RpaEventManager : public ::parking::ParkingEventManager
 {
 protected:
-    void UpdateEvent() noexcept override {}
-
-    void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+    void LogEventChange(::parking::ParkingEventType event_type, int value) noexcept override
     {
         const auto log = [](const auto& strmap, const char* event_name, auto event_value) {
             const auto it = strmap.find(event_value);

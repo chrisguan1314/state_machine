@@ -7,15 +7,10 @@ namespace parking
 {
 
 /** @brief 保存和查询直线召唤事件。 */
-class StraightSummonEventManager : public ParkingEventManager<StraightSummonActvType, StraightSummonActvIhbtType,
-                                                     StraightSummonGuidanceType, StraightSummonGuidanceIhbtType,
-                                                     StraightSummonPauseType, StraightSummonSuccessType,
-                                                     StraightSummonFailType, StraightSummonExitType>
+class StraightSummonEventManager : public ParkingEventManager
 {
 protected:
-    void UpdateEvent() noexcept override {}
-
-    void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+    void LogEventChange(ParkingEventType event_type, int value) noexcept override
     {
         const auto log = [](const auto& strmap, const char* event_name, auto event_value) {
             const auto it = strmap.find(event_value);

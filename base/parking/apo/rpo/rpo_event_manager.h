@@ -8,14 +8,10 @@ namespace parking
 
 /** @brief RPO 事件类型。 */
 /** @brief 保存和查询 RPO 事件。 */
-class RpoEventManager : public ParkingEventManager<RpoActvType, RpoActvIhbtType, RpoGuidanceType,
-                                         RpoGuidanceIhbtType, RpoPauseType, RpoSuccessType,
-                                         RpoFailType, RpoExitType>
+class RpoEventManager : public ParkingEventManager
 {
 protected:
-    void UpdateEvent() noexcept override {}
-
-    void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+    void LogEventChange(ParkingEventType event_type, int value) noexcept override
     {
         const auto log = [](const auto& strmap, const char* event_name, auto event_value) {
             const auto it = strmap.find(event_value);

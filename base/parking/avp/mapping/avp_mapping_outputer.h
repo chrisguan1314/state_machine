@@ -7,10 +7,10 @@
 
 namespace parking
 {
-class AvpMappingOutputer : public StateMachineOutputerBase<AvpMappingStateType>
+class AvpMappingOutputer : public StateMachineOutputer<AvpMappingStateType>
 {
 public:
-    AvpMappingOutputer() : StateMachineOutputerBase<AvpMappingStateType>(std::make_shared<AvpMappingAction>())
+    AvpMappingOutputer() : StateMachineOutputer<AvpMappingStateType>(std::make_shared<AvpMappingAction>())
     {
 
     }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "avp_mapping_event_map.h"
 #include "../../parking_event_manager.h"
 
 namespace parking
@@ -13,12 +12,10 @@ namespace parking
      * 布尔事件标志，其余事件使用专用条件枚举保存。该类不负责判定条件、
      * 执行建图或驱动外部状态机。
      */
-    class AvpMappingEventManager : public ParkingEventManager<AvpmActvType, AvpmActvIhbtType, AvpmGuidanceType,
-                                                              AvpmGuidanceIhbtType, AvpmPauseType, AvpmSuccessType,
-                                                              AvpmFailType, AvpmExitType>
+    class AvpMappingEventManager : public ParkingEventManager
     {
     protected:
-        void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+        void LogEventChange(ParkingEventType event_type, int value) noexcept override
         {
             const auto log = [](const auto &strmap, const char *event_name, auto event_value)
             {
@@ -29,28 +26,28 @@ namespace parking
             switch (event_type)
             {
             case ParkingEventType::ACTV_1:
-                log(avpm_actv_strmap, "ACTV", static_cast<AvpmActvType>(value));
+                log(actv_strmap, "ACTV", static_cast<PrkgFuncActvType>(value));
                 break;
             case ParkingEventType::ACTV_IHBT_2:
-                log(avpm_actv_ihbt_strmap, "ACTV_IHBT", static_cast<AvpmActvIhbtType>(value));
+                log(actv_ihbt_strmap, "ACTV_IHBT", static_cast<PrkgFuncActvIhbtType>(value));
                 break;
             case ParkingEventType::GUIDANCE_3:
-                log(avpm_guidance_strmap, "GUIDANCE", static_cast<AvpmGuidanceType>(value));
+                log(guidance_strmap, "GUIDANCE", static_cast<PrkgFuncGuidanceType>(value));
                 break;
             case ParkingEventType::GUIDANCE_IHBT_4:
-                log(avpm_guidance_ihbt_strmap, "GUIDANCE_IHBT", static_cast<AvpmGuidanceIhbtType>(value));
+                log(guidance_ihbt_strmap, "GUIDANCE_IHBT", static_cast<PrkgFuncGuidanceIhbtType>(value));
                 break;
             case ParkingEventType::PAUSE_5:
-                log(avpm_pause_strmap, "PAUSE", static_cast<AvpmPauseType>(value));
+                log(pause_strmap, "PAUSE", static_cast<PrkgFuncPauseType>(value));
                 break;
             case ParkingEventType::SUCCESS_6:
-                log(avpm_success_strmap, "SUCCESS", static_cast<AvpmSuccessType>(value));
+                log(success_strmap, "SUCCESS", static_cast<PrkgFuncSuccessType>(value));
                 break;
             case ParkingEventType::FAIL_7:
-                log(avpm_fail_strmap, "FAIL", static_cast<AvpmFailType>(value));
+                log(fail_strmap, "FAIL", static_cast<PrkgFuncFailType>(value));
                 break;
             case ParkingEventType::EXIT_8:
-                log(avpm_exit_strmap, "EXIT", static_cast<AvpmExitType>(value));
+                log(exit_strmap, "EXIT", static_cast<PrkgFuncExitType>(value));
                 break;
             case ParkingEventType::NONE_0:
             default:

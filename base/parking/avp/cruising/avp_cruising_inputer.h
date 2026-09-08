@@ -7,13 +7,8 @@
 
 namespace parking
 {
-class AvpCruisingInputer : public StateMachineInputerBase
+class AvpCruisingInputer : public StateMachineInputer
 {
-public:
-    AvpCruisingInputer() : StateMachineInputerBase(std::make_shared<AvpCruisingEvent>())
-    {
-
-    }
 public:
     virtual void InitReaders() override 
     {

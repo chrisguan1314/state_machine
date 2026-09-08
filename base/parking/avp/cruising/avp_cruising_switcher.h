@@ -26,13 +26,13 @@ namespace parking
      *
      * 该类在初始化时注册各状态的可达目标状态及对应转换条件。
      */
-    class AvpCruisingStateSwitcher : public StateMachineSwitcherBase<AvpCruisingStateType>
+    class AvpCruisingStateSwitcher : public StateMachineSwitcher<AvpCruisingStateType>
     {
     public:
         /**
          * @brief 构造 AVP 巡航状态切换器。
          */
-        AvpCruisingStateSwitcher() : StateMachineSwitcherBase<AvpCruisingStateType>()
+        AvpCruisingStateSwitcher() : StateMachineSwitcher<AvpCruisingStateType>()
         {
         }
 
@@ -305,26 +305,26 @@ namespace parking
             SwitchSubTable idle_to_table =
                 {
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromIdleToStandby, this)},
-                };
+            };
 
             SwitchSubTable standby_to_table =
                 {
                     {AvpCruisingStateType::IDLE_0, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToIdle, this)},
                     {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromStandbyToLocating, this)},
-                };
+            };
 
             SwitchSubTable locating_to_table =
                 {
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatingToStandby, this)},
                     {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatingToLocated, this)},
-                };
+            };
 
             SwitchSubTable located_to_table =
                 {
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToStandby, this)},
                     {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToLocating, this)},
                     {AvpCruisingStateType::PREPARED_4, std::bind(&AvpCruisingStateSwitcher::SwitchFromLocatedToPrepared, this)},
-                };
+            };
 
             SwitchSubTable prepared_to_table =
                 {
@@ -332,7 +332,7 @@ namespace parking
                     {AvpCruisingStateType::LOCATING_2, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToLocating, this)},
                     {AvpCruisingStateType::LOCATED_3, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToLocated, this)},
                     {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromPreparedToCruising, this)},
-                };
+            };
 
             SwitchSubTable cruising_to_table =
                 {
@@ -343,7 +343,7 @@ namespace parking
                     {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToFailed, this)},
                     {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToSuspend, this)},
                     {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromCruisingToTerminate, this)},
-                };
+            };
 
             SwitchSubTable parking_to_table =
                 {
@@ -352,23 +352,23 @@ namespace parking
                     {AvpCruisingStateType::FAILED_9, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToFailed, this)},
                     {AvpCruisingStateType::SUSPEND_10, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToSuspend, this)},
                     {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromParkingToTerminate, this)},
-                };
+            };
 
             SwitchSubTable override_to_table =
                 {
                     {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromOverrideToStandby, this)},
                     {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromOverrideToCruising, this)},
-                };
+            };
 
             SwitchSubTable success_to_table =
                 {
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuccessToStandby, this)},
-                };
+            };
 
             SwitchSubTable failed_to_table =
                 {
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromFailedToStandby, this)},
-                };
+            };
 
             SwitchSubTable suspend_to_table =
                 {
@@ -376,12 +376,12 @@ namespace parking
                     {AvpCruisingStateType::CRUISING_5, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToCruising, this)},
                     {AvpCruisingStateType::PARKING_6, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToParking, this)},
                     {AvpCruisingStateType::TERMINATE_11, std::bind(&AvpCruisingStateSwitcher::SwitchFromSuspenedToTerminate, this)},
-                };
+            };
 
             SwitchSubTable terminate_to_table =
                 {
                     {AvpCruisingStateType::STANDBY_1, std::bind(&AvpCruisingStateSwitcher::SwitchFromTerminateToStandby, this)},
-                };
+            };
 
             AddStateSwitch(AvpCruisingStateType::IDLE_0, std::move(idle_to_table));
             AddStateSwitch(AvpCruisingStateType::STANDBY_1, std::move(standby_to_table));
@@ -397,6 +397,24 @@ namespace parking
             AddStateSwitch(AvpCruisingStateType::TERMINATE_11, std::move(terminate_to_table));
         };
 
+        virtual void Print() const override
+        {
+            if (IsStateChanged())
+            {
+                PrintStateInfo(true);
+            }
+            else 
+            {
+                if (GetCrntState() >= AvpCruisingStateType::LOCATING_2)
+                {
+                    if (GetCount() % (GetFrequency() * 60) == 0)
+                    {
+                        PrintStateInfo(false);
+                    }
+                }
+            }
+        }
+
     public:
         /**
          * @brief 判断 AVP 巡航功能是否处于运行状态。
@@ -407,10 +425,11 @@ namespace parking
             return GetCrntState() >= AvpCruisingStateType::STANDBY_1;
         }
 
+    private:
         /**
          * @brief 输出当前、上一和前序状态，以及当前状态持续时间。
          */
-        void PrintStateInfo(bool flag) override
+        void PrintStateInfo(bool flag) const override
         {
             std::cout << "[AVPC] Crnt : " << AvpCruisingFormator(avp_cruising_str_map.at(GetCrntState()))
                       << ", Last : " << AvpCruisingFormator(avp_cruising_str_map.at(GetLastState()))

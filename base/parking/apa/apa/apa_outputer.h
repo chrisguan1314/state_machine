@@ -22,7 +22,7 @@ namespace parking
      *
      * @note 调用方应先执行 InitWriters() 和 InitActionTable()，再调度状态动作。
      */
-    class ApaOutputer final : public StateMachineOutputerBase<ApaStateType>
+    class ApaOutputer final : public StateMachineOutputer<ApaStateType>
     {
     public:
         /**
@@ -30,7 +30,7 @@ namespace parking
          *
          * @details 创建 ApaAction 并传递给状态机输出基类，用于执行已注册的状态动作。
          */
-        ApaOutputer() : StateMachineOutputerBase<ApaStateType>(std::make_shared<ApaAction>()) {}
+        ApaOutputer() : StateMachineOutputer<ApaStateType>(std::make_shared<ApaAction>()) {}
 
     public:
         /**

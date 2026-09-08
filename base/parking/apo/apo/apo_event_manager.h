@@ -1,19 +1,15 @@
 #pragma once
 
-#include "apo_event_map.h"
 #include "../../parking_event_manager.h"
 
 namespace parking
 {
 
-    class ApoEventManager : public ParkingEventManager<ApoActvType, ApoActvIhbtType, ApoGuidanceType,
-                                                       ApoGuidanceIhbtType, ApoPauseType, ApoSuccessType,
-                                                       ApoFailType, ApoExitType>
+    class ApoEventManager : public ParkingEventManager
     {
     protected:
-        void UpdateEvent() noexcept override {}
 
-        void LogEventChange(ParkingEventType event_type, int value) const noexcept override
+        void LogEventChange(ParkingEventType event_type, int value) noexcept override
         {
             const auto log = [](const auto &strmap, const char *event_name, auto event_value)
             {
@@ -24,28 +20,28 @@ namespace parking
             switch (event_type)
             {
             case ParkingEventType::ACTV_1:
-                log(apo_actv_strmap, "ACTV", static_cast<ApoActvType>(value));
+                log(actv_strmap, "ACTV", static_cast<PrkgFuncActvType>(value));
                 break;
             case ParkingEventType::ACTV_IHBT_2:
-                log(apo_actv_ihbt_strmap, "ACTV_IHBT", static_cast<ApoActvIhbtType>(value));
+                log(actv_ihbt_strmap, "ACTV_IHBT", static_cast<PrkgFuncActvIhbtType>(value));
                 break;
             case ParkingEventType::GUIDANCE_3:
-                log(apo_guidance_strmap, "GUIDANCE", static_cast<ApoGuidanceType>(value));
+                log(guidance_strmap, "GUIDANCE", static_cast<PrkgFuncGuidanceType>(value));
                 break;
             case ParkingEventType::GUIDANCE_IHBT_4:
-                log(apo_guidance_ihbt_strmap, "GUIDANCE_IHBT", static_cast<ApoGuidanceIhbtType>(value));
+                log(guidance_ihbt_strmap, "GUIDANCE_IHBT", static_cast<PrkgFuncGuidanceIhbtType>(value));
                 break;
             case ParkingEventType::PAUSE_5:
-                log(apo_pause_strmap, "PAUSE", static_cast<ApoPauseType>(value));
+                log(pause_strmap, "PAUSE", static_cast<PrkgFuncPauseType>(value));
                 break;
             case ParkingEventType::SUCCESS_6:
-                log(apo_success_strmap, "SUCCESS", static_cast<ApoSuccessType>(value));
+                log(success_strmap, "SUCCESS", static_cast<PrkgFuncSuccessType>(value));
                 break;
             case ParkingEventType::FAIL_7:
-                log(apo_fail_strmap, "FAIL", static_cast<ApoFailType>(value));
+                log(fail_strmap, "FAIL", static_cast<PrkgFuncFailType>(value));
                 break;
             case ParkingEventType::EXIT_8:
-                log(apo_exit_strmap, "EXIT", static_cast<ApoExitType>(value));
+                log(exit_strmap, "EXIT", static_cast<PrkgFuncExitType>(value));
                 break;
             case ParkingEventType::NONE_0:
             default:
